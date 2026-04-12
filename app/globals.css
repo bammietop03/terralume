@@ -1,26 +1,90 @@
 @import "tailwindcss";
 
+/* ── Surface tokens ───────────────────────────────────────── */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --surface: #ffffff;
+  --surface-alt: #f9fafb;
+  --surface-card: #eef0f8;
+  --on-surface: #2c2c2a;
+  --on-surface-muted: #5f5e5a;
+  --divider: #d3d1c7;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  /* ── Fonts ─────────────────────────────────────────────── */
+  --font-display: var(--font-playfair), Georgia, serif;
+  --font-sans: var(--font-inter), system-ui, sans-serif;
+
+  /* ── Brand colours (constant) ──────────────────────────── */
+  --color-navy: #1b2a6b;
+  --color-navy-dark: #111d4e;
+  --color-crimson: #9b1c2e;
+  --color-navy-light: #e8ebf5;
+  --color-crimson-light: #f5e8ea;
+
+  /* ── Semantic surface tokens (theme-responsive) ─────────── */
+  --color-surface: var(--surface);
+  --color-surface-alt: var(--surface-alt);
+  --color-surface-card: var(--surface-card);
+  --color-on-surface: var(--on-surface);
+  --color-on-surface-muted: var(--on-surface-muted);
+  --color-divider: var(--divider);
+
+  /* ── Legacy aliases (kept for compat) ──────────────────── */
+  --color-text-dark: #2c2c2a;
+  --color-text-muted: #5f5e5a;
+  --color-grey-light: #f4f4f2;
+  --color-border: #d3d1c7;
+  --color-white: #ffffff;
+  --color-background: var(--surface);
+  --color-foreground: var(--on-surface);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* ── Base ───────────────────────────────────────────────────── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--surface);
+  color: var(--on-surface);
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.7;
+}
+
+/* ── Typographic scale ─────────────────────────────────────── */
+h1 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 3rem;
+  line-height: 1.1;
+}
+
+h2 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 2rem;
+  line-height: 1.2;
+}
+
+h3 {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 1.375rem;
+  line-height: 1.4;
+}
+
+@media (max-width: 768px) {
+  h1 {
+    font-size: 2rem;
+  }
+  h2 {
+    font-size: 1.5rem;
+  }
+  h3 {
+    font-size: 1.125rem;
+  }
 }

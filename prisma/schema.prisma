@@ -1,0 +1,213 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client"
+  output   = "../app/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+
+// ─── Enums ───────────────────────────────────────────────────────────────────
+
+enum Role {
+  CLIENT
+  PM
+  ADMIN
+}
+
+enum PaymentType {
+  RETAINER
+  SUCCESS
+  OTHER
+}
+
+enum PaymentStatus {
+  PENDING
+  SUCCESS
+  FAILED
+}
+
+enum PaymentProvider {
+  PAYSTACK
+  MANUAL
+  OTHER
+}
+
+// ─── Models ──────────────────────────────────────────────────────────────────
+
+model User {
+  /// Maps to auth.users.id in Supabase — UUID stored as String
+  id            String    @id @db.Uuid
+  email         String    @unique
+  role          Role      @default(CLIENT)
+  createdAt     DateTime  @default(now()) @map("created_at")
+  lastLogin     DateTime? @map("last_login")
+
+  // Relations
+  client        Client?
+  notifications Notification[]
+  auditLogs     AuditLog[]
+  sentMessages  Message[]      @relation("SentMessages")
+  updates       Update[]
+
+  @@map("users")
+}
+
+model Client {
+  id          String  @id @default(cuid())
+  userId      String  @unique @map("user_id") @db.Uuid
+  fullName    String  @map("full_name")
+  phone       String?
+  nationality String?
+  location    String?
+  idType      String? @map("id_type")
+  idNumber    String? @map("id_number")
+
+  user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  enquiries   Enquiry[]
+  engagements Engagement[]
+
+  @@map("clients")
+}
+
+model Enquiry {
+  id              String   @id @default(cuid())
+  clientId        String   @map("client_id")
+  source          String?
+  transactionType String?  @map("transaction_type")
+  brief           String?
+  status          String   @default("open")
+  assignedAdvisor String?  @map("assigned_advisor")
+  createdAt       DateTime @default(now()) @map("created_at")
+
+  client Client @relation(fields: [clientId], references: [id], onDelete: Cascade)
+
+  @@map("enquiries")
+}
+
+model Engagement {
+  id          String    @id @default(cuid())
+  clientId    String    @map("client_id")
+  pmId        String?   @map("pm_id") @db.Uuid
+  serviceTier String?   @map("service_tier")
+  stage       String    @default("discovery")
+  startDate   DateTime? @map("start_date")
+  targetDate  DateTime? @map("target_date")
+  status      String    @default("active")
+
+  client      Client     @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  documents   Document[]
+  updates     Update[]
+  messages    Message[]
+  properties  Property[]
+  payments    Payment[]
+
+  @@map("engagements")
+}
+
+model Document {
+  id           String   @id @default(cuid())
+  engagementId String   @map("engagement_id")
+  name         String
+  category     String?
+  filePath     String   @map("file_path")
+  uploadedBy   String   @map("uploaded_by") @db.Uuid
+  uploadedAt   DateTime @default(now()) @map("uploaded_at")
+  version      Int      @default(1)
+
+  engagement Engagement @relation(fields: [engagementId], references: [id], onDelete: Cascade)
+
+  @@map("documents")
+}
+
+model Update {
+  id           String   @id @default(cuid())
+  engagementId String   @map("engagement_id")
+  pmId         String   @map("pm_id") @db.Uuid
+  content      String
+  publishedAt  DateTime? @map("published_at")
+  draft        Boolean  @default(true)
+
+  engagement Engagement @relation(fields: [engagementId], references: [id], onDelete: Cascade)
+  pm         User       @relation(fields: [pmId], references: [id])
+
+  @@map("updates")
+}
+
+model Message {
+  id             String    @id @default(cuid())
+  engagementId   String    @map("engagement_id")
+  senderId       String    @map("sender_id") @db.Uuid
+  body           String
+  attachmentPath String?   @map("attachment_path")
+  sentAt         DateTime  @default(now()) @map("sent_at")
+  readAt         DateTime? @map("read_at")
+
+  engagement Engagement @relation(fields: [engagementId], references: [id], onDelete: Cascade)
+  sender     User       @relation("SentMessages", fields: [senderId], references: [id])
+
+  @@map("messages")
+}
+
+model Property {
+  id             String  @id @default(cuid())
+  engagementId   String  @map("engagement_id")
+  address        String?
+  area           String?
+  priceAsking    Float?  @map("price_asking")
+  priceEstimated Float?  @map("price_estimated")
+  status         String  @default("active")
+  notes          String?
+
+  engagement Engagement @relation(fields: [engagementId], references: [id], onDelete: Cascade)
+
+  @@map("properties")
+}
+
+model Payment {
+  id           String        @id @default(cuid())
+  engagementId String        @map("engagement_id")
+  type         PaymentType   @default(OTHER)
+  amount       Float
+  currency     String        @default("NGN")
+  provider     PaymentProvider @default(PAYSTACK)
+  status       PaymentStatus @default(PENDING)
+  reference    String?       @unique
+  paidAt       DateTime?     @map("paid_at")
+  createdAt    DateTime      @default(now()) @map("created_at")
+
+  engagement Engagement @relation(fields: [engagementId], references: [id], onDelete: Cascade)
+
+  @@map("payments")
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String   @map("user_id") @db.Uuid
+  type      String
+  content   String
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("notifications")
+}
+
+model AuditLog {
+  id           String   @id @default(cuid())
+  userId       String   @map("user_id") @db.Uuid
+  action       String
+  resourceType String   @map("resource_type")
+  resourceId   String?  @map("resource_id")
+  timestamp    DateTime @default(now())
+  ipAddress    String?  @map("ip_address")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("audit_log")
+}

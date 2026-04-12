@@ -74,8 +74,8 @@ export default function PageHero({
         </nav>
 
         {/* Eyebrow */}
-        <div className="mb-4 flex items-center gap-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-crimson">
-          <span className="h-px w-8 bg-crimson" />
+        <div className="mb-4 flex items-center gap-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-white">
+          <span className="h-px w-8 bg-white" />
           {eyebrow}
         </div>
 

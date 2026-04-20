@@ -3,7 +3,7 @@
 import { useTransition } from "react";
 import { updateLeadStatus } from "@/app/actions/leads";
 import { toast } from "sonner";
-import type { LeadStatus } from "@/app/generated/prisma";
+import type { LeadStatus } from "@/app/generated/prisma/client";
 
 const STATUS_OPTIONS: { value: LeadStatus; label: string }[] = [
   { value: "NEW", label: "New" },

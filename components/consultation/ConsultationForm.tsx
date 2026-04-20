@@ -12,7 +12,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { submitConsultationRequest } from "@/app/actions/leads";
-import type { LeadInterestType } from "@/app/generated/prisma";
+import type { LeadInterestType } from "@/app/generated/prisma/client";
 import { CheckCircle2 } from "lucide-react";
 
 const COUNTRY_CODES = [

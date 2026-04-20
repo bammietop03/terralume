@@ -40,7 +40,7 @@ export function FooterCTA() {
           an expert buyer&apos;s agent in your corner from day one.
         </p>
         <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
-          <Button asChild size="lg" variant="primary">
+          <Button asChild size="lg" variant="secondary">
             <Link href="/get-started">
               Start Your Enquiry
               <ArrowRight size={16} />

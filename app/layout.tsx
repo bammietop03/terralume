@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
 import { Playfair_Display, Inter } from "next/font/google";
+import { Toaster } from "sonner";
 import "./globals.css";
-import { Header } from "@/components/layout/Header";
-import { Footer } from "@/components/layout/Footer";
 
 const playfair = Playfair_Display({
   variable: "--font-playfair",
@@ -30,9 +29,8 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${playfair.variable} ${inter.variable}`}>
       <body className="min-h-screen flex flex-col antialiased">
-        <Header />
         {children}
-        <Footer />
+        <Toaster richColors position="top-right" />
       </body>
     </html>
   );

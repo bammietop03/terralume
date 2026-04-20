@@ -1,7 +1,7 @@
 import { TOTAL_STEPS, STEP_LABELS } from "./types";
 
 export function ProgressBar({ step }: { step: number }) {
-  const pct = Math.round(((step - 1) / (TOTAL_STEPS - 1)) * 100);
+  const pct = Math.round((step / TOTAL_STEPS) * 100);
 
   return (
     <div className="mb-8">

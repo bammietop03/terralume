@@ -1,12 +1,13 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
+import { prisma } from "@/lib/prisma";
 
 /**
  * Refreshes the Supabase auth session from the proxy.
  * Must be called on every request to keep sessions alive.
  *
  * IMPORTANT: Never trust getSession() in server code.
- * Always use getClaims() to verify the JWT signature.
+ * Always use getUser() to verify the JWT signature.
  */
 export async function updateSession(request: NextRequest) {
   let supabaseResponse = NextResponse.next({ request });
@@ -21,15 +22,15 @@ export async function updateSession(request: NextRequest) {
         },
         setAll(cookiesToSet) {
           cookiesToSet.forEach(({ name, value }) =>
-            request.cookies.set(name, value)
+            request.cookies.set(name, value),
           );
           supabaseResponse = NextResponse.next({ request });
           cookiesToSet.forEach(({ name, value, options }) =>
-            supabaseResponse.cookies.set(name, value, options)
+            supabaseResponse.cookies.set(name, value, options),
           );
         },
       },
-    }
+    },
   );
 
   // Validate JWT signature — do NOT use getSession() here
@@ -37,13 +38,14 @@ export async function updateSession(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  // Redirect unauthenticated users away from protected routes
   const pathname = request.nextUrl.pathname;
-  const isProtected =
-    pathname.startsWith("/dashboard") ||
-    pathname.startsWith("/engagements") ||
-    pathname.startsWith("/admin");
 
+  const isClientPortal = pathname.startsWith("/client-portal");
+  const isAdminPortal = pathname.startsWith("/admin-portal");
+  const isProtected =
+    isClientPortal || isAdminPortal || pathname.startsWith("/engagements");
+
+  // Redirect unauthenticated users to login
   if (isProtected && !user) {
     const loginUrl = request.nextUrl.clone();
     loginUrl.pathname = "/login";
@@ -51,14 +53,62 @@ export async function updateSession(request: NextRequest) {
     return NextResponse.redirect(loginUrl);
   }
 
+  // Role-based portal access control
+  if (user && (isClientPortal || isAdminPortal)) {
+    try {
+      const dbUser = await prisma.user.findUnique({
+        where: { id: user.id },
+        select: { role: true, onboardingComplete: true },
+      });
+
+      if (dbUser) {
+        const isClient = dbUser.role === "CLIENT";
+
+        // CLIENT trying to access admin portal → redirect to client portal
+        if (isAdminPortal && isClient) {
+          const redirect = request.nextUrl.clone();
+          redirect.pathname = "/client-portal/dashboard";
+          return NextResponse.redirect(redirect);
+        }
+
+        // PM/ADMIN trying to access client portal → redirect to admin portal
+        if (isClientPortal && !isClient) {
+          const redirect = request.nextUrl.clone();
+          redirect.pathname = "/admin-portal/dashboard";
+          return NextResponse.redirect(redirect);
+        }
+
+        // CLIENT who hasn't completed onboarding → redirect to first-login
+        if (
+          isClient &&
+          !dbUser.onboardingComplete &&
+          !pathname.startsWith("/client-portal/first-login")
+        ) {
+          const redirect = request.nextUrl.clone();
+          redirect.pathname = "/client-portal/first-login";
+          return NextResponse.redirect(redirect);
+        }
+      }
+    } catch {
+      // Non-critical — let the request through if DB check fails
+    }
+  }
+
   // Redirect already-authed users away from auth pages
   const isAuthPage =
     pathname.startsWith("/login") || pathname.startsWith("/signup");
 
   if (isAuthPage && user) {
-    const dashboardUrl = request.nextUrl.clone();
-    dashboardUrl.pathname = "/dashboard";
-    return NextResponse.redirect(dashboardUrl);
+    const rawRedirectTo = request.nextUrl.searchParams.get("redirectTo") ?? "";
+    // Only follow relative paths to prevent open-redirect attacks
+    const safePath =
+      rawRedirectTo.startsWith("/") && !rawRedirectTo.startsWith("//")
+        ? rawRedirectTo
+        : "/admin-portal/dashboard";
+    const dest = request.nextUrl.clone();
+    dest.pathname = safePath;
+    dest.search = "";
+    return NextResponse.redirect(dest);
   }
 
   return supabaseResponse;

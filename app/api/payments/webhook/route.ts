@@ -58,14 +58,14 @@ export async function POST(request: Request) {
           },
           include: {
             engagement: {
-              include: { client: { include: { user: true } } },
+              include: { user: true },
             },
           },
         })
         .catch(() => null); // payment might not exist if webhook fires before /initialize response
 
       if (payment) {
-        const clientUserId = payment.engagement.client.userId;
+        const clientUserId = payment.engagement.userId;
 
         // Notify client
         await prisma.notification.create({

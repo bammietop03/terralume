@@ -51,13 +51,13 @@ export function HeroSection() {
 
         {/* CTAs */}
         <div className="mt-10 flex flex-wrap gap-3">
-          <Button asChild size="lg" variant="primary">
+          <Button asChild size="lg" variant="secondary">
             <Link href="/get-started">
               Get a Free Consultation
               <ArrowRight size={16} />
             </Link>
           </Button>
-          <Button asChild size="lg" variant="outline-white">
+          <Button asChild size="lg" variant="outline">
             <a href="#how-it-works">See How It Works</a>
           </Button>
         </div>

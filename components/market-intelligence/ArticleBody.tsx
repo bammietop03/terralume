@@ -1,131 +1,100 @@
-import { AlertTriangle, Info, AlertCircle } from "lucide-react";
-import { ContentBlock } from "@/lib/articles-content";
+﻿import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+import type { Components } from "react-markdown";
 
 interface Props {
-  blocks: ContentBlock[];
+  body: string;
 }
 
-const calloutConfig = {
-  info: {
-    icon: Info,
-    bg: "bg-navy-light",
-    border: "border-navy/20",
-    iconColor: "text-navy",
-    titleColor: "text-navy",
-    textColor: "text-navy/80",
+const components: Components = {
+  p: ({ children }) => (
+    <p className="mb-6 text-[16px] leading-[1.85] text-on-surface">
+      {children}
+    </p>
+  ),
+  h2: ({ children }) => (
+    <h2 className="mb-4 mt-10 font-display text-2xl font-bold text-navy first:mt-0">
+      {children}
+    </h2>
+  ),
+  h3: ({ children }) => (
+    <h3 className="mb-3 mt-8 font-display text-xl font-bold text-navy">
+      {children}
+    </h3>
+  ),
+  h1: ({ children }) => (
+    <h1 className="mb-4 mt-10 font-display text-3xl font-bold text-navy">
+      {children}
+    </h1>
+  ),
+  ul: ({ children }) => (
+    <ul className="mb-6 space-y-2.5 pl-0 list-none">{children}</ul>
+  ),
+  ol: ({ children }) => (
+    <ol className="mb-6 space-y-2.5 pl-0 list-none">{children}</ol>
+  ),
+  li: ({ children, ...props }) => {
+    // Detect ordered list via parent context by checking node
+    const isOrdered = (props as { ordered?: boolean }).ordered;
+    return (
+      <li className="flex items-start gap-3 text-[15px] leading-relaxed text-on-surface">
+        {isOrdered ? (
+          <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-navy text-[11px] font-bold text-white">
+            {(props as { index?: number }).index != null
+              ? ((props as { index?: number }).index ?? 0) + 1
+              : "•"}
+          </span>
+        ) : (
+          <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-crimson" />
+        )}
+        <span>{children}</span>
+      </li>
+    );
   },
-  warning: {
-    icon: AlertTriangle,
-    bg: "bg-amber-50",
-    border: "border-amber-200",
-    iconColor: "text-amber-600",
-    titleColor: "text-amber-800",
-    textColor: "text-amber-700",
-  },
-  danger: {
-    icon: AlertCircle,
-    bg: "bg-crimson-light",
-    border: "border-crimson/20",
-    iconColor: "text-crimson",
-    titleColor: "text-crimson",
-    textColor: "text-crimson/80",
+  blockquote: ({ children }) => (
+    <div className="mb-6 rounded-xl border border-navy/20 bg-navy-light px-5 py-4 flex gap-3">
+      <span className="mt-0.5 text-navy shrink-0">ℹ</span>
+      <div className="text-[15px] leading-relaxed text-navy/80">{children}</div>
+    </div>
+  ),
+  hr: () => <hr className="my-8 border-divider" />,
+  strong: ({ children }) => (
+    <strong className="font-semibold text-on-surface">{children}</strong>
+  ),
+  em: ({ children }) => <em className="italic text-on-surface">{children}</em>,
+  a: ({ href, children }) => (
+    <a
+      href={href}
+      className="text-crimson underline underline-offset-2 hover:text-crimson/80 transition-colors"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      {children}
+    </a>
+  ),
+  code: ({ children, className }) => {
+    const isBlock = className?.includes("language-");
+    if (isBlock) {
+      return (
+        <pre className="mb-6 overflow-x-auto rounded-xl bg-navy-dark p-5">
+          <code className="text-sm text-white/90 font-mono">{children}</code>
+        </pre>
+      );
+    }
+    return (
+      <code className="rounded bg-surface-card px-1.5 py-0.5 text-[14px] font-mono text-navy">
+        {children}
+      </code>
+    );
   },
 };
 
-export default function ArticleBody({ blocks }: Props) {
+export default function ArticleBody({ body }: Props) {
   return (
     <div className="prose-article">
-      {blocks.map((block, i) => {
-        switch (block.type) {
-          case "paragraph":
-            return (
-              <p
-                key={i}
-                className="mb-6 text-[16px] leading-[1.85] text-on-surface"
-              >
-                {block.text}
-              </p>
-            );
-
-          case "heading2":
-            return (
-              <h2
-                key={i}
-                className="mb-4 mt-10 font-display text-2xl font-bold text-navy first:mt-0"
-              >
-                {block.text}
-              </h2>
-            );
-
-          case "heading3":
-            return (
-              <h3
-                key={i}
-                className="mb-3 mt-8 font-display text-xl font-bold text-navy"
-              >
-                {block.text}
-              </h3>
-            );
-
-          case "list": {
-            const Tag = block.ordered ? "ol" : "ul";
-            return (
-              <Tag
-                key={i}
-                className={`mb-6 space-y-2.5 pl-0 ${block.ordered ? "list-none" : "list-none"}`}
-              >
-                {block.items.map((item, j) => (
-                  <li
-                    key={j}
-                    className="flex items-start gap-3 text-[15px] leading-relaxed text-on-surface"
-                  >
-                    {block.ordered ? (
-                      <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-navy text-[11px] font-bold text-white">
-                        {j + 1}
-                      </span>
-                    ) : (
-                      <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-crimson" />
-                    )}
-                    {item}
-                  </li>
-                ))}
-              </Tag>
-            );
-          }
-
-          case "callout": {
-            const variant = block.variant ?? "info";
-            const cfg = calloutConfig[variant];
-            const Icon = cfg.icon;
-            return (
-              <div
-                key={i}
-                className={`my-8 flex gap-4 rounded-xl border p-5 ${cfg.bg} ${cfg.border}`}
-              >
-                <Icon className={`mt-0.5 h-5 w-5 shrink-0 ${cfg.iconColor}`} />
-                <div>
-                  {block.title && (
-                    <p
-                      className={`mb-1 text-[13px] font-bold uppercase tracking-wide ${cfg.titleColor}`}
-                    >
-                      {block.title}
-                    </p>
-                  )}
-                  <p className={`text-[14px] leading-relaxed ${cfg.textColor}`}>
-                    {block.text}
-                  </p>
-                </div>
-              </div>
-            );
-          }
-
-          case "divider":
-            return <hr key={i} className="my-10 border-divider" />;
-
-          default:
-            return null;
-        }
-      })}
+      <ReactMarkdown remarkPlugins={[remarkGfm]} components={components}>
+        {body}
+      </ReactMarkdown>
     </div>
   );
 }

@@ -4,11 +4,10 @@ import { prisma } from "@/lib/prisma";
 
 /**
  * POST /api/auth/signup
- * Body: { email, password, fullName, phone?, role? }
+ * Body: { email, password, fullName, phone? }
  *
  * Creates a Supabase auth user then mirrors the record in the `users` table.
- * For CLIENT role, also creates a `clients` row.
- * Roles are CLIENT by default — PM/ADMIN must be set by an admin.
+ * Roles are CLIENT by default — PM/ADMIN must be created by an admin.
  */
 export async function POST(request: Request) {
   try {
@@ -17,7 +16,7 @@ export async function POST(request: Request) {
     if (!email || !password || !fullName) {
       return NextResponse.json(
         { error: "email, password, and fullName are required" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -35,25 +34,18 @@ export async function POST(request: Request) {
     if (authError || !authData.user) {
       return NextResponse.json(
         { error: authError?.message ?? "Sign-up failed" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
     const userId = authData.user.id;
 
-    // 2. Mirror user in our DB
+    // 2. Mirror user in our DB with profile fields
     const user = await prisma.user.create({
       data: {
         id: userId,
         email,
         role: "CLIENT",
-      },
-    });
-
-    // 3. Create client profile
-    const client = await prisma.client.create({
-      data: {
-        userId: user.id,
         fullName,
         phone: phone ?? null,
       },
@@ -63,12 +55,14 @@ export async function POST(request: Request) {
       {
         message: "Account created. Please check your email to confirm.",
         user: { id: user.id, email: user.email, role: user.role },
-        clientId: client.id,
       },
-      { status: 201 }
+      { status: 201 },
     );
   } catch (err) {
     console.error("[signup]", err);
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Internal server error" },
+      { status: 500 },
+    );
   }
 }

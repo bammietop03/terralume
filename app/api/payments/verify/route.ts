@@ -29,7 +29,10 @@ export async function GET(request: Request) {
     const reference = searchParams.get("reference");
 
     if (!reference) {
-      return NextResponse.json({ error: "reference is required" }, { status: 400 });
+      return NextResponse.json(
+        { error: "reference is required" },
+        { status: 400 },
+      );
     }
 
     // Call Paystack verify endpoint
@@ -39,7 +42,7 @@ export async function GET(request: Request) {
         headers: {
           Authorization: `Bearer ${process.env.PAYSTACK_SECRET_KEY}`,
         },
-      }
+      },
     );
 
     const paystackData = await paystackRes.json();
@@ -47,7 +50,7 @@ export async function GET(request: Request) {
     if (!paystackRes.ok || !paystackData.status) {
       return NextResponse.json(
         { error: paystackData.message ?? "Verification failed" },
-        { status: 502 }
+        { status: 502 },
       );
     }
 
@@ -62,13 +65,13 @@ export async function GET(request: Request) {
         paidAt: txStatus === "SUCCESS" ? new Date() : null,
       },
       include: {
-        engagement: { include: { client: { include: { user: true } } } },
+        engagement: { include: { user: true } },
       },
     });
 
     // Fire a notification on success
     if (txStatus === "SUCCESS") {
-      const clientUserId = payment.engagement.client.userId;
+      const clientUserId = payment.engagement.userId;
       await prisma.notification.create({
         data: {
           userId: clientUserId,
@@ -87,6 +90,9 @@ export async function GET(request: Request) {
     });
   } catch (err) {
     console.error("[payments/verify]", err);
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Internal server error" },
+      { status: 500 },
+    );
   }
 }

@@ -69,7 +69,7 @@ export function Header() {
             <Button
               asChild
               size="sm"
-              variant="primary"
+              variant="secondary"
               className="hidden lg:inline-flex"
             >
               <Link href="/get-started">Get Started</Link>
@@ -77,7 +77,7 @@ export function Header() {
             <Button
               asChild
               size="sm"
-              variant="outline-white"
+              variant="outline"
               className="hidden lg:inline-flex"
             >
               <Link href="/login">Log In</Link>
@@ -112,7 +112,7 @@ export function Header() {
             </Link>
           ))}
           <div className="pt-4">
-            <Button asChild variant="primary" className="w-full">
+            <Button asChild variant="secondary" className="w-full">
               <Link href="/get-started" onClick={() => setMobileOpen(false)}>
                 Get Started
               </Link>

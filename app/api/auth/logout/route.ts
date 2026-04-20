@@ -9,15 +9,16 @@ import { createClient } from "@/lib/supabase/server";
 export async function POST() {
   try {
     const supabase = await createClient();
-    const { error } = await supabase.auth.signOut();
-
-    if (error) {
-      return NextResponse.json({ error: error.message }, { status: 500 });
-    }
-
-    return NextResponse.json({ message: "Logged out successfully" });
+    await supabase.auth.signOut();
   } catch (err) {
     console.error("[logout]", err);
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
+
+  return NextResponse.redirect(
+    new URL(
+      "/login",
+      process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000",
+    ),
+    { status: 303 },
+  );
 }

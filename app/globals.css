@@ -8,6 +8,25 @@
   --on-surface: #2c2c2a;
   --on-surface-muted: #5f5e5a;
   --divider: #d3d1c7;
+
+  /* ── Shadcn UI semantic tokens ──────────────────────────── */
+  --popover: #ffffff;
+  --popover-foreground: #2c2c2a;
+  --card: #ffffff;
+  --card-foreground: #2c2c2a;
+  --primary: #1b2a6b;
+  --primary-foreground: #ffffff;
+  --secondary: #9b1c2e;
+  --secondary-foreground: #ffffff;
+  --muted: #f9fafb;
+  --muted-foreground: #5f5e5a;
+  --accent: #e8ebf5;
+  --accent-foreground: #1b2a6b;
+  --destructive: #9b1c2e;
+  --destructive-foreground: #ffffff;
+  --border: #d3d1c7;
+  --input: #d3d1c7;
+  --ring: #1b2a6b;
 }
 
 @theme inline {
@@ -30,11 +49,29 @@
   --color-on-surface-muted: var(--on-surface-muted);
   --color-divider: var(--divider);
 
+  /* ── Shadcn UI token aliases (so bg-popover, text-destructive etc. work) ── */
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
   /* ── Legacy aliases (kept for compat) ──────────────────── */
   --color-text-dark: #2c2c2a;
   --color-text-muted: #5f5e5a;
   --color-grey-light: #f4f4f2;
-  --color-border: #d3d1c7;
   --color-white: #ffffff;
   --color-background: var(--surface);
   --color-foreground: var(--on-surface);
@@ -87,4 +124,29 @@ h3 {
   h3 {
     font-size: 1.125rem;
   }
+}
+
+/* ── Modern scrollbar ──────────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(27, 42, 107, 0.12);
+  border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(27, 42, 107, 0.22);
+}
+
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(27, 42, 107, 0.12) transparent;
 }

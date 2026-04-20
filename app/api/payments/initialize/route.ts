@@ -42,21 +42,24 @@ export async function POST(request: Request) {
     if (!engagementId || !amount) {
       return NextResponse.json(
         { error: "engagementId and amount are required" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
     // Fetch the engagement to get the client's email for Paystack
     const engagement = await prisma.engagement.findUnique({
       where: { id: engagementId },
-      include: { client: { include: { user: true } } },
+      include: { user: true },
     });
 
     if (!engagement) {
-      return NextResponse.json({ error: "Engagement not found" }, { status: 404 });
+      return NextResponse.json(
+        { error: "Engagement not found" },
+        { status: 404 },
+      );
     }
 
-    const clientEmail = engagement.client.user.email;
+    const clientEmail = engagement.user.email;
 
     // Initialize Paystack transaction (amount in kobo/smallest unit)
     const paystackRes = await fetch(`${PAYSTACK_BASE}/transaction/initialize`, {
@@ -81,7 +84,7 @@ export async function POST(request: Request) {
     if (!paystackRes.ok || !paystackData.status) {
       return NextResponse.json(
         { error: paystackData.message ?? "Paystack initialization failed" },
-        { status: 502 }
+        { status: 502 },
       );
     }
 
@@ -107,6 +110,9 @@ export async function POST(request: Request) {
     });
   } catch (err) {
     console.error("[payments/initialize]", err);
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Internal server error" },
+      { status: 500 },
+    );
   }
 }

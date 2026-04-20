@@ -1,0 +1,653 @@
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font-sans)}
+
+.form-shell{max-width:680px;margin:0 auto;padding:16px 0 32px}
+
+.brand-bar{background:#111D4E;border-radius:var(--border-radius-lg) var(--border-radius-lg) 0 0;padding:18px 24px 14px;display:flex;align-items:center;justify-content:space-between}
+.brand-name{font-size:15px;font-weight:500;color:#fff;letter-spacing:.5px}
+.brand-tag{font-size:11px;color:#A8B4D8}
+.crimson-bar{height:3px;background:#9B1C2E;border-radius:0}
+
+.progress-wrap{background:var(--color-background-secondary);padding:16px 24px 0;border:0.5px solid var(--color-border-tertiary);border-top:none}
+.progress-labels{display:flex;justify-content:space-between;margin-bottom:6px}
+.progress-label{font-size:10px;font-weight:500;color:var(--color-text-tertiary);text-transform:uppercase;letter-spacing:.06em;flex:1;text-align:center}
+.progress-label.active{color:#1B2A6B}
+.progress-label.done{color:#1D9E75}
+.progress-track{height:4px;background:var(--color-border-tertiary);border-radius:2px;overflow:hidden;margin-bottom:16px}
+.progress-fill{height:100%;background:#1B2A6B;border-radius:2px;transition:width .4s cubic-bezier(.4,0,.2,1)}
+
+.step-card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-top:none;border-radius:0 0 var(--border-radius-lg) var(--border-radius-lg);padding:24px}
+
+.step-header{margin-bottom:20px}
+.step-number{font-size:10px;font-weight:500;color:#9B1C2E;text-transform:uppercase;letter-spacing:.08em;margin-bottom:3px}
+.step-title{font-size:18px;font-weight:500;color:var(--color-text-primary)}
+.step-sub{font-size:13px;color:var(--color-text-secondary);margin-top:3px;line-height:1.5}
+
+.field-group{display:flex;flex-direction:column;gap:16px;margin-bottom:4px}
+.field{display:flex;flex-direction:column;gap:5px}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.label{font-size:12px;font-weight:500;color:var(--color-text-primary)}
+.label .req{color:#9B1C2E;margin-left:2px}
+.hint{font-size:11px;color:var(--color-text-tertiary);margin-top:2px;line-height:1.4}
+.err{font-size:11px;color:var(--color-text-danger);margin-top:2px;display:none}
+.err.show{display:block}
+
+input[type=text],input[type=email],input[type=tel],select,textarea{
+  width:100%;border-radius:var(--border-radius-md);border:0.5px solid var(--color-border-secondary);
+  background:var(--color-background-primary);color:var(--color-text-primary);
+  font-size:14px;font-family:var(--font-sans);padding:10px 12px;outline:none;transition:border-color .15s
+}
+input:focus,select:focus,textarea:focus{border-color:#1B2A6B;box-shadow:0 0 0 2px rgba(27,42,107,.1)}
+input.invalid,select.invalid,textarea.invalid{border-color:var(--color-border-danger)}
+textarea{resize:vertical;min-height:80px;line-height:1.6}
+select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%235F5E5A' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:32px}
+
+.type-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.type-card{border:1.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:14px 12px;cursor:pointer;text-align:center;transition:all .15s;background:var(--color-background-primary)}
+.type-card:hover{border-color:var(--color-border-secondary);background:var(--color-background-secondary)}
+.type-card.selected{border-color:#1B2A6B;background:#E8EBF5}
+.type-icon{width:32px;height:32px;border-radius:50%;margin:0 auto 8px;display:flex;align-items:center;justify-content:center}
+.type-name{font-size:13px;font-weight:500;color:var(--color-text-primary);margin-bottom:2px}
+.type-desc{font-size:11px;color:var(--color-text-secondary);line-height:1.4}
+.type-card.selected .type-name{color:#111D4E}
+.type-card.selected .type-desc{color:#1B2A6B}
+
+.chip-group{display:flex;flex-wrap:wrap;gap:8px}
+.chip{border:0.5px solid var(--color-border-secondary);border-radius:20px;padding:6px 14px;font-size:12px;cursor:pointer;color:var(--color-text-secondary);background:var(--color-background-primary);transition:all .12s;user-select:none}
+.chip:hover{border-color:var(--color-border-primary);color:var(--color-text-primary)}
+.chip.selected{border-color:#1B2A6B;background:#E8EBF5;color:#111D4E;font-weight:500}
+
+.budget-row{display:flex;align-items:center;gap:10px}
+.budget-currency{font-size:13px;font-weight:500;color:var(--color-text-secondary);white-space:nowrap}
+.budget-range{display:flex;gap:10px;align-items:center;flex:1}
+.budget-range input{flex:1}
+.budget-sep{font-size:12px;color:var(--color-text-tertiary)}
+
+.radio-group{display:flex;flex-direction:column;gap:8px}
+.radio-item{display:flex;align-items:flex-start;gap:10px;cursor:pointer;padding:10px 12px;border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);background:var(--color-background-primary);transition:all .12s}
+.radio-item:hover{border-color:var(--color-border-secondary);background:var(--color-background-secondary)}
+.radio-item.selected{border-color:#1B2A6B;background:#E8EBF5}
+.radio-dot{width:16px;height:16px;border-radius:50%;border:1.5px solid var(--color-border-secondary);flex-shrink:0;margin-top:1px;display:flex;align-items:center;justify-content:center;transition:all .12s}
+.radio-item.selected .radio-dot{border-color:#1B2A6B;background:#1B2A6B}
+.radio-dot-inner{width:6px;height:6px;border-radius:50%;background:#fff;display:none}
+.radio-item.selected .radio-dot-inner{display:block}
+.radio-label{font-size:13px;color:var(--color-text-primary)}
+.radio-sub{font-size:11px;color:var(--color-text-secondary);margin-top:1px;line-height:1.4}
+.radio-item.selected .radio-label{color:#111D4E;font-weight:500}
+
+.info-box{background:#E8EBF5;border-radius:var(--border-radius-md);padding:12px 14px;display:flex;gap:10px;margin-bottom:4px}
+.info-dot{width:4px;border-radius:2px;background:#1B2A6B;flex-shrink:0;min-height:40px}
+.info-text{font-size:12px;color:#111D4E;line-height:1.6}
+
+.warn-box{background:#F5E8EA;border-radius:var(--border-radius-md);padding:12px 14px;display:flex;gap:10px;margin-top:8px}
+.warn-dot{width:4px;border-radius:2px;background:#9B1C2E;flex-shrink:0;min-height:32px}
+.warn-text{font-size:12px;color:#6B1020;line-height:1.6}
+
+.nav-row{display:flex;justify-content:space-between;align-items:center;margin-top:24px;padding-top:16px;border-top:0.5px solid var(--color-border-tertiary)}
+.nav-back{font-size:13px;color:var(--color-text-secondary);cursor:pointer;padding:8px 0;border:none;background:none}
+.nav-back:hover{color:var(--color-text-primary)}
+.nav-next{background:#1B2A6B;color:#fff;border:none;border-radius:var(--border-radius-md);padding:10px 24px;font-size:14px;font-weight:500;cursor:pointer;transition:background .15s;font-family:var(--font-sans)}
+.nav-next:hover{background:#111D4E}
+.nav-next:disabled{background:var(--color-border-secondary);cursor:not-allowed}
+.step-count{font-size:12px;color:var(--color-text-tertiary)}
+
+.summary-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.summary-item{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:10px 12px}
+.summary-key{font-size:10px;font-weight:500;color:var(--color-text-tertiary);text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px}
+.summary-val{font-size:13px;color:var(--color-text-primary);font-weight:500}
+.summary-val.empty{color:var(--color-text-tertiary);font-weight:400;font-style:italic}
+
+.success-screen{text-align:center;padding:32px 0}
+.success-icon{width:56px;height:56px;border-radius:50%;background:#E8EBF5;margin:0 auto 16px;display:flex;align-items:center;justify-content:center}
+.success-title{font-size:20px;font-weight:500;color:var(--color-text-primary);margin-bottom:8px}
+.success-sub{font-size:14px;color:var(--color-text-secondary);line-height:1.6;max-width:400px;margin:0 auto 24px}
+.ref-badge{display:inline-block;background:#E8EBF5;color:#111D4E;font-size:13px;font-weight:500;padding:8px 20px;border-radius:20px;margin-bottom:24px}
+</style>
+
+<div class="form-shell">
+  <h2 class="sr-only">Terralume client intake form — capture rental, purchase, or lease enquiry in 6 steps</h2>
+
+  <div class="brand-bar">
+    <div>
+      <div class="brand-name">TERRALUME LTD</div>
+      <div class="brand-tag">Buyer-Side Real Estate Advisory · Lagos, Nigeria</div>
+    </div>
+    <div style="font-size:11px;color:#A8B4D8;text-align:right">Secure intake form<br>All data confidential</div>
+  </div>
+  <div class="crimson-bar"></div>
+
+  <div class="progress-wrap">
+    <div class="progress-labels" id="prog-labels"></div>
+    <div class="progress-track"><div class="progress-fill" id="prog-fill" style="width:16.6%"></div></div>
+  </div>
+
+  <div class="step-card" id="step-card"></div>
+</div>
+
+<script>
+const STEPS = [
+  {id:'type', label:'Goal'},
+  {id:'you',  label:'About you'},
+  {id:'prop', label:'Property'},
+  {id:'budget',label:'Budget'},
+  {id:'timeline',label:'Timeline'},
+  {id:'confirm',label:'Review'},
+];
+
+let cur = 0;
+const data = {
+  type:'', purpose:'',
+  fullName:'', preferred:'', email:'', phone:'', location:'', nationality:'',
+  areas:[], propType:'', bedrooms:'', size:'', mustHave:[], dealBreakers:'',
+  currency:'NGN', budgetMin:'', budgetMax:'', fundsSource:'', mortgage:'',
+  targetDate:'', decisionSpeed:'', deciders:'', priorExp:'', riskProfile:'', refSource:'',
+};
+
+function val(id){ return (document.getElementById(id)||{}).value||''; }
+function setVal(id,v){ const el=document.getElementById(id); if(el) el.value=v; }
+
+const LABELS = { type:'Goal', you:'About you', prop:'Property', budget:'Budget', timeline:'Timeline', confirm:'Review' };
+
+function renderLabels(){
+  const wrap = document.getElementById('prog-labels');
+  wrap.innerHTML = STEPS.map((s,i)=>`<span class="progress-label ${i<cur?'done':i===cur?'active':''}">${s.label}</span>`).join('');
+}
+function renderProgress(){
+  document.getElementById('prog-fill').style.width = ((cur+1)/STEPS.length*100).toFixed(0)+'%';
+  renderLabels();
+}
+
+function nav(dir){
+  if(dir>0 && !validate()) return;
+  if(dir>0) save();
+  cur = Math.max(0, Math.min(STEPS.length-1, cur+dir));
+  renderProgress();
+  render();
+}
+
+function save(){
+  const id = STEPS[cur].id;
+  if(id==='type'){ data.type=data.type; }
+  if(id==='you'){
+    data.fullName=val('fullName'); data.preferred=val('preferred');
+    data.email=val('email'); data.phone=val('phone');
+    data.location=val('location'); data.nationality=val('nationality');
+  }
+  if(id==='prop'){
+    data.propType=val('propType'); data.bedrooms=val('bedrooms');
+    data.size=val('size'); data.dealBreakers=val('dealBreakers');
+  }
+  if(id==='budget'){
+    data.currency=val('currency'); data.budgetMin=val('budgetMin');
+    data.budgetMax=val('budgetMax'); data.fundsSource=val('fundsSource');
+    data.mortgage=val('mortgage');
+  }
+  if(id==='timeline'){
+    data.targetDate=val('targetDate'); data.decisionSpeed=val('decisionSpeed');
+    data.deciders=val('deciders'); data.priorExp=val('priorExp');
+    data.riskProfile=val('riskProfile'); data.refSource=val('refSource');
+  }
+}
+
+function validate(){
+  let ok = true;
+  const id = STEPS[cur].id;
+  const showErr = (fid, msg) => {
+    const el = document.getElementById(fid);
+    if(el){ el.classList.add('invalid'); }
+    const err = document.getElementById('err-'+fid);
+    if(err){ err.textContent=msg; err.classList.add('show'); }
+    ok = false;
+  };
+  const clearErrs = () => {
+    document.querySelectorAll('.invalid').forEach(e=>e.classList.remove('invalid'));
+    document.querySelectorAll('.err.show').forEach(e=>e.classList.remove('show'));
+  };
+  clearErrs();
+  if(id==='type'){
+    if(!data.type){ ok=false; document.getElementById('type-err').style.display='block'; }
+    else document.getElementById('type-err').style.display='none';
+  }
+  if(id==='you'){
+    if(!val('fullName').trim()) showErr('fullName','Full name is required');
+    if(!val('email').includes('@')) showErr('email','Please enter a valid email address');
+    if(!val('phone').trim()) showErr('phone','Phone number is required');
+    if(!val('location')) showErr('location','Please select your current location');
+  }
+  if(id==='prop'){
+    if(!val('propType')) showErr('propType','Please select a property type');
+    if(data.areas.length===0){ ok=false; document.getElementById('area-err').style.display='block'; }
+    else document.getElementById('area-err').style.display='none';
+  }
+  if(id==='budget'){
+    if(!val('budgetMin').trim()) showErr('budgetMin','Minimum budget is required');
+    if(!val('fundsSource')) showErr('fundsSource','Please select source of funds');
+  }
+  return ok;
+}
+
+function chipToggle(arr, val, elId){
+  const i = arr.indexOf(val);
+  if(i>-1) arr.splice(i,1); else arr.push(val);
+  document.querySelectorAll(`#${elId} .chip`).forEach(c=>{
+    c.classList.toggle('selected', arr.includes(c.dataset.val));
+  });
+}
+
+function radioSelect(field, val, groupEl){
+  data[field] = val;
+  document.querySelectorAll(`#${groupEl} .radio-item`).forEach(r=>{
+    r.classList.toggle('selected', r.dataset.val===val);
+  });
+}
+
+function typeSelect(t){
+  data.type = t;
+  document.querySelectorAll('.type-card').forEach(c=>{
+    c.classList.toggle('selected', c.dataset.type===t);
+  });
+  document.getElementById('type-err').style.display='none';
+  const purposeWrap = document.getElementById('purpose-wrap');
+  if(purposeWrap){
+    const opts = t==='rent' ? ['Personal home','Short-term stay','Temporary relocation','Corporate housing'] :
+                 t==='buy'  ? ['Owner-occupied home','Investment / rental yield','Capital appreciation','Land banking'] :
+                              ['Business premises','Office space','Retail / commercial','Warehouse / industrial'];
+    document.getElementById('purpose-chips').innerHTML = opts.map(o=>`<span class="chip ${data.purpose===o?'selected':''}" data-val="${o}" onclick="data.purpose=this.dataset.val;document.querySelectorAll('#purpose-chips .chip').forEach(c=>c.classList.toggle('selected',c.dataset.val===data.purpose))">${o}</span>`).join('');
+    purposeWrap.style.display = 'flex';
+  }
+}
+
+function render(){
+  const id = STEPS[cur].id;
+  const card = document.getElementById('step-card');
+
+  const nav_html = (backLabel='Back', nextLabel='Continue') => `
+    <div class="nav-row">
+      ${cur>0?`<button class="nav-back" onclick="nav(-1)">${backLabel}</button>`:'<span></span>'}
+      <span class="step-count">${cur+1} of ${STEPS.length}</span>
+      <button class="nav-next" onclick="nav(1)">${nextLabel}</button>
+    </div>`;
+
+  if(id==='type'){
+    card.innerHTML = `
+      <div class="step-header">
+        <div class="step-number">Step 1 of 6</div>
+        <div class="step-title">What are you looking to do?</div>
+        <div class="step-sub">This determines the questions we ask. You can always change it.</div>
+      </div>
+      <div class="type-grid">
+        <div class="type-card ${data.type==='rent'?'selected':''}" data-type="rent" onclick="typeSelect('rent')">
+          <div class="type-icon" style="background:#E8EBF5">
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><rect x="2" y="6" width="14" height="10" rx="1.5" stroke="#1B2A6B" stroke-width="1.4"/><path d="M6 6V4.5A3 3 0 0 1 12 4.5V6" stroke="#1B2A6B" stroke-width="1.4" stroke-linecap="round"/></svg>
+          </div>
+          <div class="type-name">Rent</div>
+          <div class="type-desc">Residential or short-term rental</div>
+        </div>
+        <div class="type-card ${data.type==='buy'?'selected':''}" data-type="buy" onclick="typeSelect('buy')">
+          <div class="type-icon" style="background:#E8EBF5">
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M9 2L2 7v9h5v-4h4v4h5V7L9 2Z" stroke="#1B2A6B" stroke-width="1.4" stroke-linejoin="round"/></svg>
+          </div>
+          <div class="type-name">Buy</div>
+          <div class="type-desc">Purchase a residential or investment property</div>
+        </div>
+        <div class="type-card ${data.type==='lease'?'selected':''}" data-type="lease" onclick="typeSelect('lease')">
+          <div class="type-icon" style="background:#E8EBF5">
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><rect x="2" y="3" width="14" height="12" rx="1.5" stroke="#1B2A6B" stroke-width="1.4"/><path d="M5 7h8M5 11h5" stroke="#1B2A6B" stroke-width="1.4" stroke-linecap="round"/></svg>
+          </div>
+          <div class="type-name">Lease</div>
+          <div class="type-desc">Commercial lease or long-term agreement</div>
+        </div>
+      </div>
+      <div id="type-err" style="display:none;font-size:12px;color:var(--color-text-danger);margin-top:10px">Please select what you are looking to do.</div>
+
+      <div id="purpose-wrap" style="display:${data.type?'flex':'none'};flex-direction:column;gap:6px;margin-top:20px">
+        <div class="label">What is the primary purpose? <span class="req">*</span></div>
+        <div class="chip-group" id="purpose-chips">
+          ${data.type==='rent'?['Personal home','Short-term stay','Temporary relocation','Corporate housing']:
+            data.type==='buy'?['Owner-occupied home','Investment / rental yield','Capital appreciation','Land banking']:
+            ['Business premises','Office space','Retail / commercial','Warehouse / industrial']}
+        </div>
+      </div>
+      ${nav_html('','Continue')}`;
+    if(data.type) typeSelect(data.type);
+
+  } else if(id==='you'){
+    card.innerHTML = `
+      <div class="step-header">
+        <div class="step-number">Step 2 of 6</div>
+        <div class="step-title">Tell us about yourself</div>
+        <div class="step-sub">This stays strictly confidential — it helps your advisor understand your situation from the first call.</div>
+      </div>
+      <div class="field-group">
+        <div class="field-row">
+          <div class="field">
+            <label class="label" for="fullName">Full legal name <span class="req">*</span></label>
+            <input type="text" id="fullName" placeholder="As on your ID" value="${data.fullName}">
+            <div class="err" id="err-fullName"></div>
+          </div>
+          <div class="field">
+            <label class="label" for="preferred">Preferred name</label>
+            <input type="text" id="preferred" placeholder="What should we call you?" value="${data.preferred}">
+          </div>
+        </div>
+        <div class="field">
+          <label class="label" for="email">Email address <span class="req">*</span></label>
+          <input type="email" id="email" placeholder="you@email.com" value="${data.email}">
+          <div class="err" id="err-email"></div>
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label class="label" for="phone">Phone / WhatsApp <span class="req">*</span></label>
+            <input type="tel" id="phone" placeholder="+234 or country code" value="${data.phone}">
+            <div class="err" id="err-phone"></div>
+          </div>
+          <div class="field">
+            <label class="label" for="nationality">Nationality</label>
+            <input type="text" id="nationality" placeholder="e.g. Nigerian" value="${data.nationality}">
+          </div>
+        </div>
+        <div class="field">
+          <label class="label" for="location">Where are you currently based? <span class="req">*</span></label>
+          <select id="location">
+            <option value="">Select location...</option>
+            <option value="Lagos" ${data.location==='Lagos'?'selected':''}>Lagos, Nigeria</option>
+            <option value="Abuja" ${data.location==='Abuja'?'selected':''}>Abuja, Nigeria</option>
+            <option value="Nigeria-other" ${data.location==='Nigeria-other'?'selected':''}>Other city in Nigeria</option>
+            <option value="UK" ${data.location==='UK'?'selected':''}>United Kingdom</option>
+            <option value="USA" ${data.location==='USA'?'selected':''}>United States</option>
+            <option value="Canada" ${data.location==='Canada'?'selected':''}>Canada</option>
+            <option value="Europe" ${data.location==='Europe'?'selected':''}>Europe (other)</option>
+            <option value="Other" ${data.location==='Other'?'selected':''}>Other country</option>
+          </select>
+          <div class="err" id="err-location"></div>
+          <div class="hint">Diaspora clients: we offer dedicated remote advisory packages.</div>
+        </div>
+      </div>
+      ${nav_html()}`;
+
+  } else if(id==='prop'){
+    const areas = ['Lekki Phase 1','Lekki Phase 2','Victoria Island','Ikoyi','Ajah / Sangotedo','Ikeja GRA','Yaba / Surulere','Gbagada','Magodo','Banana Island','Chevron Drive','Epe','Open to advice'];
+    const mustHaveOptions = data.type==='lease'
+      ? ['Generator backup','24-hr security','Parking','Lift / elevator','Reception area','Loading bay','Flexible floor plan','Open plan']
+      : ['Gated estate','Generator backup','24-hr security','BQ / staff quarters','Parking','Swimming pool','Borehole / water','Good road access','Serviced / furnished'];
+    card.innerHTML = `
+      <div class="step-header">
+        <div class="step-number">Step 3 of 6</div>
+        <div class="step-title">Property requirements</div>
+        <div class="step-sub">Tell us exactly what you need. The more specific you are, the better we can shortlist.</div>
+      </div>
+      <div class="field-group">
+        <div class="field">
+          <div class="label">Target areas in Lagos <span class="req">*</span></div>
+          <div class="hint">Select all that work for you. We will search within these.</div>
+          <div class="chip-group" id="area-chips" style="margin-top:6px">
+            ${areas.map(a=>`<span class="chip ${data.areas.includes(a)?'selected':''}" data-val="${a}" onclick="chipToggle(data.areas,'${a}','area-chips');document.getElementById('area-err').style.display='none'">${a}</span>`).join('')}
+          </div>
+          <div id="area-err" style="display:none;font-size:12px;color:var(--color-text-danger);margin-top:6px">Please select at least one area.</div>
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label class="label" for="propType">Property type <span class="req">*</span></label>
+            <select id="propType">
+              <option value="">Select type...</option>
+              ${data.type==='lease'
+                ? '<option>Office space</option><option>Retail / shop</option><option>Warehouse</option><option>Mixed-use</option><option>Industrial unit</option><option>Entire building</option>'
+                : '<option>Flat / apartment</option><option>Terraced house</option><option>Semi-detached</option><option>Detached house</option><option>Duplex</option><option>Maisonette</option><option>Land (with plans)</option><option>New development off-plan</option>'}
+            </select>
+            <div class="err" id="err-propType"></div>
+          </div>
+          ${data.type!=='lease'?`
+          <div class="field">
+            <label class="label" for="bedrooms">Minimum bedrooms</label>
+            <select id="bedrooms">
+              <option value="" ${!data.bedrooms?'selected':''}>Any</option>
+              <option value="1" ${data.bedrooms==='1'?'selected':''}>1 bedroom</option>
+              <option value="2" ${data.bedrooms==='2'?'selected':''}>2 bedrooms</option>
+              <option value="3" ${data.bedrooms==='3'?'selected':''}>3 bedrooms</option>
+              <option value="4" ${data.bedrooms==='4'?'selected':''}>4 bedrooms</option>
+              <option value="5+" ${data.bedrooms==='5+'?'selected':''}>5+ bedrooms</option>
+            </select>
+          </div>`:`
+          <div class="field">
+            <label class="label" for="size">Floor area needed (sqm)</label>
+            <input type="text" id="size" placeholder="e.g. 200" value="${data.size}">
+          </div>`}
+        </div>
+        <div class="field">
+          <div class="label">Must-have features</div>
+          <div class="chip-group" id="mh-chips" style="margin-top:6px">
+            ${mustHaveOptions.map(m=>`<span class="chip ${data.mustHave.includes(m)?'selected':''}" data-val="${m}" onclick="chipToggle(data.mustHave,'${m}','mh-chips')">${m}</span>`).join('')}
+          </div>
+        </div>
+        <div class="field">
+          <label class="label" for="dealBreakers">Deal-breakers or hard exclusions</label>
+          <textarea id="dealBreakers" placeholder="e.g. no ground floor, no flooding-prone areas, must have C of O...">${data.dealBreakers}</textarea>
+          <div class="hint">Be as specific as possible. This protects you and saves time.</div>
+        </div>
+      </div>
+      ${nav_html()}`;
+    setVal('propType', data.propType);
+    setVal('bedrooms', data.bedrooms);
+
+  } else if(id==='budget'){
+    const isLease = data.type==='lease';
+    card.innerHTML = `
+      <div class="step-header">
+        <div class="step-number">Step 4 of 6</div>
+        <div class="step-title">Budget & financing</div>
+        <div class="step-sub">We use real transaction data, not asking prices — so your budget goes further with Terralume.</div>
+      </div>
+      <div class="info-box">
+        <div class="info-dot"></div>
+        <div class="info-text">Your budget is confidential. We use it to find the best options within your range — not to judge or rush you into anything above it.</div>
+      </div>
+      <div class="field-group" style="margin-top:16px">
+        <div class="field">
+          <div class="label">Currency</div>
+          <div class="chip-group">
+            <span class="chip ${data.currency==='NGN'?'selected':''}" onclick="data.currency='NGN';document.querySelectorAll('#cur-grp .chip').forEach(c=>c.classList.toggle('selected',c.textContent==='NGN'))">NGN</span>
+            <span class="chip ${data.currency==='USD'?'selected':''}" onclick="data.currency='USD';document.querySelectorAll('#cur-grp .chip').forEach(c=>c.classList.toggle('selected',c.textContent==='USD'))">USD</span>
+            <span class="chip ${data.currency==='GBP'?'selected':''}" onclick="data.currency='GBP';document.querySelectorAll('#cur-grp .chip').forEach(c=>c.classList.toggle('selected',c.textContent==='GBP'))">GBP</span>
+          </div>
+          <div id="cur-grp" style="display:none"></div>
+        </div>
+        <div class="field">
+          <div class="label">${isLease?'Annual rent / lease budget':'Total budget'} <span class="req">*</span></div>
+          <div class="budget-range">
+            <div class="field" style="flex:1">
+              <input type="text" id="budgetMin" placeholder="Minimum" value="${data.budgetMin}">
+              <div class="err" id="err-budgetMin"></div>
+            </div>
+            <span class="budget-sep">—</span>
+            <div class="field" style="flex:1">
+              <input type="text" id="budgetMax" placeholder="Maximum" value="${data.budgetMax}">
+            </div>
+          </div>
+          <div class="hint">${isLease?'Enter annual figures. Service charge budget can be noted in comments.':'For purchase: include all fees (legal, stamp duty, agency) — typically 5–8% above the property price.'}</div>
+        </div>
+        <div class="field">
+          <label class="label" for="fundsSource">Primary source of funds <span class="req">*</span></label>
+          <select id="fundsSource">
+            <option value="">Select source...</option>
+            <option value="Personal savings" ${data.fundsSource==='Personal savings'?'selected':''}>Personal savings</option>
+            <option value="Mortgage / bank loan" ${data.fundsSource==='Mortgage / bank loan'?'selected':''}>Mortgage / bank loan</option>
+            <option value="Diaspora remittance" ${data.fundsSource==='Diaspora remittance'?'selected':''}>Diaspora remittance / foreign earnings</option>
+            <option value="Business proceeds" ${data.fundsSource==='Business proceeds'?'selected':''}>Business proceeds / corporate funds</option>
+            <option value="Joint / partnership" ${data.fundsSource==='Joint / partnership'?'selected':''}>Joint purchase / partnership</option>
+            <option value="Inheritance / gift" ${data.fundsSource==='Inheritance / gift'?'selected':''}>Inheritance / gift</option>
+          </select>
+          <div class="err" id="err-fundsSource"></div>
+        </div>
+        ${data.type==='buy'?`
+        <div class="field">
+          <label class="label" for="mortgage">Mortgage / financing status</label>
+          <select id="mortgage">
+            <option value="">Select status...</option>
+            <option value="Pre-approved" ${data.mortgage==='Pre-approved'?'selected':''}>Pre-approval obtained</option>
+            <option value="In progress" ${data.mortgage==='In progress'?'selected':''}>Application in progress</option>
+            <option value="Self-funded" ${data.mortgage==='Self-funded'?'selected':''}>Self-funded — no mortgage needed</option>
+            <option value="Not yet started" ${data.mortgage==='Not yet started'?'selected':''}>Not yet started</option>
+          </select>
+        </div>`:''}
+        ${data.type==='rent'?`
+        <div class="warn-box">
+          <div class="warn-dot"></div>
+          <div class="warn-text">Lagos standard: most landlords require 1–2 years rent upfront. We negotiate payment structures on your behalf and will always tell you what the market actually demands.</div>
+        </div>`:''}
+      </div>
+      ${nav_html()}`;
+    setVal('fundsSource', data.fundsSource);
+    setVal('mortgage', data.mortgage);
+
+  } else if(id==='timeline'){
+    card.innerHTML = `
+      <div class="step-header">
+        <div class="step-number">Step 5 of 6</div>
+        <div class="step-title">Timeline & background</div>
+        <div class="step-sub">This helps us prioritise your search and match you with the right advisor.</div>
+      </div>
+      <div class="field-group">
+        <div class="field-row">
+          <div class="field">
+            <label class="label" for="targetDate">Target possession / move-in date</label>
+            <input type="text" id="targetDate" placeholder="e.g. July 2025, ASAP, flexible" value="${data.targetDate}">
+          </div>
+          <div class="field">
+            <label class="label" for="decisionSpeed">Decision speed once right property found</label>
+            <select id="decisionSpeed">
+              <option value="" ${!data.decisionSpeed?'selected':''}>Select...</option>
+              <option value="48hrs" ${data.decisionSpeed==='48hrs'?'selected':''}>Within 48 hours</option>
+              <option value="1week" ${data.decisionSpeed==='1week'?'selected':''}>Within 1 week</option>
+              <option value="2-4weeks" ${data.decisionSpeed==='2-4weeks'?'selected':''}>2–4 weeks</option>
+              <option value="flexible" ${data.decisionSpeed==='flexible'?'selected':''}>Flexible</option>
+            </select>
+          </div>
+        </div>
+        <div class="field">
+          <div class="label">Who else is involved in the final decision?</div>
+          <div class="radio-group" id="deciders-grp">
+            ${[['sole','Client only','I make this decision independently'],['spouse','Spouse / partner','Joint decision with a partner'],['family','Family committee','Multiple family members involved'],['partner','Business partner','Investment or co-purchase partner']].map(([v,l,s])=>`
+            <div class="radio-item ${data.deciders===v?'selected':''}" data-val="${v}" onclick="radioSelect('deciders','${v}','deciders-grp')">
+              <div class="radio-dot"><div class="radio-dot-inner"></div></div>
+              <div><div class="radio-label">${l}</div><div class="radio-sub">${s}</div></div>
+            </div>`).join('')}
+          </div>
+        </div>
+        <div class="field">
+          <label class="label" for="priorExp">Prior Lagos property experience</label>
+          <select id="priorExp">
+            <option value="" ${!data.priorExp?'selected':''}>Select...</option>
+            <option value="first-time" ${data.priorExp==='first-time'?'selected':''}>First time — I have never done this before</option>
+            <option value="smooth" ${data.priorExp==='smooth'?'selected':''}>Yes — went smoothly</option>
+            <option value="problems" ${data.priorExp==='problems'?'selected':''}>Yes — encountered problems</option>
+            <option value="abroad-only" ${data.priorExp==='abroad-only'?'selected':''}>Only bought/rented abroad, not in Nigeria</option>
+          </select>
+          <div class="hint">If you encountered problems before, please share briefly in your comments. It helps us protect you.</div>
+        </div>
+        ${data.type==='buy'?`
+        <div class="field">
+          <div class="label">Investment risk profile</div>
+          <div class="radio-group" id="risk-grp">
+            ${[['conservative','Conservative — capital preservation first','Protect what I have. Slow and safe.'],['moderate','Moderate — balanced growth','Good yield with manageable risk.'],['aggressive','Growth-focused — high yield','I can tolerate more risk for better returns.']].map(([v,l,s])=>`
+            <div class="radio-item ${data.riskProfile===v?'selected':''}" data-val="${v}" onclick="radioSelect('riskProfile','${v}','risk-grp')">
+              <div class="radio-dot"><div class="radio-dot-inner"></div></div>
+              <div><div class="radio-label">${l}</div><div class="radio-sub">${s}</div></div>
+            </div>`).join('')}
+          </div>
+        </div>`:''}
+        <div class="field">
+          <label class="label" for="refSource">How did you hear about Terralume?</label>
+          <select id="refSource">
+            <option value="">Select...</option>
+            <option value="Referral" ${data.refSource==='Referral'?'selected':''}>Personal referral</option>
+            <option value="LinkedIn" ${data.refSource==='LinkedIn'?'selected':''}>LinkedIn</option>
+            <option value="Instagram" ${data.refSource==='Instagram'?'selected':''}>Instagram</option>
+            <option value="Google" ${data.refSource==='Google'?'selected':''}>Google search</option>
+            <option value="WhatsApp" ${data.refSource==='WhatsApp'?'selected':''}>WhatsApp</option>
+            <option value="Event" ${data.refSource==='Event'?'selected':''}>Event or speaking</option>
+            <option value="Other" ${data.refSource==='Other'?'selected':''}>Other</option>
+          </select>
+        </div>
+      </div>
+      ${nav_html()}`;
+    setVal('targetDate', data.targetDate);
+    setVal('decisionSpeed', data.decisionSpeed);
+    setVal('priorExp', data.priorExp);
+    setVal('refSource', data.refSource);
+
+  } else if(id==='confirm'){
+    const typeLabel = data.type==='rent'?'Rental':data.type==='buy'?'Purchase':'Commercial lease';
+    const fmt = v => v||'<span class="summary-val empty">Not provided</span>';
+    card.innerHTML = `
+      <div class="step-header">
+        <div class="step-number">Step 6 of 6</div>
+        <div class="step-title">Review & submit</div>
+        <div class="step-sub">Check your details before submitting. Your advisor will call within 48 hours.</div>
+      </div>
+
+      <div style="margin-bottom:16px">
+        <div style="font-size:12px;font-weight:500;color:var(--color-text-tertiary);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px">Your brief</div>
+        <div class="summary-grid">
+          <div class="summary-item"><div class="summary-key">Transaction type</div><div class="summary-val">${typeLabel}</div></div>
+          <div class="summary-item"><div class="summary-key">Purpose</div><div class="summary-val">${data.purpose||'<span class="summary-val empty">Not specified</span>'}</div></div>
+          <div class="summary-item"><div class="summary-key">Name</div><div class="summary-val">${data.fullName||'<span class="summary-val empty">Not provided</span>'}</div></div>
+          <div class="summary-item"><div class="summary-key">Based in</div><div class="summary-val">${data.location||'<span class="summary-val empty">Not provided</span>'}</div></div>
+          <div class="summary-item"><div class="summary-key">Areas</div><div class="summary-val">${data.areas.length?data.areas.join(', '):'<span class="summary-val empty">None selected</span>'}</div></div>
+          <div class="summary-item"><div class="summary-key">Property type</div><div class="summary-val">${data.propType||'<span class="summary-val empty">Not selected</span>'}</div></div>
+          <div class="summary-item"><div class="summary-key">Budget range</div><div class="summary-val">${data.budgetMin&&data.budgetMax?data.currency+' '+data.budgetMin+' – '+data.budgetMax:data.budgetMin?data.currency+' '+data.budgetMin+'+':'<span class="summary-val empty">Not provided</span>'}</div></div>
+          <div class="summary-item"><div class="summary-key">Target date</div><div class="summary-val">${data.targetDate||'<span class="summary-val empty">Flexible</span>'}</div></div>
+        </div>
+      </div>
+
+      <div class="info-box" style="margin-bottom:16px">
+        <div class="info-dot"></div>
+        <div class="info-text"><strong>What happens next:</strong> A Terralume advisor will review your brief and contact you within 48 hours to schedule your 30–45 minute discovery call. We will confirm your reference number by email immediately after submission.</div>
+      </div>
+
+      <div class="field" style="margin-bottom:16px">
+        <label style="display:flex;align-items:flex-start;gap:10px;cursor:pointer;font-size:13px;color:var(--color-text-secondary);line-height:1.5">
+          <input type="checkbox" id="consent" style="margin-top:2px;width:15px;height:15px;flex-shrink:0">
+          I confirm the information provided is accurate and I consent to Terralume Ltd processing my personal data for the purpose of providing advisory services, in accordance with the Nigeria Data Protection Regulation (NDPR).
+        </label>
+        <div class="err" id="err-consent"></div>
+      </div>
+
+      <div class="nav-row">
+        <button class="nav-back" onclick="nav(-1)">Back</button>
+        <span class="step-count">${cur+1} of ${STEPS.length}</span>
+        <button class="nav-next" onclick="submitForm()">Submit enquiry</button>
+      </div>`;
+  }
+}
+
+function submitForm(){
+  const consent = document.getElementById('consent');
+  if(!consent||!consent.checked){
+    const err=document.getElementById('err-consent');
+    if(err){err.textContent='Please confirm your consent to proceed.';err.classList.add('show');}
+    return;
+  }
+  const ref = 'TL-'+new Date().getFullYear()+'-'+String(Math.floor(Math.random()*9000)+1000);
+  const card = document.getElementById('step-card');
+  card.innerHTML = `
+    <div class="success-screen">
+      <div class="success-icon">
+        <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+          <circle cx="14" cy="14" r="13" stroke="#1B2A6B" stroke-width="1.5"/>
+          <path d="M8 14l4 4 8-8" stroke="#1B2A6B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div class="success-title">Enquiry received</div>
+      <div class="success-sub">Thank you, ${data.preferred||data.fullName.split(' ')[0]||'there'}. Your brief is with us. A Terralume advisor will contact you within 48 hours to schedule your discovery call.</div>
+      <div class="ref-badge">Your reference: ${ref}</div>
+      <div style="font-size:13px;color:var(--color-text-secondary);margin-bottom:16px">A confirmation has been sent to <strong>${data.email}</strong></div>
+      <div style="font-size:12px;color:var(--color-text-tertiary);line-height:1.6">Questions before your call?<br>WhatsApp us: <strong>+234 XXX XXXX XXX</strong></div>
+    </div>`;
+  document.getElementById('prog-fill').style.width='100%';
+  document.querySelectorAll('.progress-label').forEach(l=>l.classList.add('done'));
+}
+
+renderProgress();
+render();
+</script>

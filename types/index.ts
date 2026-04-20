@@ -19,22 +19,22 @@ export interface User {
   role: Role;
   createdAt: Date;
   lastLogin: Date | null;
-}
-
-export interface Client {
-  id: string;
-  userId: string;
-  fullName: string;
+  // Profile — all roles
+  fullName: string | null;
+  preferredName: string | null;
   phone: string | null;
+  photoUrl: string | null;
+  // Client-only (nullable for PM/ADMIN)
   nationality: string | null;
   location: string | null;
   idType: string | null;
   idNumber: string | null;
+  onboardingComplete: boolean;
 }
 
 export interface Enquiry {
   id: string;
-  clientId: string;
+  userId: string;
   source: string | null;
   transactionType: string | null;
   brief: string | null;
@@ -45,7 +45,7 @@ export interface Enquiry {
 
 export interface Engagement {
   id: string;
-  clientId: string;
+  userId: string;
   pmId: string | null;
   serviceTier: string | null;
   stage: string;
@@ -53,6 +53,23 @@ export interface Engagement {
   targetDate: Date | null;
   status: string;
 }
+
+export interface PendingAction {
+  id: string;
+  engagementId: string;
+  title: string;
+  type: PendingActionType;
+  dueDate: Date | null;
+  completedAt: Date | null;
+  createdAt: Date;
+}
+
+export type PendingActionType =
+  | "SIGN_DOCUMENT"
+  | "APPROVE_SHORTLIST"
+  | "CONFIRM_VISIT"
+  | "CONFIRM_BRIEF"
+  | "OTHER";
 
 export interface Document {
   id: string;
@@ -70,6 +87,7 @@ export interface Update {
   engagementId: string;
   pmId: string;
   content: string;
+  nextSteps: string | null;
   publishedAt: Date | null;
   draft: boolean;
 }
@@ -133,10 +151,38 @@ export interface ApiError {
   error: string;
 }
 
+// ─── Portal / Dashboard Types ────────────────────────────────────────────────
+
+export type EngagementStage =
+  | "discovery"
+  | "brief_confirmation"
+  | "area_shortlisting"
+  | "property_search"
+  | "due_diligence"
+  | "offer_negotiation"
+  | "legal_completion"
+  | "handover";
+
+export interface PMProfile {
+  id: string;
+  fullName: string | null;
+  email: string;
+  phone: string | null;
+  photoUrl: string | null;
+}
+
+export interface DashboardData {
+  engagement: Engagement;
+  latestUpdate: Update | null;
+  pendingActions: PendingAction[];
+  pm: PMProfile | null;
+}
+
+// ─── API Response Types ───────────────────────────────────────────────────────
+
 export interface SignupResponse {
   message: string;
   user: Pick<User, "id" | "email" | "role">;
-  clientId: string;
 }
 
 export interface LoginResponse {

@@ -37,46 +37,61 @@ enum PaymentProvider {
   OTHER
 }
 
+enum ArticleCategory {
+  PRICE_DATA
+  LEGAL_GUIDES
+  AREA_ANALYSIS
+  FRAUD_WARNINGS
+  HOW_TO_GUIDES
+}
+
+enum IntakeStatus {
+  PENDING
+  REVIEWING
+  ACTIVE
+  CLOSED
+}
+
 // ─── Models ──────────────────────────────────────────────────────────────────
 
 model User {
   /// Maps to auth.users.id in Supabase — UUID stored as String
-  id            String    @id @db.Uuid
-  email         String    @unique
-  role          Role      @default(CLIENT)
-  createdAt     DateTime  @default(now()) @map("created_at")
-  lastLogin     DateTime? @map("last_login")
+  id                 String    @id @db.Uuid
+  email              String    @unique
+  role               Role      @default(CLIENT)
+  createdAt          DateTime  @default(now()) @map("created_at")
+  lastLogin          DateTime? @map("last_login")
+
+  // Profile — shared across all roles
+  fullName           String?   @map("full_name")
+  preferredName      String?   @map("preferred_name")
+  phone              String?
+  photoUrl           String?   @map("photo_url")
+
+  // Client-only fields (nullable; only populated when role = CLIENT)
+  nationality        String?
+  location           String?
+  idType             String?   @map("id_type")
+  idNumber           String?   @map("id_number")
+  onboardingComplete Boolean   @default(false) @map("onboarding_complete")
 
   // Relations
-  client        Client?
-  notifications Notification[]
-  auditLogs     AuditLog[]
-  sentMessages  Message[]      @relation("SentMessages")
-  updates       Update[]
+  enquiries          Enquiry[]
+  engagements        Engagement[]
+  notifications      Notification[]
+  auditLogs          AuditLog[]
+  sentMessages       Message[]      @relation("SentMessages")
+  updates            Update[]
+  articles           Article[]
+  intakeSubmissions  IntakeSubmission[]
+  assignedIntakes    IntakeSubmission[] @relation("IntakePm")
 
   @@map("users")
 }
 
-model Client {
-  id          String  @id @default(cuid())
-  userId      String  @unique @map("user_id") @db.Uuid
-  fullName    String  @map("full_name")
-  phone       String?
-  nationality String?
-  location    String?
-  idType      String? @map("id_type")
-  idNumber    String? @map("id_number")
-
-  user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
-  enquiries   Enquiry[]
-  engagements Engagement[]
-
-  @@map("clients")
-}
-
 model Enquiry {
   id              String   @id @default(cuid())
-  clientId        String   @map("client_id")
+  userId          String   @map("user_id") @db.Uuid
   source          String?
   transactionType String?  @map("transaction_type")
   brief           String?
@@ -84,29 +99,44 @@ model Enquiry {
   assignedAdvisor String?  @map("assigned_advisor")
   createdAt       DateTime @default(now()) @map("created_at")
 
-  client Client @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("enquiries")
 }
 
 model Engagement {
-  id          String    @id @default(cuid())
-  clientId    String    @map("client_id")
-  pmId        String?   @map("pm_id") @db.Uuid
-  serviceTier String?   @map("service_tier")
-  stage       String    @default("discovery")
-  startDate   DateTime? @map("start_date")
-  targetDate  DateTime? @map("target_date")
-  status      String    @default("active")
+  id             String    @id @default(cuid())
+  userId         String    @map("user_id") @db.Uuid
+  pmId           String?   @map("pm_id") @db.Uuid
+  serviceTier    String?   @map("service_tier")
+  stage          String    @default("discovery")
+  startDate      DateTime? @map("start_date")
+  targetDate     DateTime? @map("target_date")
+  status         String    @default("active")
 
-  client      Client     @relation(fields: [clientId], references: [id], onDelete: Cascade)
-  documents   Document[]
-  updates     Update[]
-  messages    Message[]
-  properties  Property[]
-  payments    Payment[]
+  user           User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  documents      Document[]
+  updates        Update[]
+  messages       Message[]
+  properties     Property[]
+  payments       Payment[]
+  pendingActions PendingAction[]
 
   @@map("engagements")
+}
+
+model PendingAction {
+  id           String    @id @default(cuid())
+  engagementId String    @map("engagement_id")
+  title        String
+  type         String    @default("OTHER")
+  dueDate      DateTime? @map("due_date")
+  completedAt  DateTime? @map("completed_at")
+  createdAt    DateTime  @default(now()) @map("created_at")
+
+  engagement Engagement @relation(fields: [engagementId], references: [id], onDelete: Cascade)
+
+  @@map("pending_actions")
 }
 
 model Document {
@@ -125,12 +155,13 @@ model Document {
 }
 
 model Update {
-  id           String   @id @default(cuid())
-  engagementId String   @map("engagement_id")
-  pmId         String   @map("pm_id") @db.Uuid
+  id           String    @id @default(cuid())
+  engagementId String    @map("engagement_id")
+  pmId         String    @map("pm_id") @db.Uuid
   content      String
+  nextSteps    String?   @map("next_steps")
   publishedAt  DateTime? @map("published_at")
-  draft        Boolean  @default(true)
+  draft        Boolean   @default(true)
 
   engagement Engagement @relation(fields: [engagementId], references: [id], onDelete: Cascade)
   pm         User       @relation(fields: [pmId], references: [id])
@@ -210,4 +241,85 @@ model AuditLog {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("audit_log")
+}
+
+model Article {
+  id          String          @id @default(cuid())
+  slug        String          @unique
+  title       String
+  excerpt     String
+  authorId    String          @map("author_id") @db.Uuid
+  author      User            @relation(fields: [authorId], references: [id])
+  publishedAt DateTime        @map("published_at")
+  readTime    Int             @map("read_time")
+  category    ArticleCategory
+  image       String
+  featured    Boolean         @default(false)
+  body        String?
+  published   Boolean         @default(true)
+  createdAt   DateTime        @default(now()) @map("created_at")
+  updatedAt   DateTime        @updatedAt @map("updated_at")
+
+  @@map("articles")
+}
+
+model IntakeSubmission {
+  id                String       @id @default(cuid())
+  referenceNumber   String       @unique @map("reference_number")
+  status            IntakeStatus @default(PENDING)
+
+  // Optional link to a user account (created on submit)
+  userId            String?      @map("user_id") @db.Uuid
+  user              User?        @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  // Assigned PM
+  assignedPmId      String?      @map("assigned_pm_id") @db.Uuid
+  assignedPm        User?        @relation("IntakePm", fields: [assignedPmId], references: [id], onDelete: SetNull)
+
+  // PM change request from client
+  pmChangeRequested Boolean      @default(false) @map("pm_change_requested")
+  pmChangeReason    String?      @map("pm_change_reason")
+
+  // Step 1 — Goal
+  transactionType   String       @map("transaction_type")
+  purpose           String?
+
+  // Step 2 — About you
+  fullName          String       @map("full_name")
+  preferredName     String?      @map("preferred_name")
+  email             String
+  phone             String
+  location          String
+  nationality       String?
+
+  // Step 3 — Property
+  targetAreas       String[]     @map("target_areas")
+  propertyType      String?      @map("property_type")
+  bedrooms          String?
+  floorAreaSqm      String?      @map("floor_area_sqm")
+  mustHaves         String[]     @map("must_haves")
+  dealBreakers      String?      @map("deal_breakers")
+
+  // Step 4 — Budget
+  currency          String       @default("NGN")
+  budgetMin         String?      @map("budget_min")
+  budgetMax         String?      @map("budget_max")
+  sourceOfFunds     String?      @map("source_of_funds")
+  mortgageStatus    String?      @map("mortgage_status")
+
+  // Step 5 — Timeline & background
+  targetDate        String?      @map("target_date")
+  decisionSpeed     String?      @map("decision_speed")
+  decisionMakers    String?      @map("decision_makers")
+  priorExperience   String?      @map("prior_experience")
+  riskProfile       String?      @map("risk_profile")
+  referralSource    String?      @map("referral_source")
+
+  // Consent
+  dataConsent       Boolean      @default(false) @map("data_consent")
+
+  createdAt         DateTime     @default(now()) @map("created_at")
+  updatedAt         DateTime     @updatedAt @map("updated_at")
+
+  @@map("intake_submissions")
 }

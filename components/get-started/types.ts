@@ -1,108 +1,93 @@
 export interface FormData {
-  // Step 1 — About you
+  // Step 1 — Goal
+  transactionType: string; // rent | buy | lease
+  purpose: string;
+
+  // Step 2 — About you
   fullName: string;
   preferredName: string;
-  countryCode: string;
-  phone: string;
   email: string;
-  location: string;
+  phone: string;
   nationality: string;
+  location: string;
 
-  // Step 2 — Your goal
-  transactionType: string;
-  primaryPurpose: string;
-  purposeOther: string;
-
-  // Step 3 — Budget
-  budgetRange: string;
-  budgetNote: string;
-  currency: string;
-  sourceOfFunds: string;
-  mortgageStatus: string;
-
-  // Step 4 — Property
-  locationPreferences: string[];
+  // Step 3 — Property
+  targetAreas: string[];
   propertyType: string;
-  bedrooms: string;
-  sizeMin: string;
-  sizeMax: string;
+  bedrooms: string; // non-lease only
+  floorAreaSqm: string; // lease only
   mustHaves: string[];
   dealBreakers: string;
 
-  // Step 5 — Timeline
+  // Step 4 — Budget
+  currency: string; // NGN | USD | GBP
+  budgetMin: string;
+  budgetMax: string;
+  sourceOfFunds: string;
+  mortgageStatus: string; // buy only
+
+  // Step 5 — Timeline & background
   targetDate: string;
   decisionSpeed: string;
-  otherDecisionMakers: string;
-
-  // Step 6 — Background
+  decisionMakers: string; // sole | spouse | family | partner
   priorExperience: string;
-  riskTolerance: string;
+  riskProfile: string; // buy only
   referralSource: string;
-  referralDetail: string;
 
-  // Step 7 — Confirmation
+  // Step 6 — Review / consent
   dataConsent: boolean;
-  marketingConsent: boolean;
 }
 
 export const INITIAL_FORM_DATA: FormData = {
+  transactionType: "",
+  purpose: "",
+
   fullName: "",
   preferredName: "",
-  countryCode: "+234",
-  phone: "",
   email: "",
-  location: "",
+  phone: "",
   nationality: "",
+  location: "",
 
-  transactionType: "",
-  primaryPurpose: "",
-  purposeOther: "",
-
-  budgetRange: "",
-  budgetNote: "",
-  currency: "NGN (₦)",
-  sourceOfFunds: "",
-  mortgageStatus: "",
-
-  locationPreferences: [],
+  targetAreas: [],
   propertyType: "",
   bedrooms: "",
-  sizeMin: "",
-  sizeMax: "",
+  floorAreaSqm: "",
   mustHaves: [],
   dealBreakers: "",
 
+  currency: "NGN",
+  budgetMin: "",
+  budgetMax: "",
+  sourceOfFunds: "",
+  mortgageStatus: "",
+
   targetDate: "",
   decisionSpeed: "",
-  otherDecisionMakers: "",
-
+  decisionMakers: "",
   priorExperience: "",
-  riskTolerance: "",
+  riskProfile: "",
   referralSource: "",
-  referralDetail: "",
 
   dataConsent: false,
-  marketingConsent: false,
 };
 
-export const TOTAL_STEPS = 7;
+export const TOTAL_STEPS = 6;
 
 export const STEP_LABELS = [
+  "Goal",
   "About you",
-  "Your goal",
-  "Budget",
   "Property",
+  "Budget",
   "Timeline",
-  "Background",
-  "Confirmation",
+  "Review",
 ] as const;
 
 export const STEP_DESCRIPTIONS: Record<number, string> = {
-  1: "Basic contact details — so we know who we're talking to.",
-  2: "Tell us the nature and purpose of your transaction.",
-  3: "Budget information helps us shortlist appropriate properties and advisory packages.",
-  4: "Define the property you're looking for. Be as specific or open as you like.",
-  5: "Understanding your timing helps us prioritise and resource your advisory correctly.",
-  6: "A brief background helps your advisor calibrate their approach for you.",
-  7: "Review your answers before submitting. You can go back to edit any section.",
+  1: "This determines the questions we ask. You can always change it.",
+  2: "This stays strictly confidential — it helps your advisor understand your situation from the first call.",
+  3: "Tell us exactly what you need. The more specific you are, the better we can shortlist.",
+  4: "Your budget is confidential. We use it to find the best options within your range.",
+  5: "This helps us prioritise your search and match you with the right advisor.",
+  6: "Check your details before submitting. Your advisor will call within 48 hours.",
 };

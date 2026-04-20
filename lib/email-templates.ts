@@ -196,3 +196,130 @@ export function welcomeEmailHtml({
     </div>
   `;
 }
+
+export function consultationConfirmationEmailHtml({
+  clientName,
+}: {
+  clientName: string;
+}): string {
+  return `
+    <div style="${BASE_STYLE}">
+      <div style="${CARD_STYLE}">
+        <p style="margin:0 0 24px 0;">${LOGO}</p>
+        <h1 style="${HEADING_STYLE}">We've received your request</h1>
+        <p style="${BODY_STYLE}">Hi ${clientName}, thank you for reaching out to Terralume.</p>
+        <p style="${BODY_STYLE}">A member of our team will be in touch within <strong>12–24 hours</strong> to schedule your free consultation. During the call, we'll discuss your objectives, walk you through our service structure, and help determine the best path forward.</p>
+        <div style="background:#eef0f8;border-radius:8px;padding:16px;margin:16px 0;">
+          <p style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#5f5e5a;margin:0 0 8px 0;">What to expect</p>
+          <p style="${BODY_STYLE}margin:0 0 4px 0;">→ PM assigned within 12–24 hours</p>
+          <p style="${BODY_STYLE}margin:0 0 4px 0;">→ Calendar link sent to schedule your free consultation</p>
+          <p style="${BODY_STYLE}margin:0;">→ No commitment required — the consultation is entirely free</p>
+        </div>
+        <p style="${BODY_STYLE}">In the meantime, feel free to explore our <a href="https://terralume.com/how-it-works" style="color:#111d4e;font-weight:600;">how it works</a> page for more detail.</p>
+        ${FOOTER}
+      </div>
+    </div>
+  `;
+}
+
+export function internalLeadAlertEmailHtml({
+  fullName,
+  phone,
+  email,
+  location,
+  interestType,
+}: {
+  fullName: string;
+  phone: string;
+  email: string;
+  location?: string | null;
+  interestType?: string | null;
+}): string {
+  const interestLabel = interestType
+    ? interestType.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase())
+    : "Not specified";
+
+  return `
+    <div style="${BASE_STYLE}">
+      <div style="${CARD_STYLE}">
+        <p style="margin:0 0 24px 0;">${LOGO}</p>
+        <h1 style="${HEADING_STYLE}">New consultation request</h1>
+        <p style="${BODY_STYLE}">A new lead has submitted a free consultation request on the website.</p>
+        <div style="background:#f9fafb;border:1px solid #d3d1c7;border-radius:8px;padding:16px;margin:16px 0;">
+          <p style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#5f5e5a;margin:0 0 12px 0;">Lead details</p>
+          <p style="${BODY_STYLE}margin:0 0 6px 0;"><strong>Name:</strong> ${fullName}</p>
+          <p style="${BODY_STYLE}margin:0 0 6px 0;"><strong>Phone:</strong> ${phone}</p>
+          <p style="${BODY_STYLE}margin:0 0 6px 0;"><strong>Email:</strong> ${email}</p>
+          <p style="${BODY_STYLE}margin:0 0 6px 0;"><strong>Location:</strong> ${location ?? "Not provided"}</p>
+          <p style="${BODY_STYLE}margin:0;"><strong>Interest:</strong> ${interestLabel}</p>
+        </div>
+        <a href="https://terralume.com/admin-portal/leads" style="${CTA_STYLE}">View in admin portal</a>
+        ${FOOTER}
+      </div>
+    </div>
+  `;
+}
+
+export function calendarInvitationEmailHtml({
+  clientName,
+  pmName,
+  calendarUrl,
+}: {
+  clientName: string;
+  pmName: string;
+  calendarUrl: string;
+}): string {
+  return `
+    <div style="${BASE_STYLE}">
+      <div style="${CARD_STYLE}">
+        <p style="margin:0 0 24px 0;">${LOGO}</p>
+        <h1 style="${HEADING_STYLE}">Schedule your free consultation</h1>
+        <p style="${BODY_STYLE}">Hi ${clientName}, I'm ${pmName} — your dedicated project manager at Terralume.</p>
+        <p style="${BODY_STYLE}">I'd love to connect for your free consultation. Use the link below to pick a time that works best for you.</p>
+        <div style="text-align:center;margin:24px 0;">
+          <a href="${calendarUrl}" style="${CTA_STYLE}">Book your consultation</a>
+        </div>
+        <p style="${BODY_STYLE}">During the session we will:</p>
+        <div style="background:#f9fafb;border-radius:8px;border:1px solid #d3d1c7;padding:16px;margin:0 0 16px 0;">
+          <p style="${BODY_STYLE}margin:0 0 4px 0;">→ Understand your investment or property objective</p>
+          <p style="${BODY_STYLE}margin:0 0 4px 0;">→ Discuss budget and risk appetite</p>
+          <p style="${BODY_STYLE}margin:0 0 4px 0;">→ Explain how Terralume's structured process works</p>
+          <p style="${BODY_STYLE}margin:0;">→ Address any legal, tax, or cross-border considerations</p>
+        </div>
+        <p style="${BODY_STYLE}">No commitment required — this is completely free of charge.</p>
+        ${FOOTER}
+      </div>
+    </div>
+  `;
+}
+
+export function intakeInvitationEmailHtml({
+  clientName,
+  setupLink,
+}: {
+  clientName: string;
+  setupLink: string;
+}): string {
+  return `
+    <div style="${BASE_STYLE}">
+      <div style="${CARD_STYLE}">
+        <p style="margin:0 0 24px 0;">${LOGO}</p>
+        <h1 style="${HEADING_STYLE}">Your portal is ready — let's begin</h1>
+        <p style="${BODY_STYLE}">Hi ${clientName}, following your consultation with the Terralume team, we're pleased to invite you to complete your structured intake.</p>
+        <p style="${BODY_STYLE}">Click below to set your password and access your secure client portal where you can complete your intake form, upload documents, and message your project manager directly.</p>
+        <div style="text-align:center;margin:24px 0;">
+          <a href="${setupLink}" style="${CTA_STYLE}">Access your portal</a>
+        </div>
+        <div style="background:#eef0f8;border-radius:8px;padding:16px;margin:16px 0;">
+          <p style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#5f5e5a;margin:0 0 8px 0;">Inside your portal</p>
+          <p style="${BODY_STYLE}margin:0 0 4px 0;">→ Structured intake form (save &amp; continue at any time)</p>
+          <p style="${BODY_STYLE}margin:0 0 4px 0;">→ Secure document upload</p>
+          <p style="${BODY_STYLE}margin:0 0 4px 0;">→ Direct messaging with your project manager</p>
+          <p style="${BODY_STYLE}margin:0;">→ Deal dashboard &amp; progress tracker</p>
+        </div>
+        <p style="${BODY_STYLE}">This link expires in 7 days. If you have any questions, reply to this email or contact your project manager directly.</p>
+        ${FOOTER}
+      </div>
+    </div>
+  `;
+}

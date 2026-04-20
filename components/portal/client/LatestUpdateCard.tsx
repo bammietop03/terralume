@@ -18,11 +18,11 @@ export default function LatestUpdateCard({ update }: Props) {
   if (!update) {
     return (
       <div className="rounded-2xl border border-white/60 bg-white/80 backdrop-blur-sm shadow-[0_1px_3px_rgba(27,42,107,0.06),0_8px_24px_rgba(27,42,107,0.04)] overflow-hidden">
-        <div className="h-1 w-full bg-linear-to-r from-[--color-navy-light] to-[--color-navy-light]" />
+        <div className="h-1 w-full bg-linear-to-r from-(--color-navy-light) to-(--color-navy-light)" />
         <div className="p-6">
           <div className="flex items-center gap-3 mb-4">
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[--color-navy-light] ring-1 ring-[--color-navy]/5">
-              <FileText size={18} className="text-[--color-navy]" />
+            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-(--color-navy-light) ring-1 ring-(--color-navy)/5">
+              <FileText size={18} className="text-(--color-navy)" />
             </div>
             <h2 className="text-sm font-semibold text-on-surface">
               Latest Update
@@ -39,11 +39,11 @@ export default function LatestUpdateCard({ update }: Props) {
   return (
     <div className="rounded-2xl border border-white/60 bg-white/80 backdrop-blur-sm shadow-[0_1px_3px_rgba(27,42,107,0.06),0_8px_24px_rgba(27,42,107,0.04)] overflow-hidden">
       {/* Navy accent stripe */}
-      <div className="h-1 w-full bg-linear-to-r from-[--color-navy] to-[--color-navy-light]" />
+      <div className="h-1 w-full bg-linear-to-r from-(--color-navy) to-(--color-navy-light)" />
 
       <div className="p-6">
         <div className="flex items-center gap-3 mb-4">
-          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-linear-to-br from-[--color-navy] to-[--color-navy-dark] text-white shadow-sm ring-1 ring-black/3">
+          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-linear-to-br from-(--color-navy) to-(--color-navy-dark) text-white shadow-sm ring-1 ring-black/3">
             <FileText size={18} />
           </div>
           <div>
@@ -63,8 +63,8 @@ export default function LatestUpdateCard({ update }: Props) {
         </p>
 
         {update.nextSteps && (
-          <div className="rounded-xl bg-[--color-navy-light]/50 border border-[--color-navy]/8 p-4 shadow-sm">
-            <p className="text-xs font-semibold uppercase tracking-wide text-[--color-navy] mb-2">
+          <div className="rounded-xl bg-(--color-navy-light)/50 border border-(--color-navy)/8 p-4 shadow-sm">
+            <p className="text-xs font-semibold uppercase tracking-wide text-(--color-navy) mb-2">
               Next steps
             </p>
             <ul className="space-y-1.5">
@@ -78,7 +78,7 @@ export default function LatestUpdateCard({ update }: Props) {
                   >
                     <ChevronRight
                       size={14}
-                      className="mt-0.5 shrink-0 text-[--color-crimson]"
+                      className="mt-0.5 shrink-0 text-(--color-crimson)"
                     />
                     {step}
                   </li>

@@ -396,8 +396,8 @@ export default function UsersTable({ initialUsers, segment }: Props) {
                 <TableHead className="text-xs font-semibold text-on-surface-muted uppercase tracking-wide hidden md:table-cell">
                   Phone
                 </TableHead>
-                <TableHead className="text-xs font-semibold text-on-surface-muted uppercase tracking-wide hidden lg:table-cell text-center">
-                  Engagements
+                <TableHead className="text-xs font-semibold text-on-surface-muted uppercase tracking-wide hidden lg:table-cell">
+                  Assigned PM
                 </TableHead>
                 <TableHead className="text-xs font-semibold text-on-surface-muted uppercase tracking-wide hidden lg:table-cell">
                   Onboarded
@@ -456,13 +456,28 @@ export default function UsersTable({ initialUsers, segment }: Props) {
                     {user.phone ?? ""}
                   </TableCell>
 
-                  <TableCell className="text-center hidden lg:table-cell py-3">
-                    {user._count.engagements > 0 ? (
-                      <span className="inline-flex items-center justify-center rounded-full bg-(--color-navy-light) text-(--color-navy) text-xs font-semibold h-6 min-w-6 px-2">
-                        {user._count.engagements}
-                      </span>
+                  <TableCell className="hidden lg:table-cell py-3">
+                    {(user as any).assignedPm ? (
+                      <div className="flex items-center gap-2">
+                        <Avatar className="h-6 w-6 shrink-0">
+                          {(user as any).assignedPm.photoUrl && (
+                            <AvatarImage
+                              src={(user as any).assignedPm.photoUrl}
+                              alt={(user as any).assignedPm.fullName ?? ""}
+                            />
+                          )}
+                          <AvatarFallback className="text-[10px] font-semibold bg-(--color-navy-light) text-(--color-navy)">
+                            {initials((user as any).assignedPm.fullName, "")}
+                          </AvatarFallback>
+                        </Avatar>
+                        <span className="text-sm text-on-surface truncate max-w-28">
+                          {(user as any).assignedPm.fullName}
+                        </span>
+                      </div>
                     ) : (
-                      <span className="text-xs text-on-surface-muted">—</span>
+                      <span className="text-xs text-on-surface-muted">
+                        Unassigned
+                      </span>
                     )}
                   </TableCell>
 

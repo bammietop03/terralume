@@ -30,6 +30,10 @@ export interface User {
   idType: string | null;
   idNumber: string | null;
   onboardingComplete: boolean;
+  // PM assignment (clients only)
+  assignedPmId: string | null;
+  pmChangeRequested: boolean;
+  pmChangeReason: string | null;
 }
 
 export interface Enquiry {

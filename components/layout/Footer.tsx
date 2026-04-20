@@ -18,7 +18,7 @@ const footerLinks = {
     { label: "Market Intelligence", href: "/market-intelligence" },
     { label: "Buyer Guides", href: "/market-intelligence?cat=guides" },
     { label: "Due Diligence Checklist", href: "/resources/due-diligence" },
-    { label: "Start an Enquiry", href: "/get-started" },
+    { label: "Free Consultation", href: "/consultation" },
   ],
 };
 
@@ -60,24 +60,24 @@ export function Footer() {
             <ul className="space-y-2.5 text-sm text-white/55">
               <li className="flex items-center gap-2.5">
                 <MapPin size={13} className="text-crimson shrink-0" />
-                <span>Victoria Island, Lagos, Nigeria</span>
+                <span>Lagos, Nigeria</span>
               </li>
               <li className="flex items-center gap-2.5">
                 <Mail size={13} className="text-crimson shrink-0" />
                 <a
-                  href="mailto:hello@terralume.com"
+                  href="mailto:info@terralume.com"
                   className="hover:text-white transition-colors"
                 >
-                  hello@terralume.com
+                  info@terralume.com
                 </a>
               </li>
               <li className="flex items-center gap-2.5">
                 <Phone size={13} className="text-crimson shrink-0" />
                 <a
-                  href="tel:+2349000000000"
+                  href="tel:+2347046676828"
                   className="hover:text-white transition-colors"
                 >
-                  +234 900 000 0000
+                  +234 704 667 6828
                 </a>
               </li>
             </ul>
@@ -167,5 +167,3 @@ export function Footer() {
     </footer>
   );
 }
-
-

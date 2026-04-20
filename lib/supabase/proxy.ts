@@ -77,17 +77,6 @@ export async function updateSession(request: NextRequest) {
           redirect.pathname = "/admin-portal/dashboard";
           return NextResponse.redirect(redirect);
         }
-
-        // CLIENT who hasn't completed onboarding → redirect to first-login
-        if (
-          isClient &&
-          !dbUser.onboardingComplete &&
-          !pathname.startsWith("/client-portal/first-login")
-        ) {
-          const redirect = request.nextUrl.clone();
-          redirect.pathname = "/client-portal/first-login";
-          return NextResponse.redirect(redirect);
-        }
       }
     } catch {
       // Non-critical — let the request through if DB check fails

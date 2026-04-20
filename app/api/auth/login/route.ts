@@ -75,9 +75,7 @@ export async function POST(request: Request) {
     // Determine redirect URL based on role
     let redirectUrl: string;
     if (dbUser.role === "CLIENT") {
-      redirectUrl = dbUser.onboardingComplete
-        ? "/client-portal/dashboard"
-        : "/client-portal/first-login";
+      redirectUrl = "/client-portal/dashboard";
     } else {
       redirectUrl = "/admin-portal/dashboard";
     }

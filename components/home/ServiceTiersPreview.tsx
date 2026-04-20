@@ -8,7 +8,7 @@ const tiers = [
     name: "Starter",
     tag: "Rental Advisory",
     forWho: "First-time renters & relocations",
-    priceFrom: "₦150,000",
+    priceFrom: "₦150,000 - ₦200,000",
     inclusions: [
       "Property search & shortlist",
       "Landlord background check",
@@ -22,7 +22,7 @@ const tiers = [
     name: "Standard",
     tag: "Purchase Advisory",
     forWho: "First-time buyers & upgraders",
-    priceFrom: "₦350,000",
+    priceFrom: "₦350,000 - ₦650,000",
     inclusions: [
       "Everything in Starter",
       "Title verification report",
@@ -37,7 +37,7 @@ const tiers = [
     name: "Premium",
     tag: "Investment Advisory",
     forWho: "HNW investors & diaspora buyers",
-    priceFrom: "₦750,000",
+    priceFrom: "₦750,000 - ₦1,500,000+",
     inclusions: [
       "Everything in Standard",
       "Off-market deal access",
@@ -178,10 +178,10 @@ export function ServiceTiersPreview() {
               {/* CTA */}
               <Button
                 asChild
-                variant={tier.highlight ? "white" : "primary"}
+                variant={tier.highlight ? "default" : "secondary"}
                 className="w-full"
               >
-                <Link href="/get-started">
+                <Link href="/consultation">
                   {tier.cta}
                   <ArrowRight size={15} />
                 </Link>

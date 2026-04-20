@@ -33,7 +33,7 @@ export default async function NotificationsPage() {
           {notifications.map((n) => (
             <li
               key={n.id}
-              className={`px-5 py-4 ${!n.read ? "bg-[--color-navy-light]/30" : ""}`}
+              className={`px-5 py-4 ${!n.read ? "bg-(--color-navy-light)/30" : ""}`}
             >
               <p
                 className={`text-sm ${!n.read ? "font-medium text-on-surface" : "text-on-surface-muted"}`}

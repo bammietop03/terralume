@@ -43,10 +43,10 @@ export function Header() {
             className="flex items-center gap-0 shrink-0 group"
             aria-label="Terralume home"
           >
-            <span className="font-display text-[22px] font-bold text-white tracking-tight">
+            <span className="font-display text-[28px] font-bold text-white tracking-tight">
               Terra
             </span>
-            <span className="font-display text-[22px] font-bold text-crimson tracking-tight">
+            <span className="font-display text-[28px] font-bold text-crimson tracking-tight">
               lume
             </span>
           </Link>
@@ -72,7 +72,7 @@ export function Header() {
               variant="secondary"
               className="hidden lg:inline-flex"
             >
-              <Link href="/get-started">Get Started</Link>
+              <Link href="/consultation">Free Consultation</Link>
             </Button>
             <Button
               asChild
@@ -113,8 +113,8 @@ export function Header() {
           ))}
           <div className="pt-4">
             <Button asChild variant="secondary" className="w-full">
-              <Link href="/get-started" onClick={() => setMobileOpen(false)}>
-                Get Started
+              <Link href="/consultation" onClick={() => setMobileOpen(false)}>
+                Free Consultation
               </Link>
             </Button>
           </div>

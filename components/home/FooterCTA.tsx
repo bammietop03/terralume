@@ -41,7 +41,7 @@ export function FooterCTA() {
         </p>
         <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
           <Button asChild size="lg" variant="secondary">
-            <Link href="/get-started">
+            <Link href="/consultation">
               Start Your Enquiry
               <ArrowRight size={16} />
             </Link>

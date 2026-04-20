@@ -15,7 +15,7 @@ export default function QuickContactBar({ pm }: Props) {
   const mailtoUrl = `mailto:${pm.email}`;
 
   return (
-    <div className="rounded-2xl bg-linear-to-br from-[--color-navy-dark] to-[#0d1940] p-5 shadow-[0_1px_3px_rgba(27,42,107,0.1),0_8px_24px_rgba(27,42,107,0.08)] ring-1 ring-white/5">
+    <div className="rounded-2xl bg-linear-to-br from-(--color-navy-dark) to-[#0d1940] p-5 shadow-[0_1px_3px_rgba(27,42,107,0.1),0_8px_24px_rgba(27,42,107,0.08)] ring-1 ring-white/5">
       <p className="text-xs font-semibold uppercase tracking-wide text-white/50 mb-3">
         Contact your PM
       </p>

@@ -36,6 +36,7 @@ export async function getClientUsers() {
   return prisma.user.findMany({
     where: { role: "CLIENT" },
     include: {
+      assignedPm: { select: { id: true, fullName: true, photoUrl: true } },
       _count: {
         select: { engagements: true },
       },
@@ -57,6 +58,24 @@ export async function getStaffUsers() {
     orderBy: { createdAt: "desc" },
   });
 }
+
+/** CLIENT users assigned to the calling PM — PM or ADMIN. */
+export async function getMyAssignedClients() {
+  const pm = await requireAdmin();
+  return prisma.user.findMany({
+    where: { role: "CLIENT", assignedPmId: pm.id },
+    include: {
+      _count: {
+        select: { engagements: true },
+      },
+    },
+    orderBy: { createdAt: "desc" },
+  });
+}
+
+export type MyAssignedClientWithStats = Awaited<
+  ReturnType<typeof getMyAssignedClients>
+>[number];
 
 // ── Mutations ──────────────────────────────────────────────────────────────
 
@@ -182,4 +201,47 @@ export async function deleteUser(id: string) {
 
   revalidatePath("/admin-portal/users/clients");
   revalidatePath("/admin-portal/users/staff");
+}
+
+// ── Self-service: update own profile ──────────────────────────────────────
+
+export type UpdateProfileInput = {
+  fullName?: string;
+  preferredName?: string;
+  phone?: string;
+  nationality?: string;
+  location?: string;
+  photoUrl?: string;
+};
+
+export async function updateProfile(
+  input: UpdateProfileInput,
+): Promise<{ success: boolean; error?: string }> {
+  const { getSessionUser } = await import("./auth");
+  const sessionUser = await getSessionUser();
+  if (!sessionUser) return { success: false, error: "Not authenticated." };
+
+  await prisma.user.update({
+    where: { id: sessionUser.id },
+    data: {
+      ...(input.fullName !== undefined && { fullName: input.fullName.trim() }),
+      ...(input.preferredName !== undefined && {
+        preferredName: input.preferredName.trim() || null,
+      }),
+      ...(input.phone !== undefined && {
+        phone: input.phone.trim() || null,
+      }),
+      ...(input.nationality !== undefined && {
+        nationality: input.nationality.trim() || null,
+      }),
+      ...(input.location !== undefined && {
+        location: input.location.trim() || null,
+      }),
+      ...(input.photoUrl !== undefined && { photoUrl: input.photoUrl }),
+    },
+  });
+
+  revalidatePath("/client-portal/profile");
+  revalidatePath("/admin-portal/settings");
+  return { success: true };
 }

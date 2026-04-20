@@ -2,13 +2,17 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import { requireClient } from "@/app/actions/auth";
 import { getMyIntakeSubmissions } from "@/app/actions/intake";
-import { ClipboardList, Plus, Eye } from "lucide-react";
+import { ClipboardList, Plus, Eye, PenLine } from "lucide-react";
 
 export const metadata = {
   title: "My Intake Forms — Terralume Client Portal",
 };
 
 const STATUS_META: Record<string, { label: string; className: string }> = {
+  DRAFT: {
+    label: "Draft — in progress",
+    className: "bg-zinc-100 text-zinc-600 border border-zinc-300",
+  },
   PENDING: {
     label: "Pending review",
     className: "bg-amber-50 text-amber-700 border border-amber-200",
@@ -41,14 +45,29 @@ function formatDate(date: Date) {
   });
 }
 
+function stepLabel(step: number | null) {
+  const labels = [
+    "Goal",
+    "About you",
+    "Property",
+    "Budget",
+    "Timeline",
+    "Review",
+  ];
+  if (!step || step < 1) return null;
+  return labels[step - 1] ?? null;
+}
+
 export default async function ClientIntakePage() {
   const user = await requireClient().catch(() => null);
   if (!user) redirect("/login");
 
   const submissions = await getMyIntakeSubmissions(user.id);
+  const draft = submissions.find((s) => s.status === "DRAFT");
+  const activeSubs = submissions.filter((s) => s.status !== "DRAFT");
 
   return (
-    <div className="px-6 py-8 max-w-4xl mx-auto space-y-6">
+    <div className="px-6 py-8 max-w-6xl mx-auto space-y-6">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
         <div>
@@ -62,16 +81,53 @@ export default async function ClientIntakePage() {
             All the briefs you have submitted to Terralume.
           </p>
         </div>
-        <Link
-          href="/client-portal/intake/new"
-          className="inline-flex items-center gap-2 rounded-xl bg-navy px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-navy-dark"
-        >
-          <Plus size={15} />
-          Submit new brief
-        </Link>
+        {draft ? (
+          <Link
+            href="/client-portal/intake/new"
+            className="inline-flex items-center gap-2 rounded-xl bg-navy px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-navy-dark"
+          >
+            <PenLine size={15} />
+            Continue draft
+          </Link>
+        ) : (
+          <Link
+            href="/client-portal/intake/new"
+            className="inline-flex items-center gap-2 rounded-xl bg-navy px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-navy-dark"
+          >
+            <Plus size={15} />
+            Submit new brief
+          </Link>
+        )}
       </div>
 
-      {submissions.length === 0 ? (
+      {/* Draft in-progress banner */}
+      {draft && (
+        <div className="rounded-2xl border border-dashed border-zinc-300 bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-900/40 px-5 py-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+          <div className="flex items-start gap-3">
+            <PenLine size={18} className="mt-0.5 shrink-0 text-zinc-500" />
+            <div>
+              <p className="text-sm font-medium text-on-surface">
+                You have an unfinished brief
+              </p>
+              <p className="text-xs text-on-surface-muted mt-0.5">
+                Saved at step {draft.draftStep ?? 1}
+                {stepLabel(draft.draftStep)
+                  ? ` · ${stepLabel(draft.draftStep)}`
+                  : ""}{" "}
+                · last saved {formatDate(draft.updatedAt)}
+              </p>
+            </div>
+          </div>
+          <Link
+            href="/client-portal/intake/new"
+            className="inline-flex shrink-0 items-center gap-1.5 rounded-xl bg-on-surface px-4 py-2 text-sm font-medium text-surface transition-opacity hover:opacity-80"
+          >
+            Continue where I left off
+          </Link>
+        </div>
+      )}
+
+      {activeSubs.length === 0 && !draft ? (
         <div className="rounded-2xl border border-divider bg-surface shadow-sm flex flex-col items-center justify-center py-20 gap-4 text-center">
           <div className="flex h-14 w-14 items-center justify-center rounded-full bg-navy-light">
             <ClipboardList size={24} className="text-navy" />
@@ -91,9 +147,9 @@ export default async function ClientIntakePage() {
             Submit your first brief
           </Link>
         </div>
-      ) : (
+      ) : activeSubs.length === 0 ? null : (
         <div className="space-y-3">
-          {submissions.map((s) => {
+          {activeSubs.map((s) => {
             const statusMeta = STATUS_META[s.status] ?? STATUS_META.PENDING;
             return (
               <div

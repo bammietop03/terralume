@@ -46,6 +46,7 @@ export default function PortalShell({
         role={role}
         userEmail={userEmail}
         userName={userName}
+        photoUrl={photoUrl}
         mobileOpen={sidebarOpen}
         onMobileClose={() => setSidebarOpen(false)}
         collapsed={sidebarCollapsed}

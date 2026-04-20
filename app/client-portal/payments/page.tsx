@@ -16,8 +16,8 @@ export default function PaymentsPage() {
 
       <div className="rounded-2xl border border-dashed border-divider bg-surface p-16 text-center shadow-sm">
         <div className="flex justify-center mb-4">
-          <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[--color-navy-light]">
-            <CreditCard size={28} className="text-[--color-navy]" />
+          <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-(--color-navy-light)">
+            <CreditCard size={28} className="text-(--color-navy)" />
           </div>
         </div>
         <h2 className="font-display text-lg font-semibold text-on-surface mb-2">

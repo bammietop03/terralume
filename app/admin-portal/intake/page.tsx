@@ -1,7 +1,10 @@
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { requireAdmin } from "@/app/actions/auth";
-import { getIntakeSubmissions } from "@/app/actions/intake";
+import {
+  getIntakeSubmissions,
+  getMyAssignedIntakeSubmissions,
+} from "@/app/actions/intake";
 import { ClipboardList, Clock, Search, Eye } from "lucide-react";
 
 export const metadata = { title: "Intake Forms — Terralume Admin Portal" };
@@ -43,7 +46,10 @@ export default async function AdminIntakePage() {
   const user = await requireAdmin().catch(() => null);
   if (!user) redirect("/admin-login");
 
-  const submissions = await getIntakeSubmissions();
+  const submissions =
+    user.role === "PM"
+      ? await getMyAssignedIntakeSubmissions()
+      : await getIntakeSubmissions();
 
   const total = submissions.length;
   const pending = submissions.filter((s) => s.status === "PENDING").length;
@@ -76,16 +82,24 @@ export default async function AdminIntakePage() {
   return (
     <div className="px-6 py-8 max-w-7xl mx-auto space-y-6">
       {/* Header */}
-      <div>
-        <p className="text-xs font-semibold uppercase tracking-wide text-on-surface-muted mb-1">
-          Intake Management
-        </p>
-        <h1 className="font-display text-2xl font-bold text-on-surface">
-          Client Intake Forms
-        </h1>
-        <p className="text-sm text-on-surface-muted mt-1">
-          All enquiry submissions from potential clients.
-        </p>
+      <div className="flex items-start justify-between gap-4">
+        <div>
+          <p className="text-xs font-semibold uppercase tracking-wide text-on-surface-muted mb-1">
+            Intake Management
+          </p>
+          <h1 className="font-display text-2xl font-bold text-on-surface">
+            Client Intake Forms
+          </h1>
+          <p className="text-sm text-on-surface-muted mt-1">
+            All enquiry submissions from potential clients.
+          </p>
+        </div>
+        <Link
+          href="/admin-portal/intake/new"
+          className="mt-1 inline-flex shrink-0 items-center gap-1.5 rounded-xl bg-on-surface px-4 py-2 text-sm font-medium text-surface transition-opacity hover:opacity-80"
+        >
+          + New intake
+        </Link>
       </div>
 
       {/* Stats row */}

@@ -15,7 +15,7 @@ import {
   STEP_DESCRIPTIONS,
   type FormData,
 } from "./types";
-import { submitIntakeForm } from "@/app/actions/intake";
+import { submitIntakeForm, saveIntakeDraft } from "@/app/actions/intake";
 
 type Errors = Partial<Record<keyof FormData, string>>;
 
@@ -47,14 +47,42 @@ function validateStep(step: number, data: FormData): Errors {
   return errs;
 }
 
-export function IntakeForm() {
-  const [step, setStep] = useState(1);
-  const [data, setData] = useState<FormData>(INITIAL_FORM_DATA);
+interface IntakeFormProps {
+  /** Populate form from an existing draft (client portal path) */
+  initialData?: Partial<FormData>;
+  /** Resume from a specific step (1-indexed) */
+  initialStep?: number;
+  /** Existing draft IntakeSubmission.id to update instead of creating a new one */
+  draftId?: string;
+  /** Whether to save-and-continue drafts on each step (requires auth, client portal only) */
+  enableDraft?: boolean;
+  /** When true, Step 2 shows user info as read-only (client portal) */
+  readOnlyAbout?: boolean;
+  /** Custom submit action — defaults to submitIntakeForm (client self-service) */
+  submitAction?: (
+    data: FormData,
+  ) => Promise<{ success: boolean; referenceNumber?: string; error?: string }>;
+}
+
+export function IntakeForm({
+  initialData,
+  initialStep,
+  draftId: initialDraftId,
+  enableDraft = false,
+  readOnlyAbout = false,
+  submitAction = submitIntakeForm,
+}: IntakeFormProps = {}) {
+  const [step, setStep] = useState(initialStep ?? 1);
+  const [data, setData] = useState<FormData>({
+    ...INITIAL_FORM_DATA,
+    ...initialData,
+  });
   const [errors, setErrors] = useState<Errors>({});
   const [submitted, setSubmitted] = useState(false);
   const [referenceNumber, setReferenceNumber] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
+  const [draftId, setDraftId] = useState<string | undefined>(initialDraftId);
 
   const set = useCallback((patch: Partial<FormData>) => {
     setData((prev) => ({ ...prev, ...patch }));
@@ -77,6 +105,16 @@ export function IntakeForm() {
     setErrors({});
 
     if (step < TOTAL_STEPS) {
+      // Auto-save draft for logged-in portal users
+      if (enableDraft) {
+        saveIntakeDraft(data, step, draftId)
+          .then((result) => {
+            if (result.draftId) setDraftId(result.draftId);
+          })
+          .catch(() => {
+            /* non-blocking */
+          });
+      }
       setStep((s) => s + 1);
       window.scrollTo({ top: 0, behavior: "smooth" });
       return;
@@ -93,7 +131,7 @@ export function IntakeForm() {
     setSubmitError(null);
     setIsSubmitting(true);
     try {
-      const result = await submitIntakeForm(data);
+      const result = await submitAction(data);
       if (result.success && result.referenceNumber) {
         setReferenceNumber(result.referenceNumber);
         setSubmitted(true);
@@ -235,7 +273,12 @@ export function IntakeForm() {
         <form onSubmit={handleNext} noValidate>
           {step === 1 && <Step1Goal data={data} set={set} />}
           {step === 2 && (
-            <Step2AboutYou data={data} set={set} errors={errors} />
+            <Step2AboutYou
+              data={data}
+              set={set}
+              errors={errors}
+              readOnly={readOnlyAbout}
+            />
           )}
           {step === 3 && (
             <Step3Property data={data} set={set} errors={errors} />

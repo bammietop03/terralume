@@ -73,3 +73,57 @@ export async function uploadArticleImage(
   const { data } = supabase.storage.from(BUCKET).getPublicUrl(filename);
   return { ok: true, url: data.publicUrl };
 }
+
+// ── Avatar upload ─────────────────────────────────────────────────────────
+// Requires a Supabase Storage bucket named "avatars" with public read access.
+
+const AVATAR_BUCKET = "avatars";
+const AVATAR_MAX_BYTES = 3 * 1024 * 1024; // 3 MB
+
+export async function uploadAvatar(
+  formData: FormData,
+): Promise<{ ok: true; url: string } | { ok: false; error: string }> {
+  const { getSessionUser } = await import("./auth");
+  const sessionUser = await getSessionUser();
+  if (!sessionUser) return { ok: false, error: "Not authenticated." };
+
+  const file = formData.get("file");
+  if (!(file instanceof File)) return { ok: false, error: "No file provided." };
+
+  if (!ALLOWED_MIME.has(file.type)) {
+    return { ok: false, error: "Only JPEG, PNG, WebP, and GIF are allowed." };
+  }
+  if (file.size > AVATAR_MAX_BYTES) {
+    return { ok: false, error: "Avatar must be under 3 MB." };
+  }
+
+  const supabase = createAdminClient();
+  const rawExt = file.name.split(".").pop()?.toLowerCase() ?? "jpg";
+  const ext = ["jpg", "jpeg", "png", "webp"].includes(rawExt) ? rawExt : "jpg";
+  const filename = `${sessionUser.id}/avatar.${ext}`;
+
+  const arrayBuffer = await file.arrayBuffer();
+  const { error: uploadError } = await supabase.storage
+    .from(AVATAR_BUCKET)
+    .upload(filename, arrayBuffer, { contentType: file.type, upsert: true });
+
+  if (uploadError) return { ok: false, error: uploadError.message };
+
+  const { data } = supabase.storage.from(AVATAR_BUCKET).getPublicUrl(filename);
+
+  // Bust CDN cache by appending a timestamp query param
+  const url = `${data.publicUrl}?t=${Date.now()}`;
+
+  // Persist to DB
+  const { prisma } = await import("@/lib/prisma");
+  await prisma.user.update({
+    where: { id: sessionUser.id },
+    data: { photoUrl: url },
+  });
+
+  const { revalidatePath } = await import("next/cache");
+  revalidatePath("/client-portal/profile");
+  revalidatePath("/admin-portal/settings");
+
+  return { ok: true, url };
+}

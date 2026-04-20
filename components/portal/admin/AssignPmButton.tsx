@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import { assignPm } from "@/app/actions/intake";
+import { assignPmToUser } from "@/app/actions/intake";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -23,7 +23,8 @@ type PmOption = {
 };
 
 interface Props {
-  submissionId: string;
+  /** The client User.id to assign a PM to */
+  userId: string;
   assignedPm: PmOption | null;
   pmChangeRequested: boolean;
   pmChangeReason: string | null;
@@ -31,7 +32,7 @@ interface Props {
 }
 
 export default function AssignPmButton({
-  submissionId,
+  userId,
   assignedPm,
   pmChangeRequested,
   pmChangeReason,
@@ -50,7 +51,7 @@ export default function AssignPmButton({
     if (!selectedId) return;
     startTransition(async () => {
       try {
-        await assignPm(submissionId, selectedId);
+        await assignPmToUser(userId, selectedId);
         toast.success("PM assigned successfully.");
         setOpen(false);
       } catch {

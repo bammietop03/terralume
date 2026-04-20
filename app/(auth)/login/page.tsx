@@ -69,7 +69,7 @@ export default function LoginPage() {
               >
                 <CheckCircle2
                   size={15}
-                  className="text-[--color-crimson] shrink-0 mt-0.5"
+                  className="text-(--color-crimson) shrink-0 mt-0.5"
                 />
                 {f}
               </li>
@@ -82,10 +82,10 @@ export default function LoginPage() {
           <p className="text-white/35 text-xs">
             Not yet a client?{" "}
             <Link
-              href="/get-started"
+              href="/consultation"
               className="text-white/60 underline underline-offset-2 hover:text-white transition-colors"
             >
-              Start your enquiry →
+              Book a consultation →
             </Link>
           </p>
         </div>

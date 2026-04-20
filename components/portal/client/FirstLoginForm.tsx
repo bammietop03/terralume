@@ -77,7 +77,7 @@ export default function FirstLoginForm({
         {/* Logo */}
         <div className="text-center mb-8">
           <span className="font-display text-2xl font-bold tracking-tight text-navy-dark">
-            Terra<span className="text-[--color-crimson]">lume</span>
+            Terra<span className="text-(--color-crimson)">lume</span>
           </span>
         </div>
 
@@ -89,7 +89,7 @@ export default function FirstLoginForm({
                 className={cn(
                   "h-7 w-7 rounded-full flex items-center justify-center text-xs font-semibold transition-all",
                   step === s
-                    ? "bg-[--color-navy] text-white"
+                    ? "bg-(--color-navy) text-white"
                     : step > s
                       ? "bg-green-500 text-white"
                       : "bg-divider text-on-surface-muted",

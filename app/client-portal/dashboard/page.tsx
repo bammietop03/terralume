@@ -1,12 +1,15 @@
 import { redirect } from "next/navigation";
+import Link from "next/link";
 import { requireClient } from "@/app/actions/auth";
 import { getClientDashboardData } from "@/app/actions/dashboard";
+import { getMyIntakeDraft } from "@/app/actions/intake";
 import EngagementSummaryCard from "@/components/portal/client/EngagementSummaryCard";
 import StageProgressTracker from "@/components/portal/client/StageProgressTracker";
 import LatestUpdateCard from "@/components/portal/client/LatestUpdateCard";
 import PendingActionsPanel from "@/components/portal/client/PendingActionsPanel";
 import QuickContactBar from "@/components/portal/client/QuickContactBar";
 import type { PendingAction, Update } from "@/types";
+import { FileEdit } from "lucide-react";
 
 export const metadata = {
   title: "Dashboard — Terralume Client Portal",
@@ -16,22 +19,49 @@ export default async function ClientDashboardPage() {
   const user = await requireClient().catch(() => null);
   if (!user) redirect("/login");
 
-  const data = await getClientDashboardData(user.id);
+  const [data, draft] = await Promise.all([
+    getClientDashboardData(user.id),
+    getMyIntakeDraft(),
+  ]);
 
   if (!data) {
     return (
       <>
         <div className="px-6 pt-8 pb-2 max-w-6xl mx-auto">
-          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[--color-crimson] mb-1">
+          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-(--color-crimson) mb-1">
             Client Portal
           </p>
           <h1 className="font-display text-2xl font-bold text-on-surface">
             Welcome to Terralume
           </h1>
         </div>
-        <div className="p-8 max-w-3xl mx-auto">
+        <div className="p-8 max-w-3xl mx-auto space-y-4">
+          {/* Draft continuation banner */}
+          {draft && (
+            <Link
+              href="/client-portal/intake/new"
+              className="flex items-center justify-between gap-4 rounded-2xl border border-navy/20 bg-navy-light p-5 transition-colors hover:bg-navy/10"
+            >
+              <div className="flex items-center gap-3">
+                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-navy text-white">
+                  <FileEdit size={18} />
+                </span>
+                <div>
+                  <p className="text-sm font-semibold text-on-surface">
+                    Continue your intake form
+                  </p>
+                  <p className="text-xs text-on-surface-muted">
+                    You have an in-progress brief — step {draft.draftStep} of 6
+                  </p>
+                </div>
+              </div>
+              <span className="shrink-0 text-xs font-semibold text-navy underline underline-offset-4">
+                Continue →
+              </span>
+            </Link>
+          )}
           <div className="rounded-2xl border border-white/60 bg-white/80 backdrop-blur-sm p-10 text-center shadow-[0_1px_3px_rgba(27,42,107,0.06),0_8px_24px_rgba(27,42,107,0.04)]">
-            <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-linear-to-br from-[--color-navy] to-[--color-navy-dark] shadow-sm">
+            <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-linear-to-br from-(--color-navy) to-(--color-navy-dark) shadow-sm">
               <span className="font-display text-2xl text-white">T</span>
             </div>
             <h2 className="font-display text-xl font-bold text-on-surface mb-3">
@@ -56,7 +86,7 @@ export default async function ClientDashboardPage() {
   return (
     <>
       <div className="px-6 pt-8 pb-2 max-w-6xl mx-auto">
-        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[--color-crimson] mb-1">
+        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-(--color-crimson) mb-1">
           Client Portal
         </p>
         <h1 className="font-display text-2xl font-bold text-on-surface">

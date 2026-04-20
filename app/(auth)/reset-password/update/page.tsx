@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Eye, EyeOff, Loader2, CheckCircle2 } from "lucide-react";
@@ -18,6 +18,46 @@ export default function UpdatePasswordPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [done, setDone] = useState(false);
+  // Wait for Supabase to process the hash and fire PASSWORD_RECOVERY
+  const [sessionReady, setSessionReady] = useState(false);
+  const [sessionError, setSessionError] = useState(false);
+
+  useEffect(() => {
+    const supabase = createClient();
+
+    async function init() {
+      // Parse tokens from the URL hash (#access_token=...&refresh_token=...&type=recovery)
+      const hash = window.location.hash.slice(1); // strip leading #
+      const params = new URLSearchParams(hash);
+      const accessToken = params.get("access_token");
+      const refreshToken = params.get("refresh_token");
+
+      if (accessToken && refreshToken) {
+        const { error } = await supabase.auth.setSession({
+          access_token: accessToken,
+          refresh_token: refreshToken,
+        });
+        if (error) {
+          setSessionError(true);
+        } else {
+          // Clean the hash from the URL without a reload
+          window.history.replaceState(null, "", window.location.pathname);
+          setSessionReady(true);
+        }
+        return;
+      }
+
+      // No hash — check if a session already exists (e.g. page reload after hash was cleared)
+      const { data } = await supabase.auth.getSession();
+      if (data.session) {
+        setSessionReady(true);
+      } else {
+        setSessionError(true);
+      }
+    }
+
+    init();
+  }, []);
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
@@ -116,6 +156,27 @@ export default function UpdatePasswordPage() {
               <p className="text-sm text-on-surface-muted leading-relaxed">
                 Your password has been changed. Redirecting you to sign in…
               </p>
+            </div>
+          ) : !sessionReady ? (
+            <div className="text-center">
+              {sessionError ? (
+                <>
+                  <p className="text-sm font-medium text-on-surface mb-2">
+                    This link has expired or is invalid.
+                  </p>
+                  <Link
+                    href="/reset-password"
+                    className="text-sm text-navy underline underline-offset-4"
+                  >
+                    Request a new reset link
+                  </Link>
+                </>
+              ) : (
+                <div className="flex items-center justify-center gap-2 text-sm text-on-surface-muted">
+                  <Loader2 size={16} className="animate-spin" />
+                  Verifying your link…
+                </div>
+              )}
             </div>
           ) : (
             <>

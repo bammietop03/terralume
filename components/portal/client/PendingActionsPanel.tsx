@@ -36,7 +36,7 @@ const typeConfig: Record<
     icon: <AlertCircle size={16} />,
     label: "Action required",
     color:
-      "bg-[--color-navy-light] text-[--color-navy] border-[--color-navy]/20",
+      "bg-(--color-navy-light) text-(--color-navy) border-(--color-navy)/20",
   },
 };
 
@@ -60,7 +60,7 @@ export default function PendingActionsPanel({ actions }: Props) {
   if (actions.length === 0) {
     return (
       <div className="rounded-2xl border border-white/60 bg-white/80 backdrop-blur-sm shadow-[0_1px_3px_rgba(27,42,107,0.06),0_8px_24px_rgba(27,42,107,0.04)] overflow-hidden">
-        <div className="h-1 w-full bg-linear-to-r from-[--color-navy-light] to-[--color-navy-light]" />
+        <div className="h-1 w-full bg-linear-to-r from-(--color-navy-light) to-(--color-navy-light)" />
         <div className="p-6">
           <h2 className="text-sm font-semibold text-on-surface mb-3">
             Pending Actions
@@ -76,14 +76,14 @@ export default function PendingActionsPanel({ actions }: Props) {
   return (
     <div className="rounded-2xl border border-white/60 bg-white/80 backdrop-blur-sm shadow-[0_1px_3px_rgba(27,42,107,0.06),0_8px_24px_rgba(27,42,107,0.04)] overflow-hidden">
       {/* Crimson accent stripe */}
-      <div className="h-1 w-full bg-linear-to-r from-[--color-crimson] to-[--color-crimson-light]" />
+      <div className="h-1 w-full bg-linear-to-r from-(--color-crimson) to-(--color-crimson-light)" />
 
       <div className="p-6">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-sm font-semibold text-on-surface">
             Pending Actions
           </h2>
-          <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-[--color-crimson] px-1.5 text-[10px] font-bold text-white">
+          <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-(--color-crimson) px-1.5 text-[10px] font-bold text-white">
             {actions.length}
           </span>
         </div>
@@ -98,7 +98,7 @@ export default function PendingActionsPanel({ actions }: Props) {
             return (
               <li
                 key={action.id}
-                className="flex items-start gap-3 rounded-xl border border-divider/60 p-4 bg-white/60 hover:border-[--color-navy]/15 hover:bg-[--color-navy-light]/30 hover:shadow-sm transition-all duration-200"
+                className="flex items-start gap-3 rounded-xl border border-divider/60 p-4 bg-white/60 hover:border-(--color-navy)/15 hover:bg-(--color-navy-light)/30 hover:shadow-sm transition-all duration-200"
               >
                 <div
                   className={cn(

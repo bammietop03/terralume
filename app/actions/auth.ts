@@ -46,3 +46,36 @@ export async function requireClient(): Promise<User> {
 export async function requireAdmin(): Promise<User> {
   return requireRole(["PM", "ADMIN"]);
 }
+
+export async function requireSuperAdmin(): Promise<User> {
+  return requireRole("ADMIN");
+}
+
+/** Updates the current user's password after verifying the current one. */
+export async function updatePassword(
+  currentPassword: string,
+  newPassword: string,
+): Promise<{ ok: true } | { ok: false; error: string }> {
+  const sessionUser = await getSessionUser();
+  if (!sessionUser) return { ok: false, error: "Not authenticated." };
+
+  // Verify current password via server client (user's session)
+  const supabase = await createClient();
+  const { error: signInError } = await supabase.auth.signInWithPassword({
+    email: sessionUser.email,
+    password: currentPassword,
+  });
+  if (signInError)
+    return { ok: false, error: "Current password is incorrect." };
+
+  // Update via admin client
+  const { createAdminClient } = await import("@/lib/supabase/admin");
+  const admin = createAdminClient();
+  const { error: updateError } = await admin.auth.admin.updateUserById(
+    sessionUser.id,
+    { password: newPassword },
+  );
+  if (updateError) return { ok: false, error: updateError.message };
+
+  return { ok: true };
+}

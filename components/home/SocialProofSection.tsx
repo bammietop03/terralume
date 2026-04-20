@@ -31,10 +31,11 @@ const testimonials = [
 ];
 
 const metrics = [
-  { value: "120+", label: "Properties Sourced" },
-  { value: "97", label: "Deals Completed" },
+  { value: "120+", label: "Properties Investigated" },
+  { value: "67", label: "Deals Completed" },
+  { value: "61", label: "Deals Flagged" },
   { value: "12%", label: "Avg. Saving Negotiated" },
-  { value: "4.9/5", label: "Client Satisfaction" },
+  { value: "4.3/5", label: "Client Satisfaction" },
 ];
 
 export function SocialProofSection() {
@@ -53,7 +54,7 @@ export function SocialProofSection() {
         </div>
 
         {/* Metrics strip */}
-        <div className="mb-16 grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-divider bg-divider lg:grid-cols-4">
+        <div className="mb-16 grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-divider bg-divider lg:grid-cols-5">
           {metrics.map((m) => (
             <div key={m.label} className="bg-surface px-8 py-10 text-center">
               <span className="block font-display text-5xl font-bold leading-none text-navy">

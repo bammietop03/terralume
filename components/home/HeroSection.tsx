@@ -52,7 +52,7 @@ export function HeroSection() {
         {/* CTAs */}
         <div className="mt-10 flex flex-wrap gap-3">
           <Button asChild size="lg" variant="secondary">
-            <Link href="/get-started">
+            <Link href="/consultation">
               Get a Free Consultation
               <ArrowRight size={16} />
             </Link>
@@ -70,9 +70,9 @@ export function HeroSection() {
           />
           <TrustBadge icon={<Award size={15} />} label="CAC Registered" />
           <div className="hidden sm:block h-6 w-px bg-white/15" />
-          <TrustMetric value="120+" label="Deals Completed" />
+          <TrustMetric value="67+" label="Deals Completed" />
           <TrustMetric value="₦2.4B+" label="Client Savings" />
-          <TrustMetric value="4.9 / 5" label="Client Rating" />
+          <TrustMetric value="4.3 / 5" label="Client Rating" />
         </div>
       </div>
     </section>
@@ -100,5 +100,3 @@ function TrustMetric({ value, label }: { value: string; label: string }) {
     </div>
   );
 }
-
-

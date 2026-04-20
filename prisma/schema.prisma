@@ -46,10 +46,28 @@ enum ArticleCategory {
 }
 
 enum IntakeStatus {
+  DRAFT
   PENDING
   REVIEWING
   ACTIVE
   CLOSED
+}
+
+enum LeadInterestType {
+  BUY
+  INVEST
+  DEVELOP
+  LEGAL_SUPPORT
+  CROSS_BORDER
+}
+
+enum LeadStatus {
+  NEW
+  CONSULTATION_SCHEDULED
+  AWAITING_DECISION
+  INTAKE_INVITED
+  INTAKE_SUBMITTED
+  DECLINED
 }
 
 // ─── Models ──────────────────────────────────────────────────────────────────
@@ -75,6 +93,15 @@ model User {
   idNumber           String?   @map("id_number")
   onboardingComplete Boolean   @default(false) @map("onboarding_complete")
 
+  // PM assigned to this client (null for PM/ADMIN users)
+  assignedPmId       String?   @map("assigned_pm_id") @db.Uuid
+  assignedPm         User?     @relation("ClientPm", fields: [assignedPmId], references: [id], onDelete: SetNull)
+  managedClients     User[]    @relation("ClientPm")
+
+  // Client's PM-change request flags
+  pmChangeRequested  Boolean   @default(false) @map("pm_change_requested")
+  pmChangeReason     String?   @map("pm_change_reason")
+
   // Relations
   enquiries          Enquiry[]
   engagements        Engagement[]
@@ -84,7 +111,8 @@ model User {
   updates            Update[]
   articles           Article[]
   intakeSubmissions  IntakeSubmission[]
-  assignedIntakes    IntakeSubmission[] @relation("IntakePm")
+  leadAsClient       Lead?          @relation("LeadClient")
+  assignedLeads      Lead[]         @relation("LeadPm")
 
   @@map("users")
 }
@@ -272,14 +300,6 @@ model IntakeSubmission {
   userId            String?      @map("user_id") @db.Uuid
   user              User?        @relation(fields: [userId], references: [id], onDelete: SetNull)
 
-  // Assigned PM
-  assignedPmId      String?      @map("assigned_pm_id") @db.Uuid
-  assignedPm        User?        @relation("IntakePm", fields: [assignedPmId], references: [id], onDelete: SetNull)
-
-  // PM change request from client
-  pmChangeRequested Boolean      @default(false) @map("pm_change_requested")
-  pmChangeReason    String?      @map("pm_change_reason")
-
   // Step 1 — Goal
   transactionType   String       @map("transaction_type")
   purpose           String?
@@ -318,8 +338,60 @@ model IntakeSubmission {
   // Consent
   dataConsent       Boolean      @default(false) @map("data_consent")
 
+  // Draft save-and-continue
+  draftStep         Int?         @map("draft_step")
+
+  // Optional link to originating lead
+  leadId            String?      @unique @map("lead_id")
+  lead              Lead?        @relation(fields: [leadId], references: [id], onDelete: SetNull)
+
   createdAt         DateTime     @default(now()) @map("created_at")
   updatedAt         DateTime     @updatedAt @map("updated_at")
 
   @@map("intake_submissions")
+}
+
+model Lead {
+  id                 String           @id @default(cuid())
+
+  // Contact info (required)
+  fullName           String           @map("full_name")
+  phone              String
+  email              String
+
+  // Optional screening info
+  location           String?
+  interestType       LeadInterestType? @map("interest_type")
+
+  // Lifecycle
+  status             LeadStatus       @default(NEW)
+  notes              String?
+
+  // PM assignment
+  assignedPmId       String?          @map("assigned_pm_id") @db.Uuid
+  assignedPm         User?            @relation("LeadPm", fields: [assignedPmId], references: [id], onDelete: SetNull)
+
+  // Portal account link (set when intake invitation is accepted)
+  userId             String?          @unique @map("user_id") @db.Uuid
+  user               User?            @relation("LeadClient", fields: [userId], references: [id], onDelete: SetNull)
+
+  // Calendar scheduling
+  calendarUrl        String?          @map("calendar_url")
+  calendarSentAt     DateTime?        @map("calendar_sent_at")
+
+  // Intake invitation token
+  inviteToken        String?          @unique @map("invite_token")
+  inviteTokenExpiry  DateTime?        @map("invite_token_expiry")
+  inviteSentAt       DateTime?        @map("invite_sent_at")
+
+  // Decline tracking
+  declinedAt         DateTime?        @map("declined_at")
+
+  createdAt          DateTime         @default(now()) @map("created_at")
+  updatedAt          DateTime         @updatedAt @map("updated_at")
+
+  // Intake submission created from this lead
+  intakeSubmission   IntakeSubmission?
+
+  @@map("leads")
 }

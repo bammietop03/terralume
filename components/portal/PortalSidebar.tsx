@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -11,8 +11,6 @@ import {
   Users,
   UserCog,
   UserRound,
-  Briefcase,
-  Settings,
   ChevronLeft,
   ChevronRight,
   LogOut,
@@ -20,6 +18,8 @@ import {
   X,
   Newspaper,
   ClipboardList,
+  Sparkles,
+  Settings,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
@@ -29,6 +29,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import type { Role } from "@/types";
 
 interface NavItem {
@@ -49,6 +50,7 @@ const clientNav: NavItem[] = [
   { label: "Payments", href: "/client-portal/payments", icon: CreditCard },
   { label: "Notifications", href: "/client-portal/notifications", icon: Bell },
   { label: "Profile", href: "/client-portal/profile", icon: User },
+  { label: "Settings", href: "/client-portal/settings", icon: Settings },
 ];
 
 const adminNav: NavItem[] = [
@@ -57,17 +59,16 @@ const adminNav: NavItem[] = [
     href: "/admin-portal/dashboard",
     icon: LayoutDashboard,
   },
-  { label: "Client", href: "/admin-portal/users/clients", icon: UserRound },
+  { label: "Clients", href: "/admin-portal/users/clients", icon: UserRound },
   { label: "Staff", href: "/admin-portal/users/staff", icon: UserCog },
-  { label: "Engagements", href: "/admin-portal/engagements", icon: Briefcase },
+  { label: "Leads", href: "/admin-portal/leads", icon: Sparkles },
   { label: "Intake Forms", href: "/admin-portal/intake", icon: ClipboardList },
-  { label: "Messages", href: "/admin-portal/messages", icon: MessageSquare },
-  { label: "Payments", href: "/admin-portal/payments", icon: CreditCard },
   {
     label: "Market Intelligence",
     href: "/admin-portal/market-intelligence",
     icon: Newspaper,
   },
+  { label: "Profile", href: "/admin-portal/profile", icon: User },
   { label: "Settings", href: "/admin-portal/settings", icon: Settings },
 ];
 
@@ -78,14 +79,17 @@ const pmNav: NavItem[] = [
     icon: LayoutDashboard,
   },
   { label: "My Clients", href: "/admin-portal/clients", icon: Users },
-  { label: "Engagements", href: "/admin-portal/engagements", icon: Briefcase },
-  { label: "Messages", href: "/admin-portal/messages", icon: MessageSquare },
+  { label: "My Leads", href: "/admin-portal/leads", icon: Sparkles },
+  { label: "Intake Forms", href: "/admin-portal/intake", icon: ClipboardList },
+  { label: "Profile", href: "/admin-portal/profile", icon: User },
+  { label: "Settings", href: "/admin-portal/settings", icon: Settings },
 ];
 
 interface Props {
   role: Role;
   userEmail: string;
   userName: string | null;
+  photoUrl?: string | null;
   mobileOpen: boolean;
   onMobileClose: () => void;
   collapsed: boolean;
@@ -158,12 +162,18 @@ function SidebarContent({
   role,
   userEmail,
   userName,
+  photoUrl,
   collapsed,
   onCollapsedChange,
   onClose,
 }: Pick<
   Props,
-  "role" | "userEmail" | "userName" | "collapsed" | "onCollapsedChange"
+  | "role"
+  | "userEmail"
+  | "userName"
+  | "photoUrl"
+  | "collapsed"
+  | "onCollapsedChange"
 > & {
   onClose?: () => void;
 }) {
@@ -186,7 +196,7 @@ function SidebarContent({
 
   return (
     <div className="flex h-full flex-col">
-      {/* ── Logo bar ── */}
+      {/* -- Logo bar -- */}
       <div
         className={cn(
           "flex h-16 shrink-0 items-center border-b border-white/[0.07]",
@@ -216,7 +226,7 @@ function SidebarContent({
         )}
       </div>
 
-      {/* ── Navigation ── */}
+      {/* -- Navigation -- */}
       <nav className="flex-1 overflow-y-auto px-2.5 py-4 space-y-0.5">
         {!collapsed && (
           <p className="px-3 mb-2.5 text-[10px] font-semibold uppercase tracking-[0.15em] text-white/20 select-none">
@@ -233,10 +243,10 @@ function SidebarContent({
         ))}
       </nav>
 
-      {/* ── Thin divider ── */}
+      {/* -- Thin divider -- */}
       <div className="mx-3 h-px bg-white/[0.07]" />
 
-      {/* ── User footer ── */}
+      {/* -- User footer -- */}
       <div
         className={cn(
           "p-2.5 space-y-1",
@@ -247,15 +257,20 @@ function SidebarContent({
           <div className="flex items-center gap-3 rounded-xl px-3 py-2.5">
             {/* Avatar with online dot */}
             <div className="relative shrink-0">
-              <div className="h-9 w-9 rounded-full bg-linear-to-br from-crimson to-[#6b1220] flex items-center justify-center text-white text-xs font-bold shadow-md ring-2 ring-white/10">
-                {initials}
-              </div>
+              <Avatar className="h-9 w-9 shadow-md ring-2 ring-white/10">
+                {photoUrl && (
+                  <AvatarImage src={photoUrl} alt={userName ?? userEmail} />
+                )}
+                <AvatarFallback className="bg-linear-to-br from-(--color-crimson) to-[#6b1220] text-white text-xs font-bold">
+                  {initials}
+                </AvatarFallback>
+              </Avatar>
               <span className="absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full bg-emerald-400 border-2 border-[#0d1940]" />
             </div>
             {/* Name + role */}
             <div className="min-w-0 flex-1">
               <p className="text-sm font-semibold text-white truncate leading-tight">
-                {userName ?? "—"}
+                {userName ?? "�"}
               </p>
               <p className="text-[11px] text-white/35 truncate leading-tight mt-0.5">
                 {roleLabel}
@@ -266,8 +281,15 @@ function SidebarContent({
           /* Collapsed: avatar only */
           <Tooltip>
             <TooltipTrigger asChild>
-              <div className="relative h-9 w-9 cursor-default rounded-full bg-linear-to-br from-[--color-crimson] to-[#6b1220] flex items-center justify-center text-white text-xs font-bold shadow-md ring-2 ring-white/10">
-                {initials}
+              <div className="relative h-9 w-9 cursor-default shrink-0">
+                <Avatar className="h-9 w-9 shadow-md ring-2 ring-white/10">
+                  {photoUrl && (
+                    <AvatarImage src={photoUrl} alt={userName ?? userEmail} />
+                  )}
+                  <AvatarFallback className="bg-linear-to-br from-(--color-crimson) to-[#6b1220] text-white text-xs font-bold">
+                    {initials}
+                  </AvatarFallback>
+                </Avatar>
                 <span className="absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full bg-emerald-400 border-2 border-[#0d1940]" />
               </div>
             </TooltipTrigger>
@@ -309,7 +331,7 @@ function SidebarContent({
         </form>
       </div>
 
-      {/* ── Collapse toggle (desktop only) ── */}
+      {/* -- Collapse toggle (desktop only) -- */}
       {!onClose && (
         <button
           onClick={() => onCollapsedChange(!collapsed)}
@@ -327,6 +349,7 @@ export default function PortalSidebar({
   role,
   userEmail,
   userName,
+  photoUrl,
   mobileOpen,
   onMobileClose,
   collapsed,
@@ -334,7 +357,7 @@ export default function PortalSidebar({
 }: Props) {
   return (
     <TooltipProvider delayDuration={0}>
-      {/* ── Desktop sidebar ── */}
+      {/* -- Desktop sidebar -- */}
       <aside
         style={{
           background: "linear-gradient(175deg, #111d4e 0%, #0d1940 100%)",
@@ -349,12 +372,13 @@ export default function PortalSidebar({
           role={role}
           userEmail={userEmail}
           userName={userName}
+          photoUrl={photoUrl}
           collapsed={collapsed}
           onCollapsedChange={onCollapsedChange}
         />
       </aside>
 
-      {/* ── Mobile drawer ── */}
+      {/* -- Mobile drawer -- */}
       <Sheet open={mobileOpen} onOpenChange={(o) => !o && onMobileClose()}>
         <SheetContent
           side="left"
@@ -368,6 +392,7 @@ export default function PortalSidebar({
             role={role}
             userEmail={userEmail}
             userName={userName}
+            photoUrl={photoUrl}
             collapsed={false}
             onCollapsedChange={() => {}}
             onClose={onMobileClose}

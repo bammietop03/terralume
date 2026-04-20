@@ -55,7 +55,6 @@ function usePageTitle(role: Role) {
     clients: "Clients",
     engagements: "Engagements",
     settings: "Settings",
-    "first-login": "Welcome",
   };
   return (
     labels[last] ??
@@ -123,7 +122,7 @@ function NotificationsPanel({
         >
           <Bell size={17} />
           {unread > 0 && (
-            <span className="absolute top-1 right-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-[--color-crimson] px-1 text-[9px] font-bold text-white leading-none">
+            <span className="absolute top-1 right-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-crimson px-1 text-[9px] font-bold text-white leading-none">
               {unread > 9 ? "9+" : unread}
             </span>
           )}
@@ -133,19 +132,19 @@ function NotificationsPanel({
       <DropdownMenuContent
         align="end"
         sideOffset={10}
-        className="w-90 p-0 rounded-2xl border border-[--color-divider]/60 shadow-2xl shadow-black/10 overflow-hidden bg-white z-50"
+        className="w-90 p-0 rounded-2xl shadow-2xl shadow-black/20 overflow-hidden bg-white z-50"
       >
         {/* Panel header */}
-        <div className="flex items-center justify-between px-4 py-3.5 bg-[--color-navy-light]/30 border-b border-[--color-divider]/60">
+        <div className="flex items-center justify-between px-4 py-3.5 bg-navy-light/30 border-b border-divider/60">
           <div className="flex items-center gap-2.5">
-            <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-[--color-navy]">
+            <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-navy">
               <Bell size={13} className="text-white" />
             </div>
-            <h3 className="text-sm font-semibold text-[--color-on-surface]">
+            <h3 className="text-sm font-semibold text-(--color-on-surface)">
               Notifications
             </h3>
             {unread > 0 && (
-              <span className="inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-[--color-crimson] px-1.5 text-[10px] font-bold text-white">
+              <span className="inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-crimson px-1.5 text-[10px] font-bold text-white">
                 {unread > 99 ? "99+" : unread}
               </span>
             )}
@@ -153,7 +152,7 @@ function NotificationsPanel({
           {unread > 0 && (
             <button
               onClick={handleMarkAllRead}
-              className="flex items-center gap-1.5 rounded-lg px-2.5 py-1 text-xs text-[--color-navy] font-semibold hover:bg-[--color-navy-light] transition-colors"
+              className="flex items-center gap-1.5 rounded-lg px-2.5 py-1 text-xs text-(--color-navy) font-semibold hover:bg-navy-light transition-colors"
             >
               <CheckCheck size={12} />
               Mark all read
@@ -162,11 +161,11 @@ function NotificationsPanel({
         </div>
 
         {/* Notification list */}
-        <ScrollArea className="max-h-85">
+        <ScrollArea className="h-[340px]">
           {notifications.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-12 gap-3">
-              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[--color-navy-light]/60">
-                <Sparkles size={20} className="text-[--color-navy]/40" />
+              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-navy-light/60">
+                <Sparkles size={20} className="text-navy/40" />
               </div>
               <div className="text-center">
                 <p className="text-sm font-semibold text-on-surface-muted">
@@ -178,21 +177,21 @@ function NotificationsPanel({
               </div>
             </div>
           ) : (
-            <div className="divide-y divide-[--color-divider]/50">
+            <div className="divide-y divide-divider/50">
               {notifications.map((n) => (
                 <button
                   key={n.id}
                   onClick={() => !n.read && handleMarkRead(n.id)}
                   className={cn(
-                    "group w-full text-left px-4 py-3.5 transition-colors hover:bg-[--color-navy-light]/20",
-                    !n.read && "bg-[--color-navy-light]/30",
+                    "group w-full text-left px-4 py-3.5 transition-colors hover:bg-navy-light/20",
+                    !n.read && "bg-navy-light/30",
                   )}
                 >
                   <div className="flex items-start gap-3">
                     <div
                       className={cn(
                         "mt-0.5 h-2 w-2 shrink-0 rounded-full transition-colors",
-                        n.read ? "bg-transparent" : "bg-[--color-crimson]",
+                        n.read ? "bg-transparent" : "bg-(--color-crimson)",
                       )}
                     />
                     <div className="flex-1 min-w-0">
@@ -218,7 +217,7 @@ function NotificationsPanel({
                     {!n.read && (
                       <Check
                         size={13}
-                        className="shrink-0 text-[--color-navy] opacity-0 group-hover:opacity-100 transition-opacity mt-0.5"
+                        className="shrink-0 text-(--color-navy) opacity-0 group-hover:opacity-100 transition-opacity mt-0.5"
                       />
                     )}
                   </div>
@@ -255,7 +254,10 @@ export default function PortalHeader({
     .slice(0, 2);
 
   const profileHref =
-    role === "CLIENT" ? "/client-portal/profile" : "/admin-portal/settings";
+    role === "CLIENT" ? "/client-portal/profile" : "/admin-portal/profile";
+
+  const settingsHref =
+    role === "CLIENT" ? "/client-portal/settings" : "/admin-portal/settings";
 
   const portalLabel =
     role === "CLIENT"
@@ -266,7 +268,7 @@ export default function PortalHeader({
 
   const roleBadgeStyle =
     role === "ADMIN"
-      ? "bg-[--color-crimson]/20 text-[--color-crimson-light]"
+      ? "bg-white text-crimson"
       : role === "PM"
         ? "bg-white/15 text-white/70"
         : "bg-white/10 text-white/50";
@@ -294,7 +296,7 @@ export default function PortalHeader({
         {/* Mobile logo */}
         <Link href="/" className="lg:hidden">
           <span className="font-display text-[17px] font-bold tracking-tight text-white">
-            Terra<span className="text-[--color-crimson]">lume</span>
+            Terra<span className="text-crimson">lume</span>
           </span>
         </Link>
 
@@ -327,12 +329,12 @@ export default function PortalHeader({
             <button className="flex items-center gap-2 rounded-xl pl-1 pr-2 py-1 hover:bg-white/8 transition-all duration-200 outline-none group">
               {/* Avatar with ring */}
               <div className="relative">
-                <div className="h-8 w-8 rounded-full ring-2 ring-[--color-navy]/15 ring-offset-1 overflow-hidden">
+                <div className="h-8 w-8 rounded-full ring-2 ring-navy/15 ring-offset-1 overflow-hidden">
                   <Avatar className="h-8 w-8">
                     {photoUrl && (
                       <AvatarImage src={photoUrl} alt={displayName} />
                     )}
-                    <AvatarFallback className="bg-linear-to-br from-[--color-navy] to-[--color-navy-dark] text-white text-xs font-bold">
+                    <AvatarFallback className="bg-linear-to-br from-crimson to-[#6b1220] text-white text-xs font-bold">
                       {initials}
                     </AvatarFallback>
                   </Avatar>
@@ -364,14 +366,14 @@ export default function PortalHeader({
           <DropdownMenuContent
             align="end"
             sideOffset={10}
-            className="z-50 w-60 rounded-2xl border border-[--color-divider]/60 shadow-2xl shadow-black/10 p-1.5 overflow-hidden bg-white"
+            className="z-50 w-60 rounded-2xl shadow-2xl shadow-black/20 p-1.5 overflow-hidden bg-white"
           >
             {/* Mini profile card */}
-            <div className="flex items-center gap-3 px-3 py-3 mb-1 rounded-xl bg-[--color-navy-light]/30">
-              <div className="h-10 w-10 rounded-full ring-2 ring-[--color-navy]/15 overflow-hidden shrink-0">
+            <div className="flex items-center gap-3 px-3 py-3 mb-1 rounded-xl bg-navy-light/30">
+              <div className="h-10 w-10 rounded-full ring-2 ring-navy/15 overflow-hidden shrink-0">
                 <Avatar className="h-10 w-10">
                   {photoUrl && <AvatarImage src={photoUrl} alt={displayName} />}
-                  <AvatarFallback className="bg-linear-to-br from-[--color-navy] to-[--color-navy-dark] text-white text-xs font-bold">
+                  <AvatarFallback className="bg-linear-to-br from-crimson to-[#6b1220] text-white text-xs font-bold">
                     {initials}
                   </AvatarFallback>
                 </Avatar>
@@ -386,21 +388,33 @@ export default function PortalHeader({
               </div>
             </div>
 
-            <DropdownMenuSeparator className="bg-[--color-divider]/60 my-1" />
+            <DropdownMenuSeparator className="bg-divider/60 my-1" />
 
             <DropdownMenuItem
               asChild
-              className="rounded-xl cursor-pointer gap-2.5 px-3 py-2.5 focus:bg-[--color-navy-light]/50 focus:text-[--color-navy]"
+              className="rounded-xl cursor-pointer gap-2.5 px-3 py-2.5 focus:bg-navy-light/50 focus:text-navy"
             >
               <Link href={profileHref}>
-                <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-[--color-navy-light]">
-                  <User size={14} className="text-[--color-navy]" />
+                <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-navy-light">
+                  <User size={14} className="text-(--color-navy)" />
                 </span>
-                <span className="text-sm">Profile &amp; Settings</span>
+                <span className="text-sm">Profile</span>
               </Link>
             </DropdownMenuItem>
 
-            <DropdownMenuSeparator className="bg-[--color-divider]/60 my-1" />
+            <DropdownMenuItem
+              asChild
+              className="rounded-xl cursor-pointer gap-2.5 px-3 py-2.5 focus:bg-navy-light/50 focus:text-navy"
+            >
+              <Link href={settingsHref}>
+                <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-navy-light">
+                  <Settings size={14} className="text-(--color-navy)" />
+                </span>
+                <span className="text-sm">Settings</span>
+              </Link>
+            </DropdownMenuItem>
+
+            <DropdownMenuSeparator className="bg-divider/60 my-1" />
 
             <DropdownMenuItem
               asChild

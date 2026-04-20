@@ -97,7 +97,7 @@ export default async function AdminDashboardPage() {
   return (
     <>
       <div className="px-6 pt-8 pb-2 max-w-6xl mx-auto">
-        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[--color-crimson] mb-1">
+        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-(--color-crimson) mb-1">
           {isAdmin ? "Admin Portal" : "PM Portal"}
         </p>
         <h1 className="font-display text-2xl font-bold text-on-surface">
@@ -115,9 +115,9 @@ export default async function AdminDashboardPage() {
             <StatCard
               label="Active engagements"
               value={adminStats.activeEngagements}
-              icon={<Briefcase size={18} className="text-[--color-navy]" />}
-              gradient="bg-linear-to-r from-[--color-navy] to-[--color-navy-light]"
-              iconBg="bg-[--color-navy-light]"
+              icon={<Briefcase size={18} className="text-(--color-navy)" />}
+              gradient="bg-linear-to-r from-(--color-navy) to-(--color-navy-light)"
+              iconBg="bg-(--color-navy-light)"
             />
             <StatCard
               label="Total clients"
@@ -137,10 +137,10 @@ export default async function AdminDashboardPage() {
               label="Open enquiries"
               value={adminStats.openEnquiries}
               icon={
-                <FileQuestion size={18} className="text-[--color-crimson]" />
+                <FileQuestion size={18} className="text-(--color-crimson)" />
               }
-              gradient="bg-linear-to-r from-[--color-crimson] to-[--color-crimson-light]"
-              iconBg="bg-[--color-crimson-light]"
+              gradient="bg-linear-to-r from-(--color-crimson) to-(--color-crimson-light)"
+              iconBg="bg-(--color-crimson-light)"
             />
           </div>
         )}
@@ -150,7 +150,7 @@ export default async function AdminDashboardPage() {
           {/* Table header */}
           <div className="flex items-center justify-between px-6 py-4 border-b border-divider/60">
             <div className="flex items-center gap-3">
-              <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-linear-to-br from-[--color-navy] to-[--color-navy-dark] text-white shadow-sm">
+              <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-linear-to-br from-(--color-navy) to-(--color-navy-dark) text-white shadow-sm">
                 <TrendingUp size={14} />
               </div>
               <h2 className="text-sm font-semibold text-on-surface">
@@ -159,7 +159,7 @@ export default async function AdminDashboardPage() {
             </div>
             <Link
               href="/admin-portal/clients"
-              className="flex items-center gap-1.5 text-xs text-[--color-navy] font-semibold hover:text-navy-dark rounded-lg px-3 py-1.5 hover:bg-[--color-navy-light] transition-colors"
+              className="flex items-center gap-1.5 text-xs text-(--color-navy) font-semibold hover:text-navy-dark rounded-lg px-3 py-1.5 hover:bg-(--color-navy-light) transition-colors"
             >
               View all <ArrowRight size={12} />
             </Link>
@@ -167,8 +167,8 @@ export default async function AdminDashboardPage() {
 
           {engagements.length === 0 ? (
             <div className="px-6 py-16 text-center">
-              <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-2xl bg-[--color-navy-light]/60">
-                <Briefcase size={20} className="text-[--color-navy]/50" />
+              <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-2xl bg-(--color-navy-light)/60">
+                <Briefcase size={20} className="text-(--color-navy)/50" />
               </div>
               <p className="text-sm font-medium text-on-surface-muted">
                 No active engagements
@@ -181,7 +181,7 @@ export default async function AdminDashboardPage() {
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="bg-[--color-navy-light]/30 border-b border-divider/40">
+                  <tr className="bg-(--color-navy-light)/30 border-b border-divider/40">
                     <th className="text-left px-6 py-3.5 text-[11px] font-semibold text-on-surface-muted uppercase tracking-wider">
                       Client
                     </th>
@@ -201,11 +201,11 @@ export default async function AdminDashboardPage() {
                   {engagements.map((eng) => (
                     <tr
                       key={eng.id}
-                      className="group hover:bg-[--color-navy-light]/20 transition-colors"
+                      className="group hover:bg-(--color-navy-light)/20 transition-colors"
                     >
                       <td className="px-6 py-4">
                         <div className="flex items-center gap-3">
-                          <div className="h-9 w-9 shrink-0 rounded-full bg-linear-to-br from-[--color-navy] to-[--color-navy-dark] flex items-center justify-center text-white text-xs font-bold shadow-sm">
+                          <div className="h-9 w-9 shrink-0 rounded-full bg-linear-to-br from-(--color-navy) to-(--color-navy-dark) flex items-center justify-center text-white text-xs font-bold shadow-sm">
                             {(eng.user?.fullName ?? eng.user?.email ?? "?")
                               .charAt(0)
                               .toUpperCase()}
@@ -260,7 +260,7 @@ export default async function AdminDashboardPage() {
                       <td className="px-4 py-4 text-right">
                         <Link
                           href={`/admin-portal/clients/${eng.userId}`}
-                          className="inline-flex items-center gap-1 text-xs font-semibold text-[--color-navy] hover:text-navy-dark rounded-lg px-3 py-1.5 hover:bg-[--color-navy-light] transition-colors opacity-70 group-hover:opacity-100"
+                          className="inline-flex items-center gap-1 text-xs font-semibold text-(--color-navy) hover:text-navy-dark rounded-lg px-3 py-1.5 hover:bg-(--color-navy-light) transition-colors opacity-70 group-hover:opacity-100"
                         >
                           View <ArrowRight size={12} />
                         </Link>

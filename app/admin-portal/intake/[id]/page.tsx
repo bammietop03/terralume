@@ -151,6 +151,12 @@ export default async function AdminIntakeDetailPage({
       phone: u.phone,
     }));
 
+  // PM is now on the client User, not the submission
+  const assignedPm = submission.user?.assignedPm ?? null;
+  const pmChangeRequested = submission.user?.pmChangeRequested ?? false;
+  const pmChangeReason = submission.user?.pmChangeReason ?? null;
+  const isSuperAdmin = user.role === "ADMIN";
+
   const statusMeta = STATUS_META[submission.status] ?? STATUS_META.PENDING;
 
   const budgetDisplay =
@@ -197,16 +203,13 @@ export default async function AdminIntakeDetailPage({
         <div className="flex flex-col sm:flex-row sm:items-center gap-2.5 shrink-0">
           {/* PM assignment */}
           <div className="flex items-center gap-2">
-            {submission.assignedPm ? (
+            {assignedPm ? (
               <div className="flex items-center gap-1.5 rounded-full border border-divider bg-surface-alt px-2.5 py-1">
                 <div className="flex h-5 w-5 items-center justify-center rounded-full bg-navy text-[10px] font-bold uppercase text-white">
-                  {submission.assignedPm.fullName?.charAt(0) ?? (
-                    <UserCircle size={12} />
-                  )}
+                  {assignedPm.fullName?.charAt(0) ?? <UserCircle size={12} />}
                 </div>
                 <span className="text-xs text-on-surface font-medium">
-                  {submission.assignedPm.fullName ??
-                    submission.assignedPm.email}
+                  {assignedPm.fullName ?? assignedPm.email}
                 </span>
               </div>
             ) : (
@@ -214,13 +217,16 @@ export default async function AdminIntakeDetailPage({
                 No PM assigned
               </span>
             )}
-            <AssignPmButton
-              submissionId={submission.id}
-              assignedPm={submission.assignedPm ?? null}
-              pmChangeRequested={submission.pmChangeRequested}
-              pmChangeReason={submission.pmChangeReason ?? null}
-              pmOptions={pmOptions}
-            />
+            {/* Only super-admin (ADMIN role) may assign/reassign PMs */}
+            {isSuperAdmin && submission.userId && (
+              <AssignPmButton
+                userId={submission.userId}
+                assignedPm={assignedPm}
+                pmChangeRequested={pmChangeRequested}
+                pmChangeReason={pmChangeReason}
+                pmOptions={pmOptions}
+              />
+            )}
           </div>
 
           <div className="flex sm:flex-col items-center sm:items-end gap-2 sm:gap-1.5">
@@ -256,7 +262,11 @@ export default async function AdminIntakeDetailPage({
                   Portal account
                 </p>
                 <Link
-                  href="/admin-portal/users/clients"
+                  href={
+                    isSuperAdmin
+                      ? "/admin-portal/users/clients"
+                      : "/admin-portal/clients"
+                  }
                   className="inline-flex items-center gap-1 text-xs text-navy hover:underline font-medium"
                 >
                   View client account <ExternalLink size={11} />

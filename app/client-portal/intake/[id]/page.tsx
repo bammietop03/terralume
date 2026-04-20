@@ -14,6 +14,7 @@ import {
   Phone,
 } from "lucide-react";
 import RequestPmChangeButton from "@/components/portal/client/RequestPmChangeButton";
+import { Card, CardContent } from "@/components/ui/card";
 
 export const metadata = { title: "Brief Details — Terralume Client Portal" };
 
@@ -63,17 +64,17 @@ function Section({
   children: React.ReactNode;
 }) {
   return (
-    <div className="rounded-2xl border border-divider bg-surface shadow-sm overflow-hidden">
-      <div className="flex items-center gap-2.5 border-b border-divider bg-surface-alt px-5 py-3.5">
-        <Icon size={15} className="text-on-surface-muted" />
-        <h2 className="text-xs font-semibold uppercase tracking-wide text-on-surface-muted">
+    <Card className="overflow-hidden">
+      <div className="flex items-center gap-2 border-b border-divider bg-surface-alt/60 px-4 py-2.5">
+        <Icon size={13} className="text-on-surface-muted shrink-0" />
+        <span className="text-[11px] font-semibold uppercase tracking-widest text-on-surface-muted">
           {title}
-        </h2>
+        </span>
       </div>
-      <div className="px-5 py-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <CardContent className="p-4 pt-4 grid grid-cols-2 gap-x-6 gap-y-4">
         {children}
-      </div>
-    </div>
+      </CardContent>
+    </Card>
   );
 }
 
@@ -86,26 +87,30 @@ function Field({
   value?: string | null | boolean | string[];
   full?: boolean;
 }) {
-  const display = Array.isArray(value) ? (
-    value.length > 0 ? (
-      value.join(", ")
-    ) : (
-      <span className="text-on-surface-muted italic">None selected</span>
-    )
-  ) : value === true ? (
-    "Yes"
-  ) : value === false ? (
-    "No"
-  ) : (
-    value || <span className="text-on-surface-muted italic">Not provided</span>
-  );
+  const isEmpty =
+    value === null ||
+    value === undefined ||
+    value === "" ||
+    (Array.isArray(value) && value.length === 0);
+
+  const display = Array.isArray(value)
+    ? value.join(" · ")
+    : value === true
+      ? "Yes"
+      : value === false
+        ? "No"
+        : value;
 
   return (
-    <div className={full ? "sm:col-span-2" : ""}>
-      <p className="text-[10px] font-semibold uppercase tracking-wide text-on-surface-muted mb-1">
+    <div className={full ? "col-span-2" : ""}>
+      <p className="text-[10px] font-medium uppercase tracking-wider text-on-surface-muted/70 mb-0.5">
         {label}
       </p>
-      <p className="text-sm text-on-surface">{display}</p>
+      {isEmpty ? (
+        <p className="text-xs italic text-on-surface-muted">—</p>
+      ) : (
+        <p className="text-sm text-on-surface leading-snug">{display}</p>
+      )}
     </div>
   );
 }
@@ -125,89 +130,88 @@ export default async function ClientIntakeDetailPage({
   const statusMeta = STATUS_META[submission.status] ?? STATUS_META.PENDING;
 
   return (
-    <div className="px-6 py-8 max-w-3xl mx-auto space-y-6">
-      {/* Back + Header */}
-      <div>
-        <Link
-          href="/client-portal/intake"
-          className="inline-flex items-center gap-1.5 text-xs text-on-surface-muted hover:text-on-surface mb-4 transition-colors"
-        >
-          <ArrowLeft size={13} />
-          My briefs
-        </Link>
+    <div className="px-6 py-8 max-w-5xl mx-auto space-y-6">
+      {/* Back */}
+      <Link
+        href="/client-portal/intake"
+        className="inline-flex items-center gap-1.5 text-xs text-on-surface-muted hover:text-on-surface transition-colors"
+      >
+        <ArrowLeft size={12} />
+        My briefs
+      </Link>
 
-        <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-wide text-on-surface-muted mb-1">
-              Brief details
-            </p>
-            <h1 className="font-display text-2xl font-bold text-on-surface">
-              {TYPE_LABEL[submission.transactionType] ??
-                submission.transactionType}
-            </h1>
-            <p className="text-sm text-on-surface-muted mt-0.5">
-              {submission.referenceNumber} · Submitted{" "}
-              {formatDate(submission.createdAt)}
-            </p>
-          </div>
-          <span
-            className={`self-start inline-flex items-center rounded-full px-3 py-1 text-xs font-medium ${statusMeta.className}`}
-          >
-            {statusMeta.label}
-          </span>
+      {/* Page header card */}
+      <div className="rounded-xl border border-divider bg-surface p-5 flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-6">
+        <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-navy/10 text-sm font-bold text-navy uppercase">
+          {submission.fullName.charAt(0)}
         </div>
+        <div className="flex-1 min-w-0">
+          <p className="text-base font-semibold text-on-surface leading-tight truncate">
+            {submission.fullName}
+          </p>
+          <p className="mt-0.5 text-xs text-on-surface-muted">
+            {submission.referenceNumber}
+            <span className="mx-1.5 text-divider-strong">·</span>
+            {TYPE_LABEL[submission.transactionType] ??
+              submission.transactionType}
+            <span className="mx-1.5 text-divider-strong">·</span>
+            Submitted {formatDate(submission.createdAt)}
+          </p>
+        </div>
+        <span
+          className={`self-start sm:self-auto inline-flex items-center rounded-full px-3 py-1 text-xs font-medium ${statusMeta.className}`}
+        >
+          {statusMeta.label}
+        </span>
       </div>
 
       {/* Assigned advisor card */}
-      {submission.assignedPm ? (
-        <div className="rounded-2xl border border-divider bg-surface overflow-hidden">
-          <div className="flex items-center gap-2.5 border-b border-divider bg-surface-alt px-5 py-3.5">
-            <User size={15} className="text-on-surface-muted" />
-            <h2 className="text-xs font-semibold uppercase tracking-wide text-on-surface-muted">
+      {submission.user?.assignedPm ? (
+        <Card className="overflow-hidden">
+          <div className="flex items-center gap-2 border-b border-divider bg-surface-alt/60 px-4 py-2.5">
+            <User size={13} className="text-on-surface-muted shrink-0" />
+            <span className="text-[11px] font-semibold uppercase tracking-widest text-on-surface-muted">
               Your advisor
-            </h2>
+            </span>
           </div>
-          <div className="px-5 py-4 flex items-start gap-4">
-            {/* Avatar */}
-            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-navy text-sm font-bold uppercase text-white">
-              {submission.assignedPm.fullName?.charAt(0) ?? "?"}
+          <CardContent className="p-4 flex items-start gap-4">
+            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-navy/10 text-sm font-bold uppercase text-navy">
+              {submission.user.assignedPm.fullName?.charAt(0) ?? "?"}
             </div>
-            {/* Details */}
             <div className="flex-1 min-w-0">
               <p className="text-sm font-semibold text-on-surface">
-                {submission.assignedPm.fullName ?? "Your advisor"}
+                {submission.user.assignedPm.fullName ?? "Your advisor"}
               </p>
               <div className="mt-1.5 flex flex-wrap gap-x-4 gap-y-1">
                 <a
-                  href={`mailto:${submission.assignedPm.email}`}
+                  href={`mailto:${submission.user.assignedPm.email}`}
                   className="inline-flex items-center gap-1 text-xs text-on-surface-muted hover:text-navy transition-colors"
                 >
                   <Mail size={11} />
-                  {submission.assignedPm.email}
+                  {submission.user.assignedPm.email}
                 </a>
-                {submission.assignedPm.phone && (
+                {submission.user.assignedPm.phone && (
                   <a
-                    href={`tel:${submission.assignedPm.phone}`}
+                    href={`tel:${submission.user.assignedPm.phone}`}
                     className="inline-flex items-center gap-1 text-xs text-on-surface-muted hover:text-navy transition-colors"
                   >
                     <Phone size={11} />
-                    {submission.assignedPm.phone}
+                    {submission.user.assignedPm.phone}
                   </a>
                 )}
               </div>
             </div>
-            {/* Request change */}
-            {!submission.pmChangeRequested && (
+            {!submission.user.pmChangeRequested && (
               <RequestPmChangeButton submissionId={submission.id} />
             )}
-          </div>
-          {submission.pmChangeRequested && (
-            <div className="border-t border-divider bg-amber-50 px-5 py-3 flex items-center gap-2 text-xs text-amber-700">
+          </CardContent>
+          {submission.user.pmChangeRequested && (
+            <div className="border-t border-divider bg-amber-50 px-4 py-2.5 flex items-center gap-2 text-xs text-amber-700">
               <Info size={13} className="shrink-0" />
               Advisor change requested — our team will be in touch shortly.
             </div>
           )}
-        </div>
+        </Card>
       ) : null}
 
       {/* What happens next info box */}
@@ -238,55 +242,76 @@ export default async function ClientIntakeDetailPage({
         </div>
       )}
 
-      {/* Contact */}
-      <Section title="Your contact details" icon={User}>
-        <Field label="Full name" value={submission.fullName} />
-        <Field label="Preferred name" value={submission.preferredName} />
-        <Field label="Email" value={submission.email} />
-        <Field label="Phone" value={submission.phone} />
-        <Field label="Based in" value={submission.location} />
-        <Field label="Nationality" value={submission.nationality} />
-      </Section>
+      {/* Two-column section grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        {/* LEFT */}
+        <div className="space-y-4">
+          {/* Contact */}
+          <Section title="Your contact details" icon={User}>
+            <Field label="Full name" value={submission.fullName} />
+            <Field label="Preferred name" value={submission.preferredName} />
+            <Field label="Email" value={submission.email} full />
+            <Field label="Phone" value={submission.phone} />
+            <Field label="Based in" value={submission.location} />
+            <Field label="Nationality" value={submission.nationality} />
+          </Section>
 
-      {/* Goal */}
-      <Section title="Your goal" icon={Target}>
-        <Field
-          label="Transaction type"
-          value={
-            TYPE_LABEL[submission.transactionType] ?? submission.transactionType
-          }
-        />
-        <Field label="Purpose" value={submission.purpose} />
-      </Section>
+          {/* Goal */}
+          <Section title="Your goal" icon={Target}>
+            <Field
+              label="Transaction type"
+              value={
+                TYPE_LABEL[submission.transactionType] ??
+                submission.transactionType
+              }
+            />
+            <Field label="Purpose" value={submission.purpose} />
+          </Section>
 
-      {/* Property */}
-      <Section title="Property requirements" icon={Home}>
-        <Field label="Target areas" value={submission.targetAreas} full />
-        <Field label="Property type" value={submission.propertyType} />
-        <Field label="Minimum bedrooms" value={submission.bedrooms} />
-        <Field label="Floor area (sqm)" value={submission.floorAreaSqm} />
-        <Field label="Must-haves" value={submission.mustHaves} full />
-        <Field label="Deal-breakers" value={submission.dealBreakers} full />
-      </Section>
+          {/* Budget */}
+          <Section title="Budget &amp; financing" icon={Wallet}>
+            <Field label="Currency" value={submission.currency} />
+            <Field label="Budget minimum" value={submission.budgetMin} />
+            <Field label="Budget maximum" value={submission.budgetMax} />
+            <Field
+              label="Source of funds"
+              value={submission.sourceOfFunds}
+              full
+            />
+            <Field
+              label="Mortgage status"
+              value={submission.mortgageStatus}
+              full
+            />
+          </Section>
+        </div>
 
-      {/* Budget */}
-      <Section title="Budget &amp; financing" icon={Wallet}>
-        <Field label="Currency" value={submission.currency} />
-        <Field label="Budget minimum" value={submission.budgetMin} />
-        <Field label="Budget maximum" value={submission.budgetMax} />
-        <Field label="Source of funds" value={submission.sourceOfFunds} />
-        <Field label="Mortgage status" value={submission.mortgageStatus} />
-      </Section>
+        {/* RIGHT */}
+        <div className="space-y-4">
+          {/* Property */}
+          <Section title="Property requirements" icon={Home}>
+            <Field label="Target areas" value={submission.targetAreas} full />
+            <Field label="Property type" value={submission.propertyType} />
+            <Field label="Minimum bedrooms" value={submission.bedrooms} />
+            <Field label="Floor area (sqm)" value={submission.floorAreaSqm} />
+            <Field label="Must-haves" value={submission.mustHaves} full />
+            <Field label="Deal-breakers" value={submission.dealBreakers} full />
+          </Section>
 
-      {/* Timeline */}
-      <Section title="Timeline &amp; background" icon={Clock}>
-        <Field label="Target date" value={submission.targetDate} />
-        <Field label="Decision speed" value={submission.decisionSpeed} />
-        <Field label="Decision makers" value={submission.decisionMakers} />
-        <Field label="Prior experience" value={submission.priorExperience} />
-        <Field label="Risk profile" value={submission.riskProfile} />
-        <Field label="Referral source" value={submission.referralSource} />
-      </Section>
+          {/* Timeline */}
+          <Section title="Timeline &amp; background" icon={Clock}>
+            <Field label="Target date" value={submission.targetDate} />
+            <Field label="Decision speed" value={submission.decisionSpeed} />
+            <Field label="Decision makers" value={submission.decisionMakers} />
+            <Field
+              label="Prior experience"
+              value={submission.priorExperience}
+            />
+            <Field label="Risk profile" value={submission.riskProfile} />
+            <Field label="Referral source" value={submission.referralSource} />
+          </Section>
+        </div>
+      </div>
 
       {/* Footer actions */}
       <div className="flex justify-between items-center pt-2">

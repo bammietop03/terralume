@@ -30,6 +30,12 @@ export const metadata: Metadata = {
   },
 };
 
+const ROLE_LABEL: Record<string, string> = {
+  ADMIN: "Terralume Advisory",
+  PM: "Property Manager",
+  CLIENT: "Team Member",
+};
+
 function dbArticleToArticle(row: ArticleRow): Article {
   const category = row.category
     .toLowerCase()
@@ -38,7 +44,10 @@ function dbArticleToArticle(row: ArticleRow): Article {
     slug: row.slug,
     title: row.title,
     excerpt: row.excerpt,
-    author: { name: row.authorName, role: row.authorRole },
+    author: {
+      name: row.author.fullName ?? row.author.preferredName ?? "Terralume",
+      role: ROLE_LABEL[row.author.role] ?? "Contributor",
+    },
     date: row.publishedAt.toISOString(),
     readTime: row.readTime,
     category,

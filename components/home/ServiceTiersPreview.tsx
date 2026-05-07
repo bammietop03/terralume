@@ -3,12 +3,36 @@ import { Button } from "@/components/ui/button";
 import { Check, ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-const tiers = [
-  {
-    name: "Starter",
+// ─── Types ───────────────────────────────────────────────────────────────────
+
+export interface DbTier {
+  id: string;
+  name: string;
+  slug: string;
+  description: string | null;
+  price: number;
+  currency: string;
+}
+
+interface Props {
+  tiers?: DbTier[];
+}
+
+// ─── Static enrichment (non-dynamic content per slug) ────────────────────────
+
+type TierStatic = {
+  tag: string;
+  highlight: boolean;
+  forWhoSummary: string;
+  inclusions: string[];
+  cta: string;
+};
+
+const TIER_STATIC: Record<string, TierStatic> = {
+  starter: {
     tag: "Rental Advisory",
-    forWho: "First-time renters & relocations",
-    priceFrom: "₦150,000 - ₦200,000",
+    highlight: false,
+    forWhoSummary: "First-time renters & relocations",
     inclusions: [
       "Property search & shortlist",
       "Landlord background check",
@@ -16,13 +40,11 @@ const tiers = [
       "Move-in inspection report",
     ],
     cta: "Get started",
-    highlight: false,
   },
-  {
-    name: "Standard",
+  standard: {
     tag: "Purchase Advisory",
-    forWho: "First-time buyers & upgraders",
-    priceFrom: "₦350,000 - ₦650,000",
+    highlight: true,
+    forWhoSummary: "First-time buyers & upgraders",
     inclusions: [
       "Everything in Starter",
       "Title verification report",
@@ -31,13 +53,11 @@ const tiers = [
       "Completion management",
     ],
     cta: "Get started",
-    highlight: true,
   },
-  {
-    name: "Premium",
+  premium: {
     tag: "Investment Advisory",
-    forWho: "HNW investors & diaspora buyers",
-    priceFrom: "₦750,000 - ₦1,500,000+",
+    highlight: false,
+    forWhoSummary: "HNW investors & diaspora buyers",
     inclusions: [
       "Everything in Standard",
       "Off-market deal access",
@@ -47,11 +67,86 @@ const tiers = [
       "Priority support & reporting",
     ],
     cta: "Talk to us",
+  },
+  corporate: {
+    tag: "Corporate Relocation",
     highlight: false,
+    forWhoSummary: "Multinationals & large employers",
+    inclusions: [
+      "Dedicated corporate account manager",
+      "Unlimited briefs within contract",
+      "Priority processing (48-hour SLA)",
+      "Centralised HR reporting dashboard",
+    ],
+    cta: "Talk to us",
+  },
+  "diaspora-remote": {
+    tag: "Remote End-to-End",
+    highlight: false,
+    forWhoSummary: "Overseas Nigerians buying in Lagos",
+    inclusions: [
+      "Full remote onboarding via video call",
+      "Video walkthroughs for every property",
+      "UK/US/UAE timezone-compatible support",
+      "Fraud prevention & vendor verification",
+    ],
+    cta: "Get started",
+  },
+};
+
+// ─── Fallback static tiers (shown when DB is unavailable) ────────────────────
+
+const FALLBACK_TIERS: DbTier[] = [
+  {
+    id: "starter",
+    name: "Starter",
+    slug: "starter",
+    description:
+      "Expert guidance for renters and relocations — without the agent games.",
+    price: 150_000,
+    currency: "NGN",
+  },
+  {
+    id: "standard",
+    name: "Standard",
+    slug: "standard",
+    description:
+      "Full buyer representation for property purchases up to ₦100 million.",
+    price: 350_000,
+    currency: "NGN",
+  },
+  {
+    id: "premium",
+    name: "Premium",
+    slug: "premium",
+    description:
+      "Portfolio-grade acquisition support for HNW investors and repeat buyers.",
+    price: 750_000,
+    currency: "NGN",
   },
 ];
 
-export function ServiceTiersPreview() {
+// ─── Helper ───────────────────────────────────────────────────────────────────
+
+function formatPrice(price: number, currency: string) {
+  if (currency === "NGN") return `₦${price.toLocaleString("en-NG")}`;
+  return new Intl.NumberFormat("en-GB", {
+    style: "currency",
+    currency,
+    maximumFractionDigits: 0,
+  }).format(price);
+}
+
+// ─── Component ────────────────────────────────────────────────────────────────
+
+export function ServiceTiersPreview({ tiers: dbTiers }: Props) {
+  // Use the first 3 active tiers that have static enrichment; fall back to hardcoded
+  const source = dbTiers && dbTiers.length > 0 ? dbTiers : FALLBACK_TIERS;
+  const displayTiers = source
+    .filter((t) => TIER_STATIC[t.slug])
+    .slice(0, 3)
+    .map((t) => ({ ...t, ...TIER_STATIC[t.slug]! }));
+
   return (
     <section className="bg-surface py-24 lg:py-32">
       <div className="mx-auto max-w-7xl px-6 lg:px-12">
@@ -74,9 +169,9 @@ export function ServiceTiersPreview() {
         </div>
 
         <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-          {tiers.map((tier) => (
+          {displayTiers.map((tier) => (
             <div
-              key={tier.name}
+              key={tier.slug}
               className={cn(
                 "relative flex flex-col rounded-2xl border p-8 transition-all xl:p-10",
                 tier.highlight
@@ -91,7 +186,6 @@ export function ServiceTiersPreview() {
                 />
               )}
 
-              {/* Most popular badge */}
               {tier.highlight && (
                 <div className="absolute -top-4 left-1/2 -translate-x-1/2">
                   <span className="inline-flex items-center gap-1.5 rounded-full bg-crimson px-4 py-1.5 text-[11px] font-bold uppercase tracking-wider text-white shadow-lg">
@@ -100,7 +194,7 @@ export function ServiceTiersPreview() {
                 </div>
               )}
 
-              {/* Tag */}
+              {/* Tag — static */}
               <span
                 className={cn(
                   "mb-4 text-[11px] font-semibold uppercase tracking-widest",
@@ -110,7 +204,7 @@ export function ServiceTiersPreview() {
                 {tier.tag}
               </span>
 
-              {/* Tier name */}
+              {/* Name — dynamic */}
               <h3
                 className={cn(
                   "font-display text-3xl font-bold",
@@ -119,16 +213,18 @@ export function ServiceTiersPreview() {
               >
                 {tier.name}
               </h3>
+
+              {/* For who — static */}
               <p
                 className={cn(
                   "mt-1.5 text-[14px]",
                   tier.highlight ? "text-white/55" : "text-on-surface-muted",
                 )}
               >
-                {tier.forWho}
+                {tier.forWhoSummary}
               </p>
 
-              {/* Price */}
+              {/* Price — dynamic */}
               <div
                 className={cn(
                   "my-8 border-t border-b py-6",
@@ -149,11 +245,11 @@ export function ServiceTiersPreview() {
                     tier.highlight ? "text-white" : "text-navy",
                   )}
                 >
-                  {tier.priceFrom}
+                  {formatPrice(tier.price, tier.currency)}
                 </span>
               </div>
 
-              {/* Inclusions */}
+              {/* Inclusions preview — static */}
               <ul className="mb-8 flex-1 space-y-3.5">
                 {tier.inclusions.map((item) => (
                   <li key={item} className="flex items-start gap-3 text-[14px]">
@@ -175,7 +271,7 @@ export function ServiceTiersPreview() {
                 ))}
               </ul>
 
-              {/* CTA */}
+              {/* CTA — static */}
               <Button
                 asChild
                 variant={tier.highlight ? "default" : "secondary"}

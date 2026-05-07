@@ -6,6 +6,7 @@ import {
   getMyAssignedIntakeSubmissions,
 } from "@/app/actions/intake";
 import { ClipboardList, Clock, Search, Eye } from "lucide-react";
+import DeleteIntakeButton from "@/components/portal/admin/DeleteIntakeButton";
 
 export const metadata = { title: "Intake Forms — Terralume Admin Portal" };
 
@@ -215,13 +216,21 @@ export default async function AdminIntakePage() {
                         {formatDate(s.createdAt)}
                       </td>
                       <td className="px-4 py-3.5">
-                        <Link
-                          href={`/admin-portal/intake/${s.id}`}
-                          className="inline-flex items-center gap-1.5 rounded-lg border border-divider bg-white px-3 py-1.5 text-xs font-medium text-on-surface transition-colors hover:bg-surface-alt"
-                        >
-                          <Eye size={13} />
-                          View
-                        </Link>
+                        <div className="flex items-center gap-2">
+                          <Link
+                            href={`/admin-portal/intake/${s.id}`}
+                            className="inline-flex items-center gap-1.5 rounded-lg border border-divider bg-white px-3 py-1.5 text-xs font-medium text-on-surface transition-colors hover:bg-surface-alt"
+                          >
+                            <Eye size={13} />
+                            View
+                          </Link>
+                          {user.role === "ADMIN" && (
+                            <DeleteIntakeButton
+                              submissionId={s.id}
+                              referenceNumber={s.referenceNumber}
+                            />
+                          )}
+                        </div>
                       </td>
                     </tr>
                   );

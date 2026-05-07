@@ -323,3 +323,231 @@ export function intakeInvitationEmailHtml({
     </div>
   `;
 }
+
+export function strategyMeetingEmailHtml({
+  clientName,
+  pmName,
+  scheduledAt,
+  meetingLink,
+  notes,
+  portalUrl,
+}: {
+  clientName: string;
+  pmName: string;
+  scheduledAt: Date;
+  meetingLink: string | null;
+  notes: string | null;
+  portalUrl: string;
+}): string {
+  const formattedDate = new Date(scheduledAt).toLocaleDateString("en-GB", {
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
+  const formattedTime = new Date(scheduledAt).toLocaleTimeString("en-GB", {
+    hour: "2-digit",
+    minute: "2-digit",
+    timeZoneName: "short",
+  });
+
+  const linkBlock = meetingLink
+    ? `<div style="text-align:center;margin:24px 0;">
+        <a href="${meetingLink}" style="${CTA_STYLE}">Join Meeting</a>
+       </div>`
+    : "";
+
+  const notesBlock = notes
+    ? `<div style="background:#eef0f8;border-radius:8px;padding:16px;margin:16px 0;">
+        <p style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#5f5e5a;margin:0 0 8px 0;">Session notes</p>
+        <p style="${BODY_STYLE}margin:0;">${notes}</p>
+       </div>`
+    : "";
+
+  return `
+    <div style="${BASE_STYLE}">
+      <div style="${CARD_STYLE}">
+        <p style="margin:0 0 24px 0;">${LOGO}</p>
+        <h1 style="${HEADING_STYLE}">Your strategy meeting is confirmed</h1>
+        <p style="${BODY_STYLE}">Hi ${clientName}, your strategy session with ${pmName} has been scheduled.</p>
+        <div style="background:#f9fafb;border:1px solid #d3d1c7;border-radius:8px;padding:16px;margin:16px 0;">
+          <p style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#5f5e5a;margin:0 0 8px 0;">Meeting details</p>
+          <p style="${BODY_STYLE}margin:0 0 4px 0;"><strong>Date:</strong> ${formattedDate}</p>
+          <p style="${BODY_STYLE}margin:0;"><strong>Time:</strong> ${formattedTime}</p>
+        </div>
+        ${linkBlock}
+        ${notesBlock}
+        <p style="${BODY_STYLE}">During this session we will present your options, discuss market analysis, explain risk exposure, and propose an investment structure. Your preferences will be confirmed.</p>
+        <a href="${portalUrl}" style="${CTA_STYLE}">View your portal</a>
+        ${FOOTER}
+      </div>
+    </div>
+  `;
+}
+
+export function agreementReadyEmailHtml({
+  clientName,
+  portalUrl,
+  feeAmount,
+  currency,
+}: {
+  clientName: string;
+  portalUrl: string;
+  feeAmount: number;
+  currency: string;
+}): string {
+  const formattedFee = `${currency} ${feeAmount.toLocaleString()}`;
+
+  return `
+    <div style="${BASE_STYLE}">
+      <div style="${CARD_STYLE}">
+        <p style="margin:0 0 24px 0;">${LOGO}</p>
+        <h1 style="${HEADING_STYLE}">Your service agreement is ready</h1>
+        <p style="${BODY_STYLE}">Hi ${clientName}, your formal service agreement has been prepared and is ready for your review and signature.</p>
+        <div style="background:#f9fafb;border:1px solid #d3d1c7;border-radius:8px;padding:16px;margin:16px 0;">
+          <p style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#5f5e5a;margin:0 0 8px 0;">Agreement summary</p>
+          <p style="${BODY_STYLE}margin:0;"><strong>Agreed fee:</strong> ${formattedFee}</p>
+        </div>
+        <p style="${BODY_STYLE}">Please log in to your portal, read the agreement carefully, and sign electronically. Once signed and payment is confirmed, you will be formally onboarded as an active client.</p>
+        <div style="text-align:center;margin:24px 0;">
+          <a href="${portalUrl}" style="${CTA_STYLE}">Review &amp; Sign Agreement</a>
+        </div>
+        <p style="${BODY_STYLE}">If you have any questions about the terms, please message your project manager directly from your portal.</p>
+        ${FOOTER}
+      </div>
+    </div>
+  `;
+}
+
+export function invoiceIssuedEmailHtml({
+  clientName,
+  invoiceNumber,
+  description,
+  amount,
+  currency,
+  dueDate,
+  portalUrl,
+}: {
+  clientName: string;
+  invoiceNumber: string;
+  description: string;
+  amount: number;
+  currency: string;
+  dueDate: Date | null;
+  portalUrl: string;
+}): string {
+  const formattedAmount = `${currency} ${amount.toLocaleString()}`;
+  const dueLine = dueDate
+    ? `<p style="${BODY_STYLE}margin:0;"><strong>Due date:</strong> ${new Date(dueDate).toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" })}</p>`
+    : "";
+
+  return `
+    <div style="${BASE_STYLE}">
+      <div style="${CARD_STYLE}">
+        <p style="margin:0 0 24px 0;">${LOGO}</p>
+        <h1 style="${HEADING_STYLE}">Invoice ${invoiceNumber}</h1>
+        <p style="${BODY_STYLE}">Hi ${clientName}, an invoice has been issued for your Terralume engagement.</p>
+        <div style="background:#f9fafb;border:1px solid #d3d1c7;border-radius:8px;padding:16px;margin:16px 0;">
+          <p style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#5f5e5a;margin:0 0 8px 0;">Invoice details</p>
+          <p style="${BODY_STYLE}margin:0 0 4px 0;"><strong>Reference:</strong> ${invoiceNumber}</p>
+          <p style="${BODY_STYLE}margin:0 0 4px 0;"><strong>Description:</strong> ${description}</p>
+          <p style="${BODY_STYLE}margin:0 0 4px 0;"><strong>Amount:</strong> ${formattedAmount}</p>
+          ${dueLine}
+        </div>
+        <p style="${BODY_STYLE}">Please log in to your portal to pay securely online.</p>
+        <div style="text-align:center;margin:24px 0;">
+          <a href="${portalUrl}" style="${CTA_STYLE}">Pay Now</a>
+        </div>
+        ${FOOTER}
+      </div>
+    </div>
+  `;
+}
+
+export function engagementActivatedEmailHtml({
+  clientName,
+  portalUrl,
+}: {
+  clientName: string;
+  portalUrl: string;
+}): string {
+  return `
+    <div style="${BASE_STYLE}">
+      <div style="${CARD_STYLE}">
+        <p style="margin:0 0 24px 0;">${LOGO}</p>
+        <h1 style="${HEADING_STYLE}">Your engagement has started</h1>
+        <p style="${BODY_STYLE}">Hi ${clientName}, your intake has been reviewed and your engagement is now active. Your dedicated project manager will be in touch shortly to get things moving.</p>
+        <div style="background:#eef0f8;border-radius:8px;padding:16px;margin:16px 0;">
+          <p style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#5f5e5a;margin:0 0 8px 0;">What's available now</p>
+          <p style="${BODY_STYLE}margin:0 0 4px 0;">→ Track your property search progress on your dashboard</p>
+          <p style="${BODY_STYLE}margin:0 0 4px 0;">→ Message your project manager directly</p>
+          <p style="${BODY_STYLE}margin:0 0 4px 0;">→ Review and sign your service agreement</p>
+          <p style="${BODY_STYLE}margin:0;">→ Access documents and updates in real time</p>
+        </div>
+        <div style="text-align:center;margin:24px 0;">
+          <a href="${portalUrl}" style="${CTA_STYLE}">Open your dashboard</a>
+        </div>
+        ${FOOTER}
+      </div>
+    </div>
+  `;
+}
+
+export function onboardingCompleteEmailHtml({
+  clientName,
+  portalUrl,
+}: {
+  clientName: string;
+  portalUrl: string;
+}): string {
+  return `
+    <div style="${BASE_STYLE}">
+      <div style="${CARD_STYLE}">
+        <p style="margin:0 0 24px 0;">${LOGO}</p>
+        <h1 style="${HEADING_STYLE}">Welcome — you're now an active client</h1>
+        <p style="${BODY_STYLE}">Hi ${clientName}, your payment has been confirmed and your service agreement is signed. Your onboarding is complete.</p>
+        <div style="background:#eef0f8;border-radius:8px;padding:16px;margin:16px 0;">
+          <p style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#5f5e5a;margin:0 0 8px 0;">Your portal is now fully active</p>
+          <p style="${BODY_STYLE}margin:0 0 4px 0;">→ Track deal progress on your dashboard</p>
+          <p style="${BODY_STYLE}margin:0 0 4px 0;">→ View and download all your documents</p>
+          <p style="${BODY_STYLE}margin:0 0 4px 0;">→ Communicate directly with your project manager</p>
+          <p style="${BODY_STYLE}margin:0;">→ Monitor compliance and financial milestones</p>
+        </div>
+        <p style="${BODY_STYLE}">Your dedicated project manager will be in touch shortly with your first update. Everything from here moves transparently inside your dashboard.</p>
+        <div style="text-align:center;margin:24px 0;">
+          <a href="${portalUrl}" style="${CTA_STYLE}">Go to your dashboard</a>
+        </div>
+        ${FOOTER}
+      </div>
+    </div>
+  `;
+}
+
+export function newDocumentEmailHtml({
+  clientName,
+  documentName,
+  category,
+  portalUrl,
+}: {
+  clientName: string;
+  documentName: string;
+  category: string;
+  portalUrl: string;
+}): string {
+  return `
+    <div style="${BASE_STYLE}">
+      <div style="${CARD_STYLE}">
+        <p style="margin:0 0 24px 0;">${LOGO}</p>
+        <h1 style="${HEADING_STYLE}">New document available</h1>
+        <p style="${BODY_STYLE}">Hi ${clientName}, a new document has been added to your Terralume portal.</p>
+        <div style="background:#f9fafb;border:1px solid #d3d1c7;border-radius:8px;padding:16px;margin:16px 0;">
+          <p style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#5f5e5a;margin:0 0 8px 0;">Document details</p>
+          <p style="${BODY_STYLE}margin:0 0 4px 0;"><strong>Name:</strong> ${documentName}</p>
+          <p style="${BODY_STYLE}margin:0;"><strong>Category:</strong> ${category || "General"}</p>
+        </div>
+        <a href="${portalUrl}" style="${CTA_STYLE}">View in portal</a>
+        ${FOOTER}
+      </div>
+    </div>
+  `;
+}

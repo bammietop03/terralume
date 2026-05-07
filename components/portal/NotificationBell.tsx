@@ -103,7 +103,7 @@ export default function NotificationBell({
           </div>
 
           {/* List */}
-          <ul className="max-h-80 overflow-y-auto divide-y divide-divider">
+          <ul className="max-h-80 overflow-y-auto overflow-x-auto divide-y divide-divider">
             {notifications.length === 0 ? (
               <li className="px-4 py-6 text-center text-sm text-on-surface-muted">
                 No notifications yet

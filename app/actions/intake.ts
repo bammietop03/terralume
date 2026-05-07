@@ -4,13 +4,10 @@ import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 import { requireAdmin, requireClient, requireSuperAdmin } from "./auth";
 import { getSessionUser } from "./auth";
-import { createAdminClient } from "@/lib/supabase/admin";
 import { sendEmail } from "@/lib/email";
-import {
-  intakeConfirmationEmailHtml,
-  welcomeEmailHtml,
-} from "@/lib/email-templates";
+import { intakeConfirmationEmailHtml } from "@/lib/email-templates";
 import { createNotification } from "./notifications";
+import { logAudit } from "./audit";
 import type { FormData as IntakeFormData } from "@/components/get-started/types";
 
 const PORTAL_BASE =
@@ -34,108 +31,33 @@ function generateReferenceNumber(): string {
   return `TL-${year}-${numeric}`;
 }
 
-// ── Public: Submit intake form ─────────────────────────────────────────────
+// ── Client: Submit intake form (portal only) ──────────────────────────────
+// Clients must be authenticated — accounts are created by admin via
+// "Proceed with intake" on the lead detail page.
 
 export async function submitIntakeForm(formData: IntakeFormData): Promise<{
   success: boolean;
   referenceNumber?: string;
   error?: string;
 }> {
-  // Basic server-side validation of required fields
-  if (!formData.fullName || !formData.email || !formData.transactionType) {
+  const sessionUser = await requireClient().catch(() => null);
+  if (!sessionUser) return { success: false, error: "Not authenticated." };
+
+  if (!formData.transactionType) {
     return { success: false, error: "Required fields are missing." };
   }
-  if (!formData.email.includes("@")) {
-    return { success: false, error: "Invalid email address." };
-  }
 
-  const adminClient = createAdminClient();
+  const userId = sessionUser.id;
 
-  // 1. Check if a user with this email already exists in Prisma
-  let userId: string | null = null;
-  let isNewUser = false;
-
-  const existingUser = await prisma.user.findUnique({
-    where: { email: formData.email.toLowerCase().trim() },
-    select: { id: true },
-  });
-
-  if (existingUser) {
-    userId = existingUser.id;
-  } else {
-    // Create new Supabase auth user (email_confirm: true so no email loop)
-    const { data: authData, error: authError } =
-      await adminClient.auth.admin.createUser({
-        email: formData.email.toLowerCase().trim(),
-        email_confirm: true,
-        user_metadata: { full_name: formData.fullName },
-      });
-
-    if (authError || !authData.user) {
-      // If the error is "User already registered" it means a Supabase user exists
-      // without a Prisma record — handle gracefully
-      if (authError?.message?.includes("already")) {
-        // Try to look up existing Supabase user via admin API
-        const { data: listData } = await adminClient.auth.admin.listUsers();
-        const found = listData?.users?.find(
-          (u) => u.email?.toLowerCase() === formData.email.toLowerCase().trim(),
-        );
-        if (found) {
-          // Mirror into Prisma
-          await prisma.user.upsert({
-            where: { id: found.id },
-            create: {
-              id: found.id,
-              email: formData.email.toLowerCase().trim(),
-              fullName: formData.fullName,
-              preferredName: formData.preferredName || null,
-              phone: formData.phone || null,
-              nationality: formData.nationality || null,
-              location: formData.location || null,
-              role: "CLIENT",
-            },
-            update: {},
-          });
-          userId = found.id;
-        }
-      } else {
-        return {
-          success: false,
-          error: authError?.message ?? "Failed to create account.",
-        };
-      }
-    } else {
-      const uid = authData.user.id;
-
-      // Create Prisma user record
-      await prisma.user.create({
-        data: {
-          id: uid,
-          email: formData.email.toLowerCase().trim(),
-          fullName: formData.fullName,
-          preferredName: formData.preferredName || null,
-          phone: formData.phone || null,
-          nationality: formData.nationality || null,
-          location: formData.location || null,
-          role: "CLIENT",
-        },
-      });
-
-      userId = uid;
-      isNewUser = true;
-    }
-  }
-
-  // 2. Build the submission field data (shared between create and draft-promotion)
   const submissionFields = {
     status: "PENDING" as const,
     draftStep: null,
-    userId: userId ?? undefined,
-    fullName: formData.fullName,
+    userId,
+    fullName: formData.fullName || sessionUser.fullName || "",
     preferredName: formData.preferredName || null,
-    email: formData.email.toLowerCase().trim(),
-    phone: formData.phone,
-    location: formData.location,
+    email: sessionUser.email,
+    phone: formData.phone || sessionUser.phone || "",
+    location: formData.location || sessionUser.location || "",
     nationality: formData.nationality || null,
     transactionType: formData.transactionType,
     purpose: formData.purpose || null,
@@ -159,35 +81,20 @@ export async function submitIntakeForm(formData: IntakeFormData): Promise<{
     dataConsent: formData.dataConsent,
   };
 
-  // 3. If a logged-in user has an existing DRAFT, promote it instead of creating a duplicate
+  // Promote an existing DRAFT if one exists, otherwise create fresh
   let referenceNumber: string;
-  if (userId) {
-    const existingDraft = await prisma.intakeSubmission.findFirst({
-      where: { userId, status: "DRAFT" },
-      select: { id: true, referenceNumber: true },
+  const existingDraft = await prisma.intakeSubmission.findFirst({
+    where: { userId, status: "DRAFT" },
+    select: { id: true, referenceNumber: true },
+  });
+
+  if (existingDraft) {
+    await prisma.intakeSubmission.update({
+      where: { id: existingDraft.id },
+      data: submissionFields,
     });
-    if (existingDraft) {
-      await prisma.intakeSubmission.update({
-        where: { id: existingDraft.id },
-        data: submissionFields,
-      });
-      referenceNumber = existingDraft.referenceNumber;
-    } else {
-      // No draft — generate a fresh reference number and create
-      referenceNumber = generateReferenceNumber();
-      for (let i = 0; i < 5; i++) {
-        const exists = await prisma.intakeSubmission.findUnique({
-          where: { referenceNumber },
-        });
-        if (!exists) break;
-        referenceNumber = generateReferenceNumber();
-      }
-      await prisma.intakeSubmission.create({
-        data: { referenceNumber, ...submissionFields },
-      });
-    }
+    referenceNumber = existingDraft.referenceNumber;
   } else {
-    // Unauthenticated path — always create new
     referenceNumber = generateReferenceNumber();
     for (let i = 0; i < 5; i++) {
       const exists = await prisma.intakeSubmission.findUnique({
@@ -202,53 +109,100 @@ export async function submitIntakeForm(formData: IntakeFormData): Promise<{
   }
 
   const displayName =
-    formData.preferredName || formData.fullName.split(" ")[0] || "there";
+    formData.preferredName ||
+    formData.fullName?.split(" ")[0] ||
+    sessionUser.fullName?.split(" ")[0] ||
+    "there";
 
-  // 4. Send intake confirmation email
+  // Send intake confirmation email (non-blocking)
   try {
     await sendEmail({
-      to: formData.email,
+      to: sessionUser.email,
       subject: `Enquiry received — your reference is ${referenceNumber}`,
       html: intakeConfirmationEmailHtml({
         clientName: displayName,
         referenceNumber,
         transactionType: formData.transactionType,
-        isNewUser,
+        isNewUser: false,
       }),
     });
   } catch {
     // Non-blocking
   }
 
-  // 5. If new user, send welcome / account setup email
-  if (isNewUser && userId) {
-    try {
-      const { data: linkData, error: linkError } =
-        await adminClient.auth.admin.generateLink({
-          type: "recovery",
-          email: formData.email.toLowerCase().trim(),
-        });
-
-      const setupUrl =
-        !linkError && linkData?.properties?.action_link
-          ? linkData.properties.action_link
-          : `${PORTAL_BASE}/reset-password`;
-
-      await sendEmail({
-        to: formData.email,
-        subject: "Welcome to Terralume — set up your account",
-        html: welcomeEmailHtml({
-          clientName: formData.fullName,
-          loginUrl: setupUrl,
-        }),
-      });
-    } catch {
-      // Non-blocking
-    }
-  }
-
   revalidatePath("/admin-portal/intake");
   revalidatePath("/client-portal/intake");
+
+  void logAudit(
+    userId,
+    "INTAKE_SUBMITTED",
+    "IntakeSubmission",
+    referenceNumber,
+    { transactionType: formData.transactionType },
+  );
+
+  return { success: true, referenceNumber };
+}
+
+// ── Admin/PM: submit intake on behalf of a client ─────────────────────────
+
+export async function submitIntakeFormForClient(
+  clientId: string,
+  formData: IntakeFormData,
+): Promise<{ success: boolean; referenceNumber?: string; error?: string }> {
+  await requireAdmin();
+
+  if (!formData.transactionType) {
+    return { success: false, error: "Required fields are missing." };
+  }
+
+  const client = await prisma.user.findUnique({ where: { id: clientId } });
+  if (!client) return { success: false, error: "Client not found." };
+
+  let referenceNumber = generateReferenceNumber();
+  for (let i = 0; i < 5; i++) {
+    const exists = await prisma.intakeSubmission.findUnique({
+      where: { referenceNumber },
+    });
+    if (!exists) break;
+    referenceNumber = generateReferenceNumber();
+  }
+
+  await prisma.intakeSubmission.create({
+    data: {
+      referenceNumber,
+      userId: clientId,
+      fullName: client.fullName ?? formData.fullName,
+      preferredName: client.preferredName ?? formData.preferredName ?? null,
+      email: client.email,
+      phone: client.phone ?? formData.phone,
+      location: client.location ?? formData.location,
+      nationality: client.nationality ?? formData.nationality ?? null,
+      transactionType: formData.transactionType,
+      purpose: formData.purpose || null,
+      currency: formData.currency || "NGN",
+      budgetMin: formData.budgetMin || null,
+      budgetMax: formData.budgetMax || null,
+      sourceOfFunds: formData.sourceOfFunds || null,
+      mortgageStatus: formData.mortgageStatus || null,
+      targetAreas: formData.targetAreas,
+      propertyType: formData.propertyType || null,
+      bedrooms: formData.bedrooms || null,
+      floorAreaSqm: formData.floorAreaSqm || null,
+      mustHaves: formData.mustHaves,
+      dealBreakers: formData.dealBreakers || null,
+      targetDate: formData.targetDate || null,
+      decisionSpeed: formData.decisionSpeed || null,
+      decisionMakers: formData.decisionMakers || null,
+      priorExperience: formData.priorExperience || null,
+      riskProfile: formData.riskProfile || null,
+      referralSource: formData.referralSource || null,
+      dataConsent: formData.dataConsent,
+      status: "PENDING",
+    },
+  });
+
+  revalidatePath("/admin-portal/intake");
 
   return { success: true, referenceNumber };
 }
@@ -307,6 +261,11 @@ export async function getIntakeSubmissionById(id: string) {
               photoUrl: true,
             },
           },
+          engagements: {
+            where: { status: "active" },
+            take: 1,
+            select: { id: true },
+          },
         },
       },
     },
@@ -326,13 +285,18 @@ export async function updateIntakeStatus(
   id: string,
   status: "PENDING" | "REVIEWING" | "ACTIVE" | "CLOSED",
 ) {
-  await requireAdmin();
+  const admin = await requireAdmin();
   const updated = await prisma.intakeSubmission.update({
     where: { id },
     data: { status },
   });
   revalidatePath("/admin-portal/intake");
   revalidatePath(`/admin-portal/intake/${id}`);
+
+  void logAudit(admin.id, "INTAKE_STATUS_CHANGED", "IntakeSubmission", id, {
+    status,
+  });
+
   return updated;
 }
 
@@ -375,12 +339,6 @@ export async function assignPmToUser(userId: string, pmId: string) {
     userId: client.id,
     type: "PM_ASSIGNED",
     content: `Your advisor has been assigned. They will be in touch shortly.`,
-  });
-
-  // Also mark any PENDING intake submissions as ACTIVE
-  await prisma.intakeSubmission.updateMany({
-    where: { userId, status: "PENDING" },
-    data: { status: "ACTIVE" },
   });
 
   revalidatePath("/admin-portal/intake");
@@ -572,65 +530,25 @@ export async function getMyIntakeDraft(): Promise<{
   };
 }
 
-// ── Admin/PM: submit intake on behalf of a client ─────────────────────────
+// ── Super-admin: delete an intake submission ──────────────────────────────
 
-export async function submitIntakeFormForClient(
-  clientId: string,
-  formData: IntakeFormData,
-): Promise<{ success: boolean; referenceNumber?: string; error?: string }> {
-  await requireAdmin();
+export async function deleteIntakeSubmission(
+  id: string,
+): Promise<{ ok: true } | { ok: false; error: string }> {
+  const admin = await requireSuperAdmin();
 
-  if (!formData.transactionType) {
-    return { success: false, error: "Required fields are missing." };
-  }
+  const submission = await prisma.intakeSubmission.findUnique({
+    where: { id },
+    select: { id: true, referenceNumber: true },
+  });
+  if (!submission) return { ok: false, error: "Submission not found." };
 
-  const client = await prisma.user.findUnique({ where: { id: clientId } });
-  if (!client) return { success: false, error: "Client not found." };
+  await prisma.intakeSubmission.delete({ where: { id } });
 
-  let referenceNumber = generateReferenceNumber();
-  for (let i = 0; i < 5; i++) {
-    const exists = await prisma.intakeSubmission.findUnique({
-      where: { referenceNumber },
-    });
-    if (!exists) break;
-    referenceNumber = generateReferenceNumber();
-  }
-
-  await prisma.intakeSubmission.create({
-    data: {
-      referenceNumber,
-      userId: clientId,
-      fullName: client.fullName ?? formData.fullName,
-      preferredName: client.preferredName ?? formData.preferredName ?? null,
-      email: client.email,
-      phone: client.phone ?? formData.phone,
-      location: client.location ?? formData.location,
-      nationality: client.nationality ?? formData.nationality ?? null,
-      transactionType: formData.transactionType,
-      purpose: formData.purpose || null,
-      currency: formData.currency || "NGN",
-      budgetMin: formData.budgetMin || null,
-      budgetMax: formData.budgetMax || null,
-      sourceOfFunds: formData.sourceOfFunds || null,
-      mortgageStatus: formData.mortgageStatus || null,
-      targetAreas: formData.targetAreas,
-      propertyType: formData.propertyType || null,
-      bedrooms: formData.bedrooms || null,
-      floorAreaSqm: formData.floorAreaSqm || null,
-      mustHaves: formData.mustHaves,
-      dealBreakers: formData.dealBreakers || null,
-      targetDate: formData.targetDate || null,
-      decisionSpeed: formData.decisionSpeed || null,
-      decisionMakers: formData.decisionMakers || null,
-      priorExperience: formData.priorExperience || null,
-      riskProfile: formData.riskProfile || null,
-      referralSource: formData.referralSource || null,
-      dataConsent: formData.dataConsent,
-      status: "PENDING",
-    },
+  void logAudit(admin.id, "INTAKE_DELETED", "IntakeSubmission", id, {
+    referenceNumber: submission.referenceNumber,
   });
 
   revalidatePath("/admin-portal/intake");
-
-  return { success: true, referenceNumber };
+  return { ok: true };
 }

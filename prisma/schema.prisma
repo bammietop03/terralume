@@ -105,14 +105,19 @@ model User {
   // Relations
   enquiries          Enquiry[]
   engagements        Engagement[]
+  managedEngagements Engagement[]   @relation("EngagementPm")
   notifications      Notification[]
-  auditLogs          AuditLog[]
   sentMessages       Message[]      @relation("SentMessages")
+  auditLogs          AuditLog[]
   updates            Update[]
   articles           Article[]
   intakeSubmissions  IntakeSubmission[]
   leadAsClient       Lead?          @relation("LeadClient")
   assignedLeads      Lead[]         @relation("LeadPm")
+  evaluationsAsPm    ClientEvaluation[] @relation("EvaluationPm")
+  meetingsAsPm       StrategyMeeting[]  @relation("MeetingPm")
+  serviceTiersCreated ServiceTier[]
+  signedAgreements   ServiceAgreement[] @relation("AgreementSigner")
 
   @@map("users")
 }
@@ -133,22 +138,27 @@ model Enquiry {
 }
 
 model Engagement {
-  id             String    @id @default(cuid())
-  userId         String    @map("user_id") @db.Uuid
-  pmId           String?   @map("pm_id") @db.Uuid
-  serviceTier    String?   @map("service_tier")
-  stage          String    @default("discovery")
-  startDate      DateTime? @map("start_date")
-  targetDate     DateTime? @map("target_date")
-  status         String    @default("active")
+  id              String    @id @default(cuid())
+  userId          String    @map("user_id") @db.Uuid
+  pmId            String?   @map("pm_id") @db.Uuid
+  serviceTier     String?   @map("service_tier")
+  serviceTierId   String?   @map("service_tier_id")
+  stage           String    @default("discovery")
+  startDate       DateTime? @map("start_date")
+  targetDate      DateTime? @map("target_date")
+  status          String    @default("active")
 
-  user           User             @relation(fields: [userId], references: [id], onDelete: Cascade)
-  documents      Document[]
-  updates        Update[]
-  messages       Message[]
-  properties     Property[]
-  payments       Payment[]
-  pendingActions PendingAction[]
+  user             User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  documents        Document[]
+  updates          Update[]
+  messages         Message[]
+  payments         Payment[]
+  pendingActions   PendingAction[]
+  invoices         Invoice[]
+  agreement        ServiceAgreement?
+  strategyMeetings StrategyMeeting[]
+  pm               User?      @relation("EngagementPm", fields: [pmId], references: [id], onDelete: SetNull)
+  tierRef          ServiceTier? @relation(fields: [serviceTierId], references: [id], onDelete: SetNull)
 
   @@map("engagements")
 }
@@ -168,14 +178,16 @@ model PendingAction {
 }
 
 model Document {
-  id           String   @id @default(cuid())
-  engagementId String   @map("engagement_id")
-  name         String
-  category     String?
-  filePath     String   @map("file_path")
-  uploadedBy   String   @map("uploaded_by") @db.Uuid
-  uploadedAt   DateTime @default(now()) @map("uploaded_at")
-  version      Int      @default(1)
+  id              String   @id @default(cuid())
+  engagementId    String   @map("engagement_id")
+  name            String
+  title           String?
+  category        String?
+  filePath        String   @map("file_path")
+  uploadedBy      String   @map("uploaded_by") @db.Uuid
+  uploadedAt      DateTime @default(now()) @map("uploaded_at")
+  version         Int      @default(1)
+  isClientVisible Boolean  @default(true) @map("is_client_visible")
 
   engagement Engagement @relation(fields: [engagementId], references: [id], onDelete: Cascade)
 
@@ -212,21 +224,6 @@ model Message {
   @@map("messages")
 }
 
-model Property {
-  id             String  @id @default(cuid())
-  engagementId   String  @map("engagement_id")
-  address        String?
-  area           String?
-  priceAsking    Float?  @map("price_asking")
-  priceEstimated Float?  @map("price_estimated")
-  status         String  @default("active")
-  notes          String?
-
-  engagement Engagement @relation(fields: [engagementId], references: [id], onDelete: Cascade)
-
-  @@map("properties")
-}
-
 model Payment {
   id           String        @id @default(cuid())
   engagementId String        @map("engagement_id")
@@ -257,20 +254,6 @@ model Notification {
   @@map("notifications")
 }
 
-model AuditLog {
-  id           String   @id @default(cuid())
-  userId       String   @map("user_id") @db.Uuid
-  action       String
-  resourceType String   @map("resource_type")
-  resourceId   String?  @map("resource_id")
-  timestamp    DateTime @default(now())
-  ipAddress    String?  @map("ip_address")
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@map("audit_log")
-}
-
 model Article {
   id          String          @id @default(cuid())
   slug        String          @unique
@@ -289,6 +272,24 @@ model Article {
   updatedAt   DateTime        @updatedAt @map("updated_at")
 
   @@map("articles")
+}
+
+model AuditLog {
+  id           String   @id @default(cuid())
+  userId       String   @map("user_id") @db.Uuid
+  action       String
+  resourceType String   @map("resource_type")
+  resourceId   String?  @map("resource_id")
+  metadata     Json?
+  ipAddress    String?  @map("ip_address")
+  timestamp    DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([resourceType, resourceId])
+  @@index([timestamp])
+  @@map("audit_log")
 }
 
 model IntakeSubmission {
@@ -348,6 +349,8 @@ model IntakeSubmission {
   createdAt         DateTime     @default(now()) @map("created_at")
   updatedAt         DateTime     @updatedAt @map("updated_at")
 
+  evaluation        ClientEvaluation?
+
   @@map("intake_submissions")
 }
 
@@ -394,4 +397,118 @@ model Lead {
   intakeSubmission   IntakeSubmission?
 
   @@map("leads")
+}
+
+// ─── Phase 4–6 Models ─────────────────────────────────────────────────────────
+
+model ClientEvaluation {
+  id                   String   @id @default(cuid())
+  intakeSubmissionId   String   @unique @map("intake_submission_id")
+  pmId                 String   @map("pm_id") @db.Uuid
+
+  legalScore           Int?     @map("legal_score")
+  legalNotes           String?  @map("legal_notes")
+  financialScore       Int?     @map("financial_score")
+  financialNotes       String?  @map("financial_notes")
+  marketScore          Int?     @map("market_score")
+  marketNotes          String?  @map("market_notes")
+  taxNotes             String?  @map("tax_notes")
+  riskScore            Int?     @map("risk_score")
+  riskNotes            String?  @map("risk_notes")
+  crossBorderNotes     String?  @map("cross_border_notes")
+  overallRecommendation String? @map("overall_recommendation")
+  completedAt          DateTime? @map("completed_at")
+  createdAt            DateTime @default(now()) @map("created_at")
+  updatedAt            DateTime @updatedAt @map("updated_at")
+
+  intakeSubmission IntakeSubmission @relation(fields: [intakeSubmissionId], references: [id], onDelete: Cascade)
+  pm               User            @relation("EvaluationPm", fields: [pmId], references: [id])
+
+  @@map("client_evaluations")
+}
+
+model StrategyMeeting {
+  id           String    @id @default(cuid())
+  engagementId String    @map("engagement_id")
+  pmId         String    @map("pm_id") @db.Uuid
+  title        String?
+  scheduledAt  DateTime  @map("scheduled_at")
+  meetingLink  String?   @map("meeting_link")
+  notes        String?
+  status       String    @default("SCHEDULED")
+  sentAt       DateTime? @map("sent_at")
+  createdAt    DateTime  @default(now()) @map("created_at")
+  updatedAt    DateTime  @updatedAt @map("updated_at")
+
+  engagement Engagement @relation(fields: [engagementId], references: [id], onDelete: Cascade)
+  pm         User       @relation("MeetingPm", fields: [pmId], references: [id])
+
+  @@map("strategy_meetings")
+}
+
+model ServiceTier {
+  id          String   @id @default(cuid())
+  name        String
+  slug        String   @unique
+  description String?
+  price       Float
+  currency    String   @default("NGN")
+  isActive    Boolean  @default(true) @map("is_active")
+  createdById String?  @map("created_by_id") @db.Uuid
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  engagements Engagement[]
+  createdBy   User?      @relation(fields: [createdById], references: [id], onDelete: SetNull)
+
+  @@map("service_tiers")
+}
+
+model ServiceAgreement {
+  id                String    @id @default(cuid())
+  engagementId      String    @unique @map("engagement_id")
+  serviceTier       String?   @map("service_tier")
+  scopeDescription  String    @map("scope_description")
+  timeline          String?
+  deliverables      String[]
+  feeAmount         Float     @map("fee_amount")
+  currency          String    @default("NGN")
+  terms             String
+  version           Int       @default(1)
+  status            String    @default("PENDING")
+  signedAt            DateTime? @map("signed_at")
+  signerName          String?   @map("signer_name")
+  signatureImageUrl   String?   @map("signature_image_url")
+  signedByUserId      String?   @map("signed_by_user_id") @db.Uuid
+  generatedAt         DateTime  @default(now()) @map("generated_at")
+  createdAt         DateTime  @default(now()) @map("created_at")
+  updatedAt         DateTime  @updatedAt @map("updated_at")
+
+  engagement   Engagement @relation(fields: [engagementId], references: [id], onDelete: Cascade)
+  signedByUser User?      @relation("AgreementSigner", fields: [signedByUserId], references: [id], onDelete: SetNull)
+  invoices     Invoice[]
+
+  @@map("service_agreements")
+}
+
+model Invoice {
+  id                 String    @id @default(cuid())
+  engagementId       String    @map("engagement_id")
+  invoiceNumber      String    @unique @map("invoice_number")
+  description        String
+  amount             Float
+  currency           String    @default("NGN")
+  status             String    @default("DRAFT")
+  dueDate            DateTime? @map("due_date")
+  issuedAt           DateTime? @map("issued_at")
+  paidAt             DateTime? @map("paid_at")
+  paystackReference  String?   @unique @map("paystack_reference")
+  serviceAgreementId String?   @map("service_agreement_id")
+  createdAt          DateTime  @default(now()) @map("created_at")
+  updatedAt          DateTime  @updatedAt @map("updated_at")
+
+  engagement       Engagement        @relation(fields: [engagementId], references: [id], onDelete: Cascade)
+  serviceAgreement ServiceAgreement? @relation(fields: [serviceAgreementId], references: [id], onDelete: SetNull)
+
+  @@map("invoices")
 }

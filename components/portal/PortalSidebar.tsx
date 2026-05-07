@@ -4,7 +4,6 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
   LayoutDashboard,
-  FileText,
   MessageSquare,
   CreditCard,
   User,
@@ -20,6 +19,11 @@ import {
   ClipboardList,
   Sparkles,
   Settings,
+  FileSignature,
+  History,
+  Building2,
+  LayoutList,
+  Layers,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
@@ -31,6 +35,7 @@ import {
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import type { Role } from "@/types";
+import { useUnread } from "./UnreadContext";
 
 interface NavItem {
   label: string;
@@ -44,8 +49,12 @@ const clientNav: NavItem[] = [
     href: "/client-portal/dashboard",
     icon: LayoutDashboard,
   },
+  {
+    label: "My Engagement",
+    href: "/client-portal/engagement",
+    icon: Building2,
+  },
   { label: "Intake Forms", href: "/client-portal/intake", icon: ClipboardList },
-  { label: "Documents", href: "/client-portal/documents", icon: FileText },
   { label: "Messages", href: "/client-portal/messages", icon: MessageSquare },
   { label: "Payments", href: "/client-portal/payments", icon: CreditCard },
   { label: "Notifications", href: "/client-portal/notifications", icon: Bell },
@@ -59,14 +68,26 @@ const adminNav: NavItem[] = [
     href: "/admin-portal/dashboard",
     icon: LayoutDashboard,
   },
-  { label: "Clients", href: "/admin-portal/users/clients", icon: UserRound },
-  { label: "Staff", href: "/admin-portal/users/staff", icon: UserCog },
   { label: "Leads", href: "/admin-portal/leads", icon: Sparkles },
   { label: "Intake Forms", href: "/admin-portal/intake", icon: ClipboardList },
+  { label: "Engagements", href: "/admin-portal/engagements", icon: LayoutList },
+  { label: "Messages", href: "/admin-portal/messages", icon: MessageSquare },
+  { label: "Clients", href: "/admin-portal/users/clients", icon: UserRound },
+  { label: "Staff", href: "/admin-portal/users/staff", icon: UserCog },
   {
     label: "Market Intelligence",
     href: "/admin-portal/market-intelligence",
     icon: Newspaper,
+  },
+  {
+    label: "Service Tiers",
+    href: "/admin-portal/service-tiers",
+    icon: Layers,
+  },
+  {
+    label: "Audit Log",
+    href: "/admin-portal/audit-log",
+    icon: History,
   },
   { label: "Profile", href: "/admin-portal/profile", icon: User },
   { label: "Settings", href: "/admin-portal/settings", icon: Settings },
@@ -81,6 +102,8 @@ const pmNav: NavItem[] = [
   { label: "My Clients", href: "/admin-portal/clients", icon: Users },
   { label: "My Leads", href: "/admin-portal/leads", icon: Sparkles },
   { label: "Intake Forms", href: "/admin-portal/intake", icon: ClipboardList },
+  { label: "Engagements", href: "/admin-portal/engagements", icon: LayoutList },
+  { label: "Messages", href: "/admin-portal/messages", icon: MessageSquare },
   { label: "Profile", href: "/admin-portal/profile", icon: User },
   { label: "Settings", href: "/admin-portal/settings", icon: Settings },
 ];
@@ -100,10 +123,12 @@ function NavLink({
   item,
   collapsed,
   onClick,
+  badge,
 }: {
   item: NavItem;
   collapsed: boolean;
   onClick?: () => void;
+  badge?: number;
 }) {
   const pathname = usePathname();
   const isActive =
@@ -130,7 +155,7 @@ function NavLink({
       {/* Icon wrapper */}
       <span
         className={cn(
-          "flex shrink-0 items-center justify-center rounded-lg transition-all duration-200",
+          "relative flex shrink-0 items-center justify-center rounded-lg transition-all duration-200",
           collapsed ? "h-9 w-9" : "h-8 w-8",
           isActive
             ? "bg-crimson/20 text-white"
@@ -138,9 +163,22 @@ function NavLink({
         )}
       >
         <Icon size={16} />
+        {/* Badge on icon (collapsed mode) */}
+        {collapsed && badge && badge > 0 && (
+          <span className="absolute -top-1 -right-1 flex items-center justify-center rounded-full bg-(--color-crimson) text-white text-[9px] font-bold min-w-3.75 h-3.75 px-0.5 tabular-nums leading-none">
+            {badge > 99 ? "99+" : badge}
+          </span>
+        )}
       </span>
 
-      {!collapsed && <span className="truncate">{item.label}</span>}
+      {!collapsed && <span className="flex-1 truncate">{item.label}</span>}
+
+      {/* Badge inline (expanded mode) */}
+      {!collapsed && badge && badge > 0 && (
+        <span className="ml-auto flex items-center justify-center rounded-full bg-white/15 text-white text-[10px] font-bold min-w-4.5 h-4.5 px-1 tabular-nums">
+          {badge > 99 ? "99+" : badge}
+        </span>
+      )}
     </Link>
   );
 
@@ -150,6 +188,7 @@ function NavLink({
         <TooltipTrigger asChild>{link}</TooltipTrigger>
         <TooltipContent side="right" sideOffset={10} className="font-medium">
           {item.label}
+          {badge && badge > 0 ? ` (${badge})` : ""}
         </TooltipContent>
       </Tooltip>
     );
@@ -177,6 +216,7 @@ function SidebarContent({
 > & {
   onClose?: () => void;
 }) {
+  const { unread: unreadMessages } = useUnread();
   const navItems =
     role === "CLIENT" ? clientNav : role === "ADMIN" ? adminNav : pmNav;
 
@@ -239,6 +279,11 @@ function SidebarContent({
             item={item}
             collapsed={collapsed}
             onClick={onClose}
+            badge={
+              item.href.includes("/messages") && unreadMessages > 0
+                ? unreadMessages
+                : undefined
+            }
           />
         ))}
       </nav>

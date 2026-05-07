@@ -16,6 +16,7 @@ import {
   ShieldCheck,
   ExternalLink,
   UserCircle,
+  Zap,
 } from "lucide-react";
 import IntakeStatusSelect from "@/components/portal/admin/IntakeStatusSelect";
 import AssignPmButton from "@/components/portal/admin/AssignPmButton";
@@ -243,6 +244,35 @@ export default async function AdminIntakeDetailPage({
           </div>
         </div>
       </div>
+
+      {/* Activate Client banner — ADMIN only, user exists, no engagement yet */}
+      {isSuperAdmin &&
+        submission.userId &&
+        submission.user &&
+        (submission.user as { engagements?: { id: string }[] }).engagements
+          ?.length === 0 && (
+          <div className="flex items-center justify-between gap-4 rounded-xl border border-(--color-navy)/20 bg-(--color-navy-light) px-5 py-4">
+            <div className="flex items-center gap-3">
+              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-(--color-navy) text-white">
+                <Zap size={16} />
+              </span>
+              <div>
+                <p className="text-sm font-semibold text-on-surface">
+                  Activate this client
+                </p>
+                <p className="text-xs text-on-surface-muted">
+                  Create an engagement to begin work with this client.
+                </p>
+              </div>
+            </div>
+            <Link
+              href={`/admin-portal/intake/${submission.id}/activate`}
+              className="shrink-0 rounded-xl bg-(--color-navy) px-4 py-2 text-sm font-semibold text-white hover:bg-(--color-navy-dark) transition-colors"
+            >
+              Activate →
+            </Link>
+          </div>
+        )}
 
       {/* Two-column section grid */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">

@@ -6,6 +6,7 @@ import { requireAdmin, requireRole } from "./auth";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { sendEmail } from "@/lib/email";
 import { welcomeEmailHtml } from "@/lib/email-templates";
+import { logAudit } from "./audit";
 import type { Role } from "@/types";
 
 const PORTAL_BASE =
@@ -180,6 +181,10 @@ export async function updateUser(id: string, input: UpdateUserInput) {
 
   revalidatePath("/admin-portal/users/clients");
   revalidatePath("/admin-portal/users/staff");
+
+  const caller = await requireAdmin();
+  void logAudit(caller.id, "USER_UPDATED", "User", id);
+
   return user;
 }
 
@@ -187,7 +192,7 @@ export async function updateUser(id: string, input: UpdateUserInput) {
 
 /** Hard-deletes the user from Supabase Auth and the database. */
 export async function deleteUser(id: string) {
-  await requireRole("ADMIN");
+  const caller = await requireRole("ADMIN");
 
   const adminClient = createAdminClient();
 
@@ -198,6 +203,8 @@ export async function deleteUser(id: string) {
   }
 
   await prisma.user.delete({ where: { id } });
+
+  void logAudit(caller.id, "USER_DELETED", "User", id);
 
   revalidatePath("/admin-portal/users/clients");
   revalidatePath("/admin-portal/users/staff");
@@ -243,5 +250,8 @@ export async function updateProfile(
 
   revalidatePath("/client-portal/profile");
   revalidatePath("/admin-portal/settings");
+
+  void logAudit(sessionUser.id, "PROFILE_UPDATED", "User", sessionUser.id);
+
   return { success: true };
 }

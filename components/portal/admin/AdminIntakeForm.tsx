@@ -149,7 +149,6 @@ export default function AdminIntakeForm({ clients }: Props) {
         )}
       </div>
 
-      {/* Intake form — only shown once client selected */}
       {selectedClient ? (
         <IntakeForm
           initialData={{ ...INITIAL_FORM_DATA, ...aboutData }}

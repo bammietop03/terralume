@@ -8,6 +8,8 @@ import StageProgressTracker from "@/components/portal/client/StageProgressTracke
 import LatestUpdateCard from "@/components/portal/client/LatestUpdateCard";
 import PendingActionsPanel from "@/components/portal/client/PendingActionsPanel";
 import QuickContactBar from "@/components/portal/client/QuickContactBar";
+import PaymentSummaryCard from "@/components/portal/client/PaymentSummaryCard";
+import EngagementInfoBar from "@/components/portal/client/EngagementInfoBar";
 import type { PendingAction, Update } from "@/types";
 import { FileEdit } from "lucide-react";
 
@@ -78,7 +80,15 @@ export default async function ClientDashboardPage() {
     );
   }
 
-  const { engagement, latestUpdate, pendingActions, pm } = data;
+  const {
+    engagement,
+    latestUpdate,
+    pendingActions,
+    pm,
+    paymentSummary,
+    documentCount,
+    upcomingMeeting,
+  } = data;
 
   const firstName =
     user.preferredName ?? user.fullName?.split(" ")[0] ?? "there";
@@ -110,6 +120,11 @@ export default async function ClientDashboardPage() {
           {/* Right column */}
           <div className="flex flex-col gap-5">
             <StageProgressTracker currentStage={engagement.stage} />
+            <PaymentSummaryCard paymentSummary={paymentSummary} />
+            <EngagementInfoBar
+              documentCount={documentCount}
+              upcomingMeeting={upcomingMeeting}
+            />
             <QuickContactBar pm={pm} />
           </div>
         </div>

@@ -3,6 +3,7 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { prisma } from "@/lib/prisma";
+import { logAudit } from "./audit";
 import type { Role, User } from "@/types";
 
 /** Returns the fully hydrated DB user for the current session, or null. */
@@ -76,6 +77,8 @@ export async function updatePassword(
     { password: newPassword },
   );
   if (updateError) return { ok: false, error: updateError.message };
+
+  void logAudit(sessionUser.id, "PASSWORD_CHANGED", "User", sessionUser.id);
 
   return { ok: true };
 }

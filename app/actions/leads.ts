@@ -12,6 +12,7 @@ import {
   intakeInvitationEmailHtml,
 } from "@/lib/email-templates";
 import { createNotification } from "./notifications";
+import { logAudit } from "./audit";
 import type {
   LeadInterestType,
   LeadStatus,
@@ -181,7 +182,7 @@ export async function getLeadById(id: string) {
 // ── Admin: update lead status ──────────────────────────────────────────────
 
 export async function updateLeadStatus(id: string, status: LeadStatus) {
-  await requireAdmin();
+  const admin = await requireAdmin();
   await prisma.lead.update({
     where: { id },
     data: {
@@ -191,12 +192,14 @@ export async function updateLeadStatus(id: string, status: LeadStatus) {
   });
   revalidatePath("/admin-portal/leads");
   revalidatePath(`/admin-portal/leads/${id}`);
+
+  void logAudit(admin.id, "LEAD_STATUS_CHANGED", "Lead", id, { status });
 }
 
 // ── Admin: assign PM to lead ───────────────────────────────────────────────
 
 export async function assignLeadPm(leadId: string, pmId: string) {
-  await requireAdmin();
+  const admin = await requireAdmin();
 
   const lead = await prisma.lead.update({
     where: { id: leadId },
@@ -217,6 +220,8 @@ export async function assignLeadPm(leadId: string, pmId: string) {
 
   revalidatePath("/admin-portal/leads");
   revalidatePath(`/admin-portal/leads/${leadId}`);
+
+  void logAudit(admin.id, "LEAD_PM_ASSIGNED", "Lead", leadId, { pmId });
 }
 
 // ── Admin: send calendar link to lead ─────────────────────────────────────
@@ -275,6 +280,13 @@ export async function sendCalendarLink(leadId: string, calendarUrl: string) {
 
   revalidatePath(`/admin-portal/leads/${leadId}`);
   revalidatePath("/admin-portal/leads");
+
+  const admin = await getSessionUser();
+  if (admin) {
+    void logAudit(admin.id, "CALENDAR_LINK_SENT", "Lead", leadId, {
+      calendarUrl: calendarUrl.trim(),
+    });
+  }
 
   return { success: true };
 }
@@ -451,6 +463,13 @@ export async function sendIntakeInvitation(leadId: string): Promise<{
 
   revalidatePath(`/admin-portal/leads/${leadId}`);
   revalidatePath("/admin-portal/leads");
+
+  const sessionAdmin = await getSessionUser();
+  if (sessionAdmin) {
+    void logAudit(sessionAdmin.id, "INTAKE_INVITATION_SENT", "Lead", leadId, {
+      userId,
+    });
+  }
 
   return { success: true };
 }

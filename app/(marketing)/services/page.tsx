@@ -1,7 +1,8 @@
 import Link from "next/link";
 import { CheckCircle2, ArrowRight } from "lucide-react";
 import { Metadata } from "next";
-import { tiers } from "@/lib/services-data";
+import { tiers as staticTiers } from "@/lib/services-data";
+import { getPublicServiceTiers } from "@/app/actions/service-tiers";
 import { FooterCTA } from "@/components/home/FooterCTA";
 import PageHero from "@/components/layout/PageHero";
 
@@ -11,7 +12,35 @@ export const metadata: Metadata = {
     "Choose the right advisory package for your Lagos property journey — from rental guidance to high-value investment acquisition.",
 };
 
-export default function ServicesPage() {
+// ─── Helper ───────────────────────────────────────────────────────────────────
+
+function formatPrice(price: number, currency: string) {
+  if (currency === "NGN") return `₦${price.toLocaleString("en-NG")}`;
+  return new Intl.NumberFormat("en-GB", {
+    style: "currency",
+    currency,
+    maximumFractionDigits: 0,
+  }).format(price);
+}
+
+// ─── Page ─────────────────────────────────────────────────────────────────────
+
+export default async function ServicesPage() {
+  const dbTiers = await getPublicServiceTiers().catch(() => []);
+
+  // Merge: for each static tier, overlay dynamic fields from DB if available
+  const tiers = staticTiers.map((staticTier) => {
+    const db = dbTiers.find((d) => d.slug === staticTier.slug);
+    return {
+      ...staticTier,
+      // Dynamic overrides
+      name: db?.name ?? staticTier.name,
+      tagline: db?.description ?? staticTier.tagline,
+      priceFrom: db ? formatPrice(db.price, db.currency) : staticTier.priceFrom,
+      currency: db?.currency ?? "NGN",
+    };
+  });
+
   return (
     <>
       <PageHero
@@ -54,21 +83,24 @@ export default function ServicesPage() {
                 )}
 
                 <div className="flex flex-1 flex-col p-7">
-                  {/* Tag */}
+                  {/* Tag — static */}
                   <div className="mb-5 flex items-center gap-2">
                     <span className="rounded-full bg-navy-light px-3 py-1 text-[11px] font-semibold uppercase tracking-widest text-navy">
                       {tier.tag}
                     </span>
                   </div>
 
+                  {/* Name — dynamic */}
                   <h2 className="mb-1 font-display text-2xl font-bold text-navy">
                     {tier.name}
                   </h2>
+
+                  {/* Tagline — dynamic */}
                   <p className="mb-6 text-[14px] leading-relaxed text-on-surface-muted">
                     {tier.tagline}
                   </p>
 
-                  {/* Price */}
+                  {/* Price — dynamic */}
                   <div className="mb-6 border-b border-divider pb-6">
                     <p className="mb-0.5 text-[11px] uppercase tracking-widest text-on-surface-muted">
                       Advisory fee from
@@ -76,12 +108,13 @@ export default function ServicesPage() {
                     <p className="font-display text-3xl font-bold text-navy">
                       {tier.priceFrom}
                     </p>
+                    {/* priceSuffix — static */}
                     <p className="text-[13px] text-on-surface-muted">
                       {tier.priceSuffix}
                     </p>
                   </div>
 
-                  {/* Inclusions preview (first 4) */}
+                  {/* Inclusions preview — static */}
                   <ul className="mb-6 space-y-2.5 flex-1">
                     {tier.inclusions.slice(0, 4).map((item, i) => (
                       <li
@@ -122,7 +155,7 @@ export default function ServicesPage() {
         </div>
       </section>
 
-      {/* ── Trust strip ──────────────────────────────────────── */}
+      {/* ── Trust strip — static ──────────────────────────────── */}
       <section className="border-y border-divider bg-surface py-12">
         <div className="container mx-auto max-w-4xl px-6 text-center">
           <p className="mb-8 text-[11px] font-semibold uppercase tracking-[0.18em] text-on-surface-muted">

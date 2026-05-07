@@ -42,7 +42,9 @@ export interface RealtimeEngagement {
  *   const notifications = useNotifications(userId)
  */
 export function useNotifications(userId: string) {
-  const [notifications, setNotifications] = useState<RealtimeNotification[]>([]);
+  const [notifications, setNotifications] = useState<RealtimeNotification[]>(
+    [],
+  );
   const channelRef = useRef<RealtimeChannel | null>(null);
 
   useEffect(() => {
@@ -65,7 +67,7 @@ export function useNotifications(userId: string) {
             ...prev,
             payload.new as RealtimeNotification,
           ]);
-        }
+        },
       )
       .subscribe();
 
@@ -95,8 +97,12 @@ export function useMessages(engagementId: string) {
 
     const supabase = createClient();
 
+    // Use a unique channel name per engagement.
+    // postgres_changes requires the "messages" table to be in the supabase_realtime
+    // publication. If your project has RLS enabled you must also add a policy that
+    // allows SELECT for authenticated users.
     channelRef.current = supabase
-      .channel(`messages:${engagementId}`)
+      .channel(`messages:engagement:${engagementId}`)
       .on(
         "postgres_changes",
         {
@@ -106,10 +112,31 @@ export function useMessages(engagementId: string) {
           filter: `engagement_id=eq.${engagementId}`,
         },
         (payload) => {
-          setMessages((prev) => [...prev, payload.new as RealtimeMessage]);
-        }
+          // Supabase sends snake_case column names — map to camelCase
+          const raw = payload.new as Record<string, unknown>;
+          const msg: RealtimeMessage = {
+            id: raw.id as string,
+            engagementId: (raw.engagement_id ?? raw.engagementId) as string,
+            senderId: (raw.sender_id ?? raw.senderId) as string,
+            body: raw.body as string,
+            attachmentPath: (raw.attachment_path ?? raw.attachmentPath) as
+              | string
+              | null,
+            sentAt: (raw.sent_at ?? raw.sentAt) as string,
+            readAt: (raw.read_at ?? raw.readAt) as string | null,
+          };
+          setMessages((prev) => [...prev, msg]);
+        },
       )
-      .subscribe();
+      .subscribe((status) => {
+        // "SUBSCRIBED" means the channel is live.
+        // "CHANNEL_ERROR" / "TIMED_OUT" means realtime is not reachable —
+        // check that the messages table is in the supabase_realtime publication
+        // and that the anon key has SELECT permission.
+        if (status === "CHANNEL_ERROR" || status === "TIMED_OUT") {
+          console.warn("[realtime] messages channel error:", status);
+        }
+      });
 
     return () => {
       supabase.removeChannel(channelRef.current!);
@@ -130,9 +157,11 @@ export function useMessages(engagementId: string) {
  */
 export function useEngagementStage(
   engagementId: string,
-  initial: RealtimeEngagement | null = null
+  initial: RealtimeEngagement | null = null,
 ) {
-  const [engagement, setEngagement] = useState<RealtimeEngagement | null>(initial);
+  const [engagement, setEngagement] = useState<RealtimeEngagement | null>(
+    initial,
+  );
   const channelRef = useRef<RealtimeChannel | null>(null);
 
   useEffect(() => {
@@ -152,7 +181,7 @@ export function useEngagementStage(
         },
         (payload) => {
           setEngagement(payload.new as RealtimeEngagement);
-        }
+        },
       )
       .subscribe();
 

@@ -17,6 +17,7 @@ import {
   ExternalLink,
   UserCircle,
   Zap,
+  ClipboardList,
 } from "lucide-react";
 import IntakeStatusSelect from "@/components/portal/admin/IntakeStatusSelect";
 import AssignPmButton from "@/components/portal/admin/AssignPmButton";
@@ -139,7 +140,7 @@ export default async function AdminIntakeDetailPage({
 
   const [submission, staffUsers] = await Promise.all([
     getIntakeSubmissionById(id),
-    getStaffUsers(),
+    user.role === "ADMIN" ? getStaffUsers() : Promise.resolve([]),
   ]);
   if (!submission) notFound();
 
@@ -170,13 +171,22 @@ export default async function AdminIntakeDetailPage({
   return (
     <div className="mx-auto max-w-5xl px-6 py-7 space-y-5">
       {/* Back */}
-      <Link
-        href="/admin-portal/intake"
-        className="inline-flex items-center gap-1.5 text-xs text-on-surface-muted hover:text-on-surface transition-colors"
-      >
-        <ArrowLeft size={12} />
-        All intake forms
-      </Link>
+      <div className="flex items-center justify-between">
+        <Link
+          href="/admin-portal/intake"
+          className="inline-flex items-center gap-1.5 text-xs text-on-surface-muted hover:text-on-surface transition-colors"
+        >
+          <ArrowLeft size={12} />
+          All intake forms
+        </Link>
+        <Link
+          href="/admin-portal/intake/new"
+          className="inline-flex items-center gap-1.5 rounded-xl bg-(--color-navy) px-4 py-2 text-sm font-semibold text-white hover:bg-(--color-navy-dark) transition-colors"
+        >
+          <ClipboardList size={14} />
+          Fill Intake Form
+        </Link>
+      </div>
 
       {/* Page header */}
       <div className="rounded-xl border border-divider bg-surface p-5 flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-6">
@@ -246,8 +256,7 @@ export default async function AdminIntakeDetailPage({
       </div>
 
       {/* Activate Client banner — ADMIN only, user exists, no engagement yet */}
-      {isSuperAdmin &&
-        submission.userId &&
+      {submission.userId &&
         submission.user &&
         (submission.user as { engagements?: { id: string }[] }).engagements
           ?.length === 0 && (

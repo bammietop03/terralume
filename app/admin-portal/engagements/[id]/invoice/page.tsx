@@ -3,7 +3,7 @@
 import { useState, useTransition, useEffect } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
-import { ArrowLeft, Send, Plus, CheckCircle2 } from "lucide-react";
+import { ArrowLeft, Send, Plus, CheckCircle2, Download } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -279,17 +279,30 @@ export default function EngagementInvoicePage() {
                       </p>
                     )}
                   </div>
-                  {inv.status === "DRAFT" && (
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      disabled={sendingId === inv.id}
-                      onClick={() => handleSend(inv.id)}
-                    >
-                      <Send size={13} className="mr-1.5" />
-                      {sendingId === inv.id ? "Sending…" : "Send"}
-                    </Button>
-                  )}
+                  <div className="shrink-0 flex flex-col items-end gap-2">
+                    {inv.status === "DRAFT" && (
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        disabled={sendingId === inv.id}
+                        onClick={() => handleSend(inv.id)}
+                      >
+                        <Send size={13} className="mr-1.5" />
+                        {sendingId === inv.id ? "Sending…" : "Send"}
+                      </Button>
+                    )}
+                    {inv.status === "PAID" && (
+                      <a
+                        href={`/print/receipt/${inv.id}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1.5 rounded-lg border border-divider bg-white px-3 py-1.5 text-xs font-medium text-on-surface transition-colors hover:bg-surface-alt"
+                      >
+                        <Download size={12} />
+                        Receipt
+                      </a>
+                    )}
+                  </div>
                 </div>
               </CardContent>
             </Card>

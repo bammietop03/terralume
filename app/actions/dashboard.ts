@@ -1,24 +1,35 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
-import type { DashboardData } from "@/types";
 
-export async function getClientDashboardData(userId: string): Promise<
-  | (DashboardData & {
-      paymentSummary: {
-        totalPaid: number;
-        currency: string;
-        pendingAmount: number;
-      };
-      documentCount: number;
-      upcomingMeeting: {
-        title: string | null;
-        scheduledAt: Date;
-        meetingLink: string | null;
-      } | null;
-    })
-  | null
-> {
+export async function getClientDashboardData(userId: string): Promise<{
+  engagement: Awaited<ReturnType<typeof prisma.engagement.findFirst>>;
+  latestUpdate: {
+    id: string;
+    content: string;
+    nextSteps: string | null;
+    publishedAt: Date | null;
+    draft: boolean;
+  } | null;
+  pm: {
+    id: string;
+    fullName: string | null;
+    email: string;
+    phone: string | null;
+    photoUrl: string | null;
+  } | null;
+  paymentSummary: {
+    totalPaid: number;
+    currency: string;
+    pendingAmount: number;
+  };
+  documentCount: number;
+  upcomingMeeting: {
+    title: string | null;
+    scheduledAt: Date;
+    meetingLink: string | null;
+  } | null;
+} | null> {
   const engagement = await prisma.engagement.findFirst({
     where: { userId, status: "active" },
     include: {
@@ -26,10 +37,6 @@ export async function getClientDashboardData(userId: string): Promise<
         where: { draft: false },
         orderBy: { publishedAt: "desc" },
         take: 1,
-      },
-      pendingActions: {
-        where: { completedAt: null },
-        orderBy: { dueDate: "asc" },
       },
     },
   });
@@ -76,8 +83,6 @@ export async function getClientDashboardData(userId: string): Promise<
   return {
     engagement,
     latestUpdate: engagement.updates[0] ?? null,
-    pendingActions:
-      engagement.pendingActions as DashboardData["pendingActions"],
     pm,
     paymentSummary: { totalPaid, currency, pendingAmount },
     documentCount,
@@ -91,7 +96,6 @@ export async function getAdminDashboardStats() {
   const [
     activeEngagements,
     totalClients,
-    pendingActions,
     openEnquiries,
     recentEngagements,
     newLeads,
@@ -102,7 +106,6 @@ export async function getAdminDashboardStats() {
   ] = await Promise.all([
     prisma.engagement.count({ where: { status: "active" } }),
     prisma.user.count({ where: { role: "CLIENT" } }),
-    prisma.pendingAction.count({ where: { completedAt: null } }),
     prisma.enquiry.count({ where: { status: "open" } }),
     prisma.engagement.findMany({
       where: { status: "active" },
@@ -110,7 +113,6 @@ export async function getAdminDashboardStats() {
       take: 8,
       include: {
         user: { select: { fullName: true, email: true } },
-        pendingActions: { where: { completedAt: null }, select: { id: true } },
       },
     }),
     prisma.lead.count({ where: { createdAt: { gte: sevenDaysAgo } } }),
@@ -145,7 +147,6 @@ export async function getAdminDashboardStats() {
   return {
     activeEngagements,
     totalClients,
-    pendingActions,
     openEnquiries,
     newLeads,
     pendingIntakes,
@@ -165,10 +166,6 @@ export async function getPMDashboardData(pmUserId: string) {
     orderBy: { startDate: "desc" },
     include: {
       user: { select: { fullName: true, email: true } },
-      pendingActions: {
-        where: { completedAt: null },
-        orderBy: { dueDate: "asc" },
-      },
       updates: {
         where: { draft: false },
         orderBy: { publishedAt: "desc" },
@@ -208,22 +205,8 @@ export async function getPMDashboardData(pmUserId: string) {
       : Promise.resolve([]),
   ]);
 
-  const totalPendingActions = engagements.reduce(
-    (sum, e) => sum + e.pendingActions.length,
-    0,
-  );
-  const overduePendingActions = engagements.reduce(
-    (sum, e) =>
-      sum +
-      e.pendingActions.filter((a) => a.dueDate && new Date(a.dueDate) < now)
-        .length,
-    0,
-  );
-
   return {
     engagements,
-    totalPendingActions,
-    overduePendingActions,
     unreadMessages,
     upcomingMeetings,
   };

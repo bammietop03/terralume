@@ -10,6 +10,7 @@ import {
   CreditCard,
   CheckCircle2,
   Clock,
+  Download,
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -221,6 +222,83 @@ export default async function ClientDetailPage({
                 Activate from intake
               </Link>
             </p>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Payments & Invoices */}
+      {engagement && engagement.invoices.length > 0 && (
+        <Card>
+          <CardContent className="pt-5">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="font-semibold text-on-surface">
+                Invoices &amp; Payments
+              </h2>
+              <Link
+                href={`/admin-portal/engagements/${engagement.id}/invoice`}
+                className="text-xs text-on-surface-muted hover:text-on-surface transition-colors"
+              >
+                Manage invoices →
+              </Link>
+            </div>
+            <div className="space-y-3">
+              {engagement.invoices.map((inv) => {
+                const isPaid = inv.status === "PAID";
+                const isSent = inv.status === "SENT";
+                const statusStyles: Record<string, string> = {
+                  DRAFT: "bg-zinc-100 text-zinc-600 ring-zinc-200",
+                  SENT: "bg-blue-50 text-blue-700 ring-blue-200",
+                  PAID: "bg-emerald-50 text-emerald-700 ring-emerald-200",
+                  CANCELLED: "bg-red-50 text-red-700 ring-red-200",
+                };
+                return (
+                  <div
+                    key={inv.id}
+                    className="flex items-start justify-between gap-4 rounded-xl border border-divider bg-surface-alt/40 px-4 py-3"
+                  >
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center gap-2 flex-wrap mb-0.5">
+                        <span className="text-sm font-semibold text-on-surface font-mono">
+                          {inv.invoiceNumber}
+                        </span>
+                        <span
+                          className={`rounded-full px-2 py-0.5 text-xs font-semibold ring-1 ring-inset ${statusStyles[inv.status] ?? statusStyles.DRAFT}`}
+                        >
+                          {inv.status}
+                        </span>
+                      </div>
+                      <p className="text-xs text-on-surface-muted truncate">
+                        {inv.description}
+                      </p>
+                      <p className="text-sm font-semibold text-on-surface mt-1">
+                        {inv.currency} {inv.amount.toLocaleString()}
+                      </p>
+                      {isPaid && inv.paidAt && (
+                        <p className="text-xs text-emerald-600 flex items-center gap-1 mt-0.5">
+                          <CheckCircle2 size={11} />
+                          Paid {formatDate(inv.paidAt)}
+                        </p>
+                      )}
+                      {isSent && inv.dueDate && (
+                        <p className="text-xs text-on-surface-muted mt-0.5">
+                          Due: {formatDate(inv.dueDate)}
+                        </p>
+                      )}
+                    </div>
+                    {isPaid && (
+                      <Link
+                        href={`/print/receipt/${inv.id}`}
+                        target="_blank"
+                        className="shrink-0 inline-flex items-center gap-1.5 rounded-lg border border-divider bg-white px-3 py-1.5 text-xs font-medium text-on-surface transition-colors hover:bg-surface-alt"
+                      >
+                        <Download size={12} />
+                        Receipt
+                      </Link>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
           </CardContent>
         </Card>
       )}

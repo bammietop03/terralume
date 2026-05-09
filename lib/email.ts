@@ -21,6 +21,6 @@ export async function sendEmail({
   const { error } = await resend.emails.send({ from: FROM, to, subject, html });
   if (error) {
     console.error("[email] Send failed:", error);
-    throw new Error(error.message);
+    // Don't throw — email failures are non-blocking; callers shouldn't crash
   }
 }

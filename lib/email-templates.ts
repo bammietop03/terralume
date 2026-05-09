@@ -92,38 +92,6 @@ export function newUpdateEmailHtml({
   `;
 }
 
-export function pendingActionEmailHtml({
-  clientName,
-  actionTitle,
-  dueDate,
-  portalUrl,
-}: {
-  clientName: string;
-  actionTitle: string;
-  dueDate: Date | null;
-  portalUrl: string;
-}): string {
-  const dueLine = dueDate
-    ? `<p style="${BODY_STYLE}">This action is due by <strong>${new Date(dueDate).toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" })}</strong>.</p>`
-    : "";
-
-  return `
-    <div style="${BASE_STYLE}">
-      <div style="${CARD_STYLE}">
-        <p style="margin:0 0 24px 0;">${LOGO}</p>
-        <h1 style="${HEADING_STYLE}">Action required from you</h1>
-        <p style="${BODY_STYLE}">Hi ${clientName}, your PM has assigned an action that requires your attention.</p>
-        <div style="background:#fef9ee;border:1px solid #f6c26b;border-radius:8px;padding:16px;margin:16px 0;">
-          <p style="font-size:14px;font-weight:600;color:#2c2c2a;margin:0;">${actionTitle}</p>
-        </div>
-        ${dueLine}
-        <a href="${portalUrl}" style="${CTA_STYLE}">View in portal</a>
-        ${FOOTER}
-      </div>
-    </div>
-  `;
-}
-
 export function intakeConfirmationEmailHtml({
   clientName,
   referenceNumber,

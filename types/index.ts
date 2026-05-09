@@ -58,23 +58,6 @@ export interface Engagement {
   status: string;
 }
 
-export interface PendingAction {
-  id: string;
-  engagementId: string;
-  title: string;
-  type: PendingActionType;
-  dueDate: Date | null;
-  completedAt: Date | null;
-  createdAt: Date;
-}
-
-export type PendingActionType =
-  | "SIGN_DOCUMENT"
-  | "APPROVE_SHORTLIST"
-  | "CONFIRM_VISIT"
-  | "CONFIRM_BRIEF"
-  | "OTHER";
-
 export interface Document {
   id: string;
   engagementId: string;
@@ -178,7 +161,6 @@ export interface PMProfile {
 export interface DashboardData {
   engagement: Engagement;
   latestUpdate: Update | null;
-  pendingActions: PendingAction[];
   pm: PMProfile | null;
 }
 

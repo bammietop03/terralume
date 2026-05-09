@@ -130,6 +130,55 @@ export async function submitIntakeForm(formData: IntakeFormData): Promise<{
     // Non-blocking
   }
 
+  // Update lead status and notify PM (non-blocking)
+  try {
+    const lead = await prisma.lead.findFirst({
+      where: {
+        OR: [{ userId }, { email: sessionUser.email }],
+        NOT: { status: "DECLINED" },
+      },
+      select: { id: true, assignedPmId: true, fullName: true },
+    });
+
+    if (lead) {
+      await prisma.lead.update({
+        where: { id: lead.id },
+        data: { status: "INTAKE_SUBMITTED" },
+      });
+
+      const notifContent = `${displayName} has submitted their intake form (${referenceNumber}).`;
+
+      // Notify assigned PM
+      if (lead.assignedPmId) {
+        void createNotification({
+          userId: lead.assignedPmId,
+          type: "INTAKE_SUBMITTED",
+          content: notifContent,
+        });
+      }
+
+      // Notify all admins
+      const admins = await prisma.user.findMany({
+        where: { role: "ADMIN" },
+        select: { id: true },
+      });
+      void Promise.all(
+        admins.map((a) =>
+          createNotification({
+            userId: a.id,
+            type: "INTAKE_SUBMITTED",
+            content: notifContent,
+          }),
+        ),
+      );
+
+      revalidatePath("/admin-portal/leads");
+      revalidatePath(`/admin-portal/leads/${lead.id}`);
+    }
+  } catch {
+    // Non-blocking
+  }
+
   revalidatePath("/admin-portal/intake");
   revalidatePath("/client-portal/intake");
 

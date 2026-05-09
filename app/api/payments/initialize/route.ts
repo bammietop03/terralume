@@ -32,11 +32,13 @@ export async function POST(request: Request) {
       amount,
       currency = "NGN",
       type = "OTHER",
+      invoiceId,
     } = body as {
       engagementId: string;
       amount: number;
       currency?: string;
       type?: "RETAINER" | "SUCCESS" | "OTHER";
+      invoiceId?: string;
     };
 
     if (!engagementId || !amount) {
@@ -75,6 +77,7 @@ export async function POST(request: Request) {
         metadata: {
           engagementId,
           userId: user.id,
+          invoiceId: invoiceId ?? null,
         },
       }),
     });
@@ -89,6 +92,15 @@ export async function POST(request: Request) {
     }
 
     const { authorization_url, reference } = paystackData.data;
+
+    // If this payment is for a specific invoice, stamp the reference on it
+    // so markInvoicePaid() can look it up later via webhook or verify
+    if (invoiceId) {
+      await prisma.invoice.update({
+        where: { id: invoiceId },
+        data: { paystackReference: reference },
+      });
+    }
 
     // Persist PENDING payment in DB
     const payment = await prisma.payment.create({

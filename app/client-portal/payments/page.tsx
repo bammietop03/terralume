@@ -1,7 +1,8 @@
 import { redirect } from "next/navigation";
 import { requireClient } from "@/app/actions/auth";
 import { prisma } from "@/lib/prisma";
-import { CreditCard, CheckCircle2 } from "lucide-react";
+import Link from "next/link";
+import { CreditCard, CheckCircle2, Download } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import PayNowButton from "@/components/portal/client/PayNowButton";
 
@@ -100,14 +101,26 @@ export default async function PaymentsPage() {
                       </p>
                     )}
                   </div>
-                  {inv.status === "SENT" && engagementId && (
-                    <PayNowButton
-                      engagementId={engagementId}
-                      invoiceId={inv.id}
-                      amount={inv.amount}
-                      currency={inv.currency}
-                    />
-                  )}
+                  <div className="shrink-0 flex flex-col items-end gap-2">
+                    {inv.status === "SENT" && engagementId && (
+                      <PayNowButton
+                        engagementId={engagementId}
+                        invoiceId={inv.id}
+                        amount={inv.amount}
+                        currency={inv.currency}
+                      />
+                    )}
+                    {inv.status === "PAID" && (
+                      <Link
+                        href={`/print/receipt/client/${inv.id}`}
+                        target="_blank"
+                        className="inline-flex items-center gap-1.5 rounded-lg border border-divider bg-white px-3 py-1.5 text-xs font-medium text-on-surface transition-colors hover:bg-surface-alt"
+                      >
+                        <Download size={12} />
+                        Receipt
+                      </Link>
+                    )}
+                  </div>
                 </div>
               </CardContent>
             </Card>

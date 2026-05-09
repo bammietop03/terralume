@@ -8,7 +8,6 @@ import {
 import {
   Users,
   Briefcase,
-  AlertCircle,
   FileQuestion,
   ArrowRight,
   Clock,
@@ -20,7 +19,6 @@ import {
   FileText,
   CheckCircle2,
   BarChart3,
-  AlertTriangle,
 } from "lucide-react";
 
 export const metadata = { title: "Dashboard — Terralume Admin Portal" };
@@ -175,7 +173,7 @@ export default async function AdminDashboardPage() {
 
         <div className="px-6 py-6 max-w-7xl mx-auto space-y-6">
           {/* Stats grid */}
-          <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-4">
             <StatCard
               label="Active engagements"
               value={adminStats.activeEngagements}
@@ -191,13 +189,6 @@ export default async function AdminDashboardPage() {
               gradient="bg-linear-to-r from-purple-500 to-purple-200"
               iconBg="bg-purple-50"
               href="/admin-portal/users/clients"
-            />
-            <StatCard
-              label="Pending actions"
-              value={adminStats.pendingActions}
-              icon={<AlertCircle size={18} className="text-amber-600" />}
-              gradient="bg-linear-to-r from-amber-500 to-amber-200"
-              iconBg="bg-amber-50"
             />
             <StatCard
               label="Open enquiries"
@@ -389,9 +380,6 @@ export default async function AdminDashboardPage() {
                       <th className="text-left px-4 py-3.5 text-[11px] font-semibold text-on-surface-muted uppercase tracking-wider">
                         Stage
                       </th>
-                      <th className="text-left px-4 py-3.5 text-[11px] font-semibold text-on-surface-muted uppercase tracking-wider hidden md:table-cell">
-                        Actions
-                      </th>
                       <th className="text-left px-4 py-3.5 text-[11px] font-semibold text-on-surface-muted uppercase tracking-wider hidden lg:table-cell">
                         Target
                       </th>
@@ -428,19 +416,6 @@ export default async function AdminDashboardPage() {
                             <span className="h-1.5 w-1.5 rounded-full bg-current opacity-40" />
                             {STAGE_LABELS[eng.stage] ?? eng.stage}
                           </span>
-                        </td>
-                        <td className="px-4 py-4 hidden md:table-cell">
-                          {eng.pendingActions.length > 0 ? (
-                            <span className="inline-flex items-center gap-1 text-xs font-semibold text-amber-700 bg-amber-50 border border-amber-200 rounded-full px-2.5 py-1">
-                              <AlertTriangle size={11} />
-                              {eng.pendingActions.length} pending
-                            </span>
-                          ) : (
-                            <span className="inline-flex items-center gap-1 text-xs text-green-700 bg-green-50 border border-green-200 rounded-full px-2.5 py-1">
-                              <CheckCircle2 size={11} />
-                              Clear
-                            </span>
-                          )}
                         </td>
                         <td className="px-4 py-4 hidden lg:table-cell">
                           {eng.targetDate ? (
@@ -500,27 +475,13 @@ export default async function AdminDashboardPage() {
 
       <div className="px-6 py-6 max-w-7xl mx-auto space-y-6">
         {/* PM Stats */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 lg:grid-cols-2 gap-4">
           <StatCard
             label="My active clients"
             value={pmEngagements.length}
             icon={<Users size={18} className="text-(--color-navy)" />}
             gradient="bg-linear-to-r from-(--color-navy) to-(--color-navy-light)"
             iconBg="bg-(--color-navy-light)"
-          />
-          <StatCard
-            label="Pending actions"
-            value={pmData!.totalPendingActions}
-            icon={<AlertCircle size={18} className="text-amber-600" />}
-            gradient="bg-linear-to-r from-amber-500 to-amber-200"
-            iconBg="bg-amber-50"
-          />
-          <StatCard
-            label="Overdue actions"
-            value={pmData!.overduePendingActions}
-            icon={<AlertTriangle size={18} className="text-red-600" />}
-            gradient="bg-linear-to-r from-red-500 to-red-200"
-            iconBg="bg-red-50"
           />
           <StatCard
             label="Unread messages"
@@ -564,11 +525,7 @@ export default async function AdminDashboardPage() {
             ) : (
               <div className="divide-y divide-divider/40">
                 {pmEngagements.map((eng) => {
-                  const overdueCount = eng.pendingActions.filter(
-                    (a) => a.dueDate && new Date(a.dueDate) < new Date(),
-                  ).length;
                   const lastUpdate = eng.updates[0]?.publishedAt;
-
                   return (
                     <div
                       key={eng.id}
@@ -599,19 +556,6 @@ export default async function AdminDashboardPage() {
                       </div>
 
                       <div className="flex items-center gap-2 shrink-0">
-                        {overdueCount > 0 && (
-                          <span className="inline-flex items-center gap-1 text-xs font-semibold text-red-700 bg-red-50 border border-red-200 rounded-full px-2 py-0.5">
-                            <AlertTriangle size={10} />
-                            {overdueCount} overdue
-                          </span>
-                        )}
-                        {eng.pendingActions.length > 0 &&
-                          overdueCount === 0 && (
-                            <span className="inline-flex items-center gap-1 text-xs font-semibold text-amber-700 bg-amber-50 border border-amber-200 rounded-full px-2 py-0.5">
-                              <AlertCircle size={10} />
-                              {eng.pendingActions.length}
-                            </span>
-                          )}
                         <Link
                           href={`/admin-portal/engagements/${eng.id}`}
                           className="inline-flex items-center gap-1 text-xs font-semibold text-(--color-navy) hover:text-navy-dark rounded-lg px-3 py-1.5 hover:bg-(--color-navy-light) transition-colors opacity-0 group-hover:opacity-100"

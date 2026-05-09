@@ -153,7 +153,6 @@ model Engagement {
   updates          Update[]
   messages         Message[]
   payments         Payment[]
-  pendingActions   PendingAction[]
   invoices         Invoice[]
   agreement        ServiceAgreement?
   strategyMeetings StrategyMeeting[]
@@ -161,20 +160,6 @@ model Engagement {
   tierRef          ServiceTier? @relation(fields: [serviceTierId], references: [id], onDelete: SetNull)
 
   @@map("engagements")
-}
-
-model PendingAction {
-  id           String    @id @default(cuid())
-  engagementId String    @map("engagement_id")
-  title        String
-  type         String    @default("OTHER")
-  dueDate      DateTime? @map("due_date")
-  completedAt  DateTime? @map("completed_at")
-  createdAt    DateTime  @default(now()) @map("created_at")
-
-  engagement Engagement @relation(fields: [engagementId], references: [id], onDelete: Cascade)
-
-  @@map("pending_actions")
 }
 
 model Document {

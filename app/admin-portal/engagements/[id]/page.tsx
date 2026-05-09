@@ -8,6 +8,7 @@ import {
   FileText,
   CreditCard,
   FileSignature,
+  Rss,
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -16,6 +17,7 @@ import DocumentDialog from "@/components/portal/admin/DocumentDialog";
 import ClientDetailsDialog from "@/components/portal/admin/ClientDetailsDialog";
 import UpdateStageForm from "@/components/portal/admin/UpdateStageForm";
 import UpdateStatusForm from "@/components/portal/admin/UpdateStatusForm";
+import AddUpdateDialog from "@/components/portal/admin/AddUpdateDialog";
 
 export const metadata = { title: "Engagement Detail — Terralume Admin Portal" };
 
@@ -181,6 +183,57 @@ export default async function EngagementDetailPage({
               </div>
             </div>
           </div>
+        </CardContent>
+      </Card>
+
+      {/* Updates */}
+      <Card>
+        <CardContent className="pt-5">
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-2">
+              <Rss size={18} className="text-(--color-navy)" />
+              <h2 className="font-semibold text-on-surface">Updates</h2>
+            </div>
+            <AddUpdateDialog
+              engagementId={engagement.id}
+              pmId={engagement.pm?.id ?? client.id}
+            />
+          </div>
+
+          {engagement.updates.length === 0 ? (
+            <p className="text-sm text-on-surface-muted italic">
+              No updates posted yet.
+            </p>
+          ) : (
+            <div className="space-y-3">
+              {engagement.updates.map((update) => (
+                <div
+                  key={update.id}
+                  className="rounded-xl border border-divider bg-surface-muted/40 px-4 py-3 space-y-1"
+                >
+                  <div className="flex items-center justify-between gap-2">
+                    <p className="text-xs font-medium text-on-surface-muted">
+                      {update.pm?.fullName ?? "PM"} ·{" "}
+                      {formatDate(update.publishedAt)}
+                    </p>
+                  </div>
+                  <p className="text-sm text-on-surface whitespace-pre-line">
+                    {update.content}
+                  </p>
+                  {update.nextSteps && (
+                    <div className="mt-2 rounded-lg bg-surface-muted px-3 py-2">
+                      <p className="text-xs font-semibold text-on-surface-muted uppercase tracking-wide mb-0.5">
+                        Next steps
+                      </p>
+                      <p className="text-xs text-on-surface whitespace-pre-line">
+                        {update.nextSteps}
+                      </p>
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          )}
         </CardContent>
       </Card>
 

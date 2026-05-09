@@ -18,6 +18,7 @@ import {
   CheckCircle2,
   Clock,
   FileSignature,
+  Rss,
 } from "lucide-react";
 
 export const metadata = { title: "My Engagement — Terralume Client Portal" };
@@ -195,7 +196,63 @@ export default async function ClientEngagementPage() {
               {/* Stage tracker */}
               <StageProgressTracker currentStage={engagement.stage} />
 
-              {/* Agreement banner — prominent */}
+              {/* Progress Updates — prominent, always visible */}
+              <section className="space-y-3">
+                <div className="flex items-center gap-2">
+                  <Rss size={16} className="text-(--color-navy)" />
+                  <h2 className="text-sm font-semibold text-on-surface">
+                    Progress Updates
+                  </h2>
+                  {engagement.updates.length > 0 && (
+                    <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-(--color-navy) px-1.5 text-[10px] font-bold text-white">
+                      {engagement.updates.length}
+                    </span>
+                  )}
+                </div>
+
+                {engagement.updates.length === 0 ? (
+                  <div className="rounded-xl border border-dashed border-divider bg-surface p-5 flex items-center gap-3">
+                    <Clock
+                      size={18}
+                      className="text-on-surface-muted shrink-0"
+                    />
+                    <p className="text-sm text-on-surface-muted">
+                      No updates yet — your PM will post progress notes here as
+                      your search advances.
+                    </p>
+                  </div>
+                ) : (
+                  <div className="space-y-3">
+                    {engagement.updates.map((update) => (
+                      <Card
+                        key={update.id}
+                        className="border-l-4 border-l-(--color-navy)"
+                      >
+                        <CardContent className="pt-4 pb-4">
+                          <p className="text-xs text-on-surface-muted mb-2">
+                            {formatDate(update.publishedAt)}
+                          </p>
+                          <p className="text-sm text-on-surface whitespace-pre-line">
+                            {update.content}
+                          </p>
+                          {update.nextSteps && (
+                            <div className="mt-3 rounded-lg bg-surface-muted/60 px-3 py-2">
+                              <p className="text-xs font-semibold text-on-surface-muted uppercase tracking-wide mb-1">
+                                Next steps
+                              </p>
+                              <p className="text-xs text-on-surface whitespace-pre-line">
+                                {update.nextSteps}
+                              </p>
+                            </div>
+                          )}
+                        </CardContent>
+                      </Card>
+                    ))}
+                  </div>
+                )}
+              </section>
+
+              {/* Agreement banner */}
               {engagement.agreement ? (
                 <div
                   className={`rounded-2xl border-2 p-5 flex flex-col sm:flex-row sm:items-center gap-4 ${
@@ -403,42 +460,6 @@ export default async function ClientEngagementPage() {
                 </Card>
               )}
 
-              {/* Updates feed */}
-              {engagement.updates.length > 0 && (
-                <section className="space-y-3">
-                  <h2 className="text-sm font-semibold text-on-surface">
-                    Progress Updates
-                  </h2>
-                  <div className="space-y-3">
-                    {engagement.updates.map((update) => (
-                      <Card
-                        key={update.id}
-                        className="border-l-4 border-l-(--color-navy)"
-                      >
-                        <CardContent className="pt-4 pb-4">
-                          <p className="text-xs text-on-surface-muted mb-2">
-                            {formatDate(update.publishedAt)}
-                          </p>
-                          <p className="text-sm text-on-surface whitespace-pre-line">
-                            {update.content}
-                          </p>
-                          {update.nextSteps && (
-                            <div className="mt-3 rounded-lg bg-surface-muted/60 px-3 py-2">
-                              <p className="text-xs font-semibold text-on-surface-muted uppercase tracking-wide mb-1">
-                                Next steps
-                              </p>
-                              <p className="text-xs text-on-surface whitespace-pre-line">
-                                {update.nextSteps}
-                              </p>
-                            </div>
-                          )}
-                        </CardContent>
-                      </Card>
-                    ))}
-                  </div>
-                </section>
-              )}
-
               {/* Documents */}
               <section className="space-y-3">
                 <h2 className="text-sm font-semibold text-on-surface flex items-center gap-2">
@@ -507,9 +528,10 @@ export default async function ClientEngagementPage() {
           </h2>
           <div className="space-y-2">
             {pastEngagements.map((e) => (
-              <div
+              <Link
                 key={e.id}
-                className="flex items-center justify-between rounded-xl border border-divider bg-surface px-4 py-3"
+                href={`/client-portal/engagement/${e.id}`}
+                className="flex items-center justify-between rounded-xl border border-divider bg-surface px-4 py-3 hover:bg-surface-muted transition-colors group"
               >
                 <div>
                   <p className="text-sm font-medium text-on-surface">
@@ -520,10 +542,16 @@ export default async function ClientEngagementPage() {
                     {e.targetDate ? formatDate(e.targetDate) : "closed"}
                   </p>
                 </div>
-                <Badge variant="outline" className="capitalize">
-                  {e.stage.replace(/_/g, " ")}
-                </Badge>
-              </div>
+                <div className="flex items-center gap-2">
+                  <Badge variant="default" className="capitalize">
+                    {e.status.replace(/_/g, " ")}
+                  </Badge>
+                  <ArrowRight
+                    size={14}
+                    className="text-on-surface-muted transition-opacity"
+                  />
+                </div>
+              </Link>
             ))}
           </div>
         </section>

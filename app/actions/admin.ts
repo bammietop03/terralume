@@ -52,8 +52,20 @@ export async function getClientDetail(userId: string) {
           updates: { orderBy: { publishedAt: "desc" }, take: 5 },
           documents: { orderBy: { uploadedAt: "desc" } },
           payments: { orderBy: { createdAt: "desc" } },
-          pendingActions: { orderBy: { createdAt: "desc" } },
-          invoices: { select: { id: true, status: true } },
+          invoices: {
+            orderBy: { createdAt: "desc" as const },
+            select: {
+              id: true,
+              invoiceNumber: true,
+              description: true,
+              amount: true,
+              currency: true,
+              status: true,
+              dueDate: true,
+              issuedAt: true,
+              paidAt: true,
+            },
+          },
           agreement: { select: { status: true } },
           tierRef: { select: { name: true } },
         },
@@ -123,49 +135,6 @@ export async function publishUpdate({
   });
 
   return update;
-}
-
-export async function createPendingAction({
-  engagementId,
-  title,
-  type,
-  dueDate,
-}: {
-  engagementId: string;
-  title: string;
-  type: string;
-  dueDate?: Date;
-}) {
-  await requireAdmin();
-
-  const action = await prisma.pendingAction.create({
-    data: { engagementId, title, type, dueDate: dueDate ?? null },
-  });
-
-  const engagement = await prisma.engagement.findUnique({
-    where: { id: engagementId },
-    select: { userId: true, user: { select: { fullName: true, email: true } } },
-  });
-
-  if (engagement?.user) {
-    await createNotification({
-      userId: engagement.userId,
-      type: "PENDING_ACTION",
-      content: `Action required: ${title}`,
-    });
-  }
-
-  revalidatePath(`/admin-portal/clients/${engagement?.userId}`);
-  return action;
-}
-
-export async function completePendingAction(actionId: string) {
-  await requireAdmin();
-  await prisma.pendingAction.update({
-    where: { id: actionId },
-    data: { completedAt: new Date() },
-  });
-  revalidatePath("/", "layout");
 }
 
 export async function assignPM(engagementId: string, pmId: string) {
@@ -399,7 +368,10 @@ export async function getEngagementDetail(engagementId: string) {
         orderBy: { scheduledAt: "asc" },
       },
       tierRef: true,
-      pendingActions: { orderBy: { createdAt: "desc" } },
+      updates: {
+        orderBy: { publishedAt: "desc" },
+        include: { pm: { select: { fullName: true } } },
+      },
     },
   });
 }

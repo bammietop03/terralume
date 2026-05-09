@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { prisma } from "@/lib/prisma";
+import { markInvoicePaid } from "@/app/actions/invoices";
 
 const PAYSTACK_BASE = "https://api.paystack.co";
 
@@ -79,6 +80,9 @@ export async function GET(request: Request) {
           content: `Your payment of ${payment.currency} ${payment.amount.toLocaleString()} has been received.`,
         },
       });
+
+      // Mark the linked invoice as PAID (reference was stamped during /initialize)
+      await markInvoicePaid(reference, payment.paidAt ?? new Date());
     }
 
     return NextResponse.json({

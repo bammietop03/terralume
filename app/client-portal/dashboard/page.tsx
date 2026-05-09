@@ -6,11 +6,10 @@ import { getMyIntakeDraft } from "@/app/actions/intake";
 import EngagementSummaryCard from "@/components/portal/client/EngagementSummaryCard";
 import StageProgressTracker from "@/components/portal/client/StageProgressTracker";
 import LatestUpdateCard from "@/components/portal/client/LatestUpdateCard";
-import PendingActionsPanel from "@/components/portal/client/PendingActionsPanel";
 import QuickContactBar from "@/components/portal/client/QuickContactBar";
 import PaymentSummaryCard from "@/components/portal/client/PaymentSummaryCard";
 import EngagementInfoBar from "@/components/portal/client/EngagementInfoBar";
-import type { PendingAction, Update } from "@/types";
+import type { Update } from "@/types";
 import { FileEdit } from "lucide-react";
 
 export const metadata = {
@@ -83,7 +82,6 @@ export default async function ClientDashboardPage() {
   const {
     engagement,
     latestUpdate,
-    pendingActions,
     pm,
     paymentSummary,
     documentCount,
@@ -114,7 +112,6 @@ export default async function ClientDashboardPage() {
           <div className="lg:col-span-2 flex flex-col gap-5">
             <EngagementSummaryCard engagement={engagement} pm={pm} />
             <LatestUpdateCard update={latestUpdate as Update | null} />
-            <PendingActionsPanel actions={pendingActions as PendingAction[]} />
           </div>
 
           {/* Right column */}

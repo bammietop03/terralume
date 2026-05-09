@@ -111,7 +111,12 @@ export function Header() {
               {link.label}
             </Link>
           ))}
-          <div className="pt-4">
+          <div className="pt-4 flex flex-col gap-2">
+            <Button asChild variant="outline" className="w-full">
+              <Link href="/login" onClick={() => setMobileOpen(false)}>
+                Log In
+              </Link>
+            </Button>
             <Button asChild variant="secondary" className="w-full">
               <Link href="/consultation" onClick={() => setMobileOpen(false)}>
                 Free Consultation

@@ -19,6 +19,10 @@ export const metadata: Metadata = {
   title: "Terralume — Buyer-Side Real Estate Advisory, Lagos",
   description:
     "The only real estate advisory firm in Lagos that works exclusively for buyers — never sellers.",
+  icons: {
+    icon: "/favicon.svg",
+    shortcut: "/favicon.svg",
+  },
 };
 
 export default function RootLayout({

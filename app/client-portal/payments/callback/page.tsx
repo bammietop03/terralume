@@ -5,7 +5,7 @@ import { useSearchParams, useRouter } from "next/navigation";
 import { CheckCircle2, XCircle, Loader2 } from "lucide-react";
 import Link from "next/link";
 
-export const metadata = { title: "Payment Confirmation — Terralume" };
+// export const metadata = { title: "Payment Confirmation — Terralume" };
 
 export default function PaymentCallbackPage() {
   const searchParams = useSearchParams();

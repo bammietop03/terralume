@@ -110,13 +110,13 @@ export default async function ClientDashboardPage() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
           {/* Left column */}
           <div className="lg:col-span-2 flex flex-col gap-5">
-            <EngagementSummaryCard engagement={engagement} pm={pm} />
+            <EngagementSummaryCard engagement={engagement!} pm={pm} />
             <LatestUpdateCard update={latestUpdate as Update | null} />
           </div>
 
           {/* Right column */}
           <div className="flex flex-col gap-5">
-            <StageProgressTracker currentStage={engagement.stage} />
+            <StageProgressTracker currentStage={engagement!.stage} />
             <PaymentSummaryCard paymentSummary={paymentSummary} />
             <EngagementInfoBar
               documentCount={documentCount}

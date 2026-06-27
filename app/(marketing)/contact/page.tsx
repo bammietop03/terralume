@@ -101,8 +101,8 @@ export default function ContactPage() {
       <section className="bg-surface py-24 lg:py-32">
         <div className="mx-auto max-w-5xl px-6 lg:px-12">
           <div className="mb-14 max-w-xl">
-            <p className="mb-4 flex items-center gap-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-crimson">
-              <span className="h-px w-8 bg-crimson" />
+            <p className="mb-4 flex items-center gap-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-gold">
+              <span className="h-px w-8 bg-gold" />
               Direct Contact
             </p>
             <h2 className="font-display text-3xl font-bold text-navy lg:text-4xl">
@@ -123,11 +123,11 @@ export default function ContactPage() {
                 <div className="relative overflow-hidden bg-navy px-7 py-6">
                   <div
                     aria-hidden
-                    className="absolute inset-x-0 top-0 h-0.5 bg-linear-to-r from-crimson/60 via-crimson/20 to-transparent"
+                    className="absolute inset-x-0 top-0 h-0.5 bg-linear-to-r from-gold/60 via-gold/20 to-transparent"
                   />
                   <div
                     aria-hidden
-                    className="pointer-events-none absolute -right-10 -top-10 h-32 w-32 rounded-full bg-crimson/15 blur-3xl"
+                    className="pointer-events-none absolute -right-10 -top-10 h-32 w-32 rounded-full bg-gold/15 blur-3xl"
                   />
                   <div className="relative flex h-11 w-11 items-center justify-center rounded-xl border border-gold/30 bg-gold/15">
                     <Icon size={20} className="text-gold" />
@@ -140,7 +140,7 @@ export default function ContactPage() {
                   {href ? (
                     <a
                       href={href}
-                      className="font-display text-[18px] font-bold text-navy transition-colors hover:text-crimson"
+                      className="font-display text-[18px] font-bold text-navy transition-colors hover:text-gold"
                     >
                       {value}
                     </a>
@@ -214,7 +214,7 @@ export default function ContactPage() {
           <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
             <div className="flex flex-col justify-between rounded-2xl border border-divider bg-surface-card p-8">
               <div>
-                <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.15em] text-crimson">
+                <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.15em] text-gold">
                   Real Estate
                 </p>
                 <h3 className="font-display text-xl font-bold text-navy">
@@ -236,7 +236,7 @@ export default function ContactPage() {
             </div>
             <div className="flex flex-col justify-between rounded-2xl border border-divider bg-surface-card p-8">
               <div>
-                <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.15em] text-crimson">
+                <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.15em] text-gold">
                   Energy
                 </p>
                 <h3 className="font-display text-xl font-bold text-navy">

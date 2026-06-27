@@ -33,14 +33,14 @@ export default function LoginPageClient() {
         <div
           aria-hidden
           className="absolute -bottom-40 -right-40 w-105 h-105 rounded-full opacity-5"
-          style={{ background: "var(--color-crimson)" }}
+          style={{ background: "var(--color-gold)" }}
         />
 
         {/* Logo */}
         <div className="relative z-10">
           <Link href="/" className="inline-block">
             <span className="font-display text-2xl font-bold text-white tracking-tight">
-              Terra<span className="text-(--color-crimson)">lume</span>
+              Terra<span className="text-(--color-gold)">lume</span>
             </span>
           </Link>
         </div>
@@ -53,9 +53,7 @@ export default function LoginPageClient() {
           <h1 className="font-display text-[2.6rem] font-bold text-white leading-[1.15] mb-5">
             Your home in Lagos,
             <br />
-            <em className="not-italic text-(--color-crimson)">
-              expertly guided.
-            </em>
+            <em className="not-italic text-(--color-gold)">expertly guided.</em>
           </h1>
           <p className="text-white/55 text-[0.9rem] leading-relaxed mb-8 max-w-xs">
             Track your search, review property shortlists, and stay connected
@@ -69,7 +67,7 @@ export default function LoginPageClient() {
               >
                 <CheckCircle2
                   size={15}
-                  className="text-(--color-crimson) shrink-0 mt-0.5"
+                  className="text-(--color-gold) shrink-0 mt-0.5"
                 />
                 {f}
               </li>

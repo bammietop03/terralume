@@ -69,7 +69,7 @@ export function Step3Property({ data, set, errors }: Props) {
       {/* Target areas */}
       <div>
         <Label className="mb-1 block">
-          Target areas in Lagos <span className="text-crimson">*</span>
+          Target areas in Lagos <span className="text-gold">*</span>
         </Label>
         <p className="mb-2 text-[11px] text-on-surface-muted">
           Select all that work for you. We will search within these.
@@ -93,7 +93,7 @@ export function Step3Property({ data, set, errors }: Props) {
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <div>
           <Label className="mb-1 block">
-            Property type <span className="text-crimson">*</span>
+            Property type <span className="text-gold">*</span>
           </Label>
           <Select
             value={data.propertyType}

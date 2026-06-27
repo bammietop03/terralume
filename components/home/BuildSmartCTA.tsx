@@ -49,7 +49,7 @@ export function BuildSmartCTA() {
           <Button
             asChild
             size="lg"
-            className="bg-crimson hover:bg-crimson-dark text-white font-semibold gap-2.5 px-8 h-14 text-[16px]"
+            className="bg-gold hover:bg-gold-dark text-white font-semibold gap-2.5 px-8 h-14 text-[16px]"
           >
             <Link href="/consultation">
               <CalendarDays size={18} />

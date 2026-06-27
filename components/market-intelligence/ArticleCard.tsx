@@ -49,12 +49,12 @@ export default function ArticleCard({
             >
               {category.label}
             </span>
-            <span className="rounded-full bg-crimson px-3 py-1 text-[11px] font-semibold uppercase tracking-widest text-white">
+            <span className="rounded-full bg-gold px-3 py-1 text-[11px] font-semibold uppercase tracking-widest text-white">
               Featured
             </span>
           </div>
 
-          <h2 className="mb-3 font-display text-2xl font-bold leading-snug text-navy transition-colors group-hover:text-crimson lg:text-3xl">
+          <h2 className="mb-3 font-display text-2xl font-bold leading-snug text-navy transition-colors group-hover:text-gold lg:text-3xl">
             {article.title}
           </h2>
 
@@ -107,7 +107,7 @@ export default function ArticleCard({
           </span>
         </div>
 
-        <h3 className="mb-2 flex-1 font-display text-[17px] font-bold leading-snug text-navy transition-colors group-hover:text-crimson">
+        <h3 className="mb-2 flex-1 font-display text-[17px] font-bold leading-snug text-navy transition-colors group-hover:text-gold">
           {article.title}
         </h3>
 

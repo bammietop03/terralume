@@ -120,8 +120,8 @@ export default function AboutPage() {
           <div className="grid gap-14 lg:grid-cols-2 lg:items-center">
             {/* Text */}
             <div>
-              <div className="mb-4 flex items-center gap-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-crimson">
-                <span className="h-px w-8 bg-crimson" />
+              <div className="mb-4 flex items-center gap-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-gold">
+                <span className="h-px w-8 bg-gold" />
                 Our Story
               </div>
               <h2 className="mb-6 font-display text-4xl font-bold text-navy lg:text-5xl">
@@ -215,8 +215,8 @@ export default function AboutPage() {
         <div className="container mx-auto max-w-5xl px-6">
           <div className="grid grid-cols-1 gap-12 lg:grid-cols-2 lg:items-start">
             <div>
-              <div className="mb-4 flex items-center gap-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-crimson">
-                <span className="h-px w-8 bg-crimson" />
+              <div className="mb-4 flex items-center gap-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-gold">
+                <span className="h-px w-8 bg-gold" />
                 One Operating Model, Not Two Businesses
               </div>
               <h2 className="font-display text-3xl font-bold text-navy lg:text-4xl">
@@ -266,10 +266,10 @@ export default function AboutPage() {
       <section className="bg-surface-alt py-20">
         <div className="container mx-auto max-w-5xl px-6">
           <div className="mx-auto max-w-3xl text-center">
-            <div className="mb-4 flex items-center justify-center gap-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-crimson">
-              <span className="h-px w-8 bg-crimson" />
+            <div className="mb-4 flex items-center justify-center gap-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-gold">
+              <span className="h-px w-8 bg-gold" />
               The Problem
-              <span className="h-px w-8 bg-crimson" />
+              <span className="h-px w-8 bg-gold" />
             </div>
             <h2 className="mb-6 font-display text-4xl font-bold text-navy">
               Who works for the buyer in Lagos?
@@ -348,7 +348,7 @@ export default function AboutPage() {
                   <div
                     className={`mt-4 rounded-lg px-3 py-2 text-center text-[12px] font-semibold uppercase tracking-widest ${
                       row.bad
-                        ? "bg-crimson-light text-crimson"
+                        ? "bg-gold-light text-gold"
                         : "bg-white/10 text-white"
                     }`}
                   >
@@ -365,8 +365,8 @@ export default function AboutPage() {
       <section className="bg-surface py-20">
         <div className="container mx-auto max-w-5xl px-6">
           <div className="mb-12 max-w-2xl">
-            <div className="mb-4 flex items-center gap-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-crimson">
-              <span className="h-px w-8 bg-crimson" />
+            <div className="mb-4 flex items-center gap-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-gold">
+              <span className="h-px w-8 bg-gold" />
               Leadership
             </div>
             <h2 className="mb-4 font-display text-4xl font-bold text-navy">
@@ -387,8 +387,8 @@ export default function AboutPage() {
       <section className="bg-surface-alt py-20">
         <div className="container mx-auto max-w-5xl px-6">
           <div className="mb-12 max-w-2xl">
-            <div className="mb-4 flex items-center gap-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-crimson">
-              <span className="h-px w-8 bg-crimson" />
+            <div className="mb-4 flex items-center gap-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-gold">
+              <span className="h-px w-8 bg-gold" />
               Our Values
             </div>
             <h2 className="mb-4 font-display text-4xl font-bold text-navy">
@@ -413,8 +413,8 @@ export default function AboutPage() {
                     {i + 1}
                   </span>
 
-                  <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl bg-crimson-light">
-                    <Icon className="h-5 w-5 text-crimson" />
+                  <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl bg-gold-light">
+                    <Icon className="h-5 w-5 text-gold" />
                   </div>
 
                   <p className="mb-2 font-display text-[16px] font-bold text-navy">
@@ -435,8 +435,8 @@ export default function AboutPage() {
         <div className="container mx-auto max-w-5xl px-6">
           <div className="grid gap-12 lg:grid-cols-2 lg:items-start">
             <div>
-              <div className="mb-4 flex items-center gap-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-crimson">
-                <span className="h-px w-8 bg-crimson" />
+              <div className="mb-4 flex items-center gap-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-gold">
+                <span className="h-px w-8 bg-gold" />
                 Compliance & Registration
               </div>
               <h2 className="mb-4 font-display text-4xl font-bold text-navy">

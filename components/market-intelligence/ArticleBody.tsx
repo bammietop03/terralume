@@ -45,7 +45,7 @@ const components: Components = {
               : "•"}
           </span>
         ) : (
-          <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-crimson" />
+          <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-gold" />
         )}
         <span>{children}</span>
       </li>
@@ -65,7 +65,7 @@ const components: Components = {
   a: ({ href, children }) => (
     <a
       href={href}
-      className="text-crimson underline underline-offset-2 hover:text-crimson/80 transition-colors"
+      className="text-gold underline underline-offset-2 hover:text-gold/80 transition-colors"
       target="_blank"
       rel="noopener noreferrer"
     >

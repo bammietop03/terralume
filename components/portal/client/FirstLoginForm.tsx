@@ -77,7 +77,7 @@ export default function FirstLoginForm({
         {/* Logo */}
         <div className="text-center mb-8">
           <span className="font-display text-2xl font-bold tracking-tight text-navy-dark">
-            Terra<span className="text-(--color-crimson)">lume</span>
+            Terra<span className="text-(--color-gold)">lume</span>
           </span>
         </div>
 

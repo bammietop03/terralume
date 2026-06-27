@@ -14,19 +14,19 @@
   --popover-foreground: #2c2c2a;
   --card: #ffffff;
   --card-foreground: #2c2c2a;
-  --primary: #1b2a6b;
+  --primary: #142134;
   --primary-foreground: #ffffff;
-  --secondary: #9b1c2e;
+  --secondary: #c4943a;
   --secondary-foreground: #ffffff;
   --muted: #f9fafb;
   --muted-foreground: #5f5e5a;
   --accent: #e8ebf5;
-  --accent-foreground: #1b2a6b;
+  --accent-foreground: #142134;
   --destructive: #9b1c2e;
   --destructive-foreground: #ffffff;
   --border: #d3d1c7;
   --input: #d3d1c7;
-  --ring: #1b2a6b;
+  --ring: #142134;
 }
 
 @theme inline {
@@ -35,12 +35,12 @@
   --font-sans: var(--font-inter), system-ui, sans-serif;
 
   /* ── Brand colours (constant) ──────────────────────────── */
-  --color-navy: #1b2a6b;
-  --color-navy-dark: #111d4e;
-  --color-crimson: #9b1c2e;
+  --color-navy: #142134;
+  --color-navy-dark: #142134;
+  /* --color-crimson: #9b1c2e; */
   --color-gold: #c4943a;
   --color-navy-light: #e8ebf5;
-  --color-crimson-light: #f5e8ea;
+  /* --color-crimson-light: #f5e8ea; */
   --color-gold-light: #fdf4e3;
 
   /* ── Semantic surface tokens (theme-responsive) ─────────── */

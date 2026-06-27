@@ -31,7 +31,7 @@ export function HeroSection() {
       <div className="relative z-10 mx-auto w-full max-w-7xl px-6 pb-20 pt-36 lg:px-12 lg:pb-28">
         {/* Eyebrow */}
         <div className="mb-7 inline-flex items-center gap-2.5 rounded-full border border-white/15 bg-white/8 px-4 py-1.5 backdrop-blur-sm">
-          <span className="h-1.5 w-1.5 rounded-full bg-crimson animate-pulse" />
+          <span className="h-1.5 w-1.5 rounded-full bg-gold animate-pulse" />
           <span className="text-[11px] font-semibold uppercase tracking-[0.15em] text-white/80">
             Buyer-Side Real Estate Advisory · Lagos, Nigeria
           </span>
@@ -40,7 +40,7 @@ export function HeroSection() {
         {/* Headline */}
         <h1 className="max-w-3xl font-display text-5xl font-bold leading-[1.08] text-white lg:text-[64px] xl:text-[72px]">
           Your property investment.{" "}
-          <span className="text-crimson italic">Protected.</span>
+          <span className="text-gold italic">Protected.</span>
         </h1>
 
         {/* Subheadline */}
@@ -82,7 +82,7 @@ export function HeroSection() {
 function TrustBadge({ icon, label }: { icon: React.ReactNode; label: string }) {
   return (
     <div className="flex items-center gap-2 text-sm text-white/70">
-      <span className="text-crimson">{icon}</span>
+      <span className="text-gold">{icon}</span>
       {label}
     </div>
   );

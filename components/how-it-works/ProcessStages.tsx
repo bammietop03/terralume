@@ -36,7 +36,7 @@ interface Gate {
 type ProcessItem = Stage | Gate;
 
 const responsibleStyle: Record<Responsible, string> = {
-  "Terralume Team": "bg-crimson/8 text-crimson border border-crimson/20",
+  "Terralume Team": "bg-gold/8 text-gold border border-gold/20",
   "Project Manager": "bg-navy/8 text-navy border border-navy/15",
   Client: "bg-surface-alt text-on-surface-muted border border-divider",
 };
@@ -273,16 +273,16 @@ export function ProcessStages() {
                   className="relative overflow-hidden rounded-2xl bg-navy-dark px-10 py-8"
                 >
                   {/* Left accent bar */}
-                  <div className="absolute inset-y-0 left-0 w-1 rounded-l-2xl bg-crimson" />
+                  <div className="absolute inset-y-0 left-0 w-1 rounded-l-2xl bg-gold" />
                   {/* Glow */}
                   <div
                     aria-hidden
-                    className="pointer-events-none absolute -right-12 -top-12 h-48 w-48 rounded-full bg-crimson/6 blur-3xl"
+                    className="pointer-events-none absolute -right-12 -top-12 h-48 w-48 rounded-full bg-gold/6 blur-3xl"
                   />
                   <div className="relative flex flex-col gap-5 lg:flex-row lg:items-start lg:gap-10">
                     {/* Gate badge + name */}
                     <div className="shrink-0 lg:w-56">
-                      <span className="mb-3 inline-flex items-center gap-2 rounded-full bg-crimson px-3.5 py-1 text-[10px] font-bold uppercase tracking-[0.15em] text-white">
+                      <span className="mb-3 inline-flex items-center gap-2 rounded-full bg-gold px-3.5 py-1 text-[10px] font-bold uppercase tracking-[0.15em] text-white">
                         <span className="h-1.5 w-1.5 rounded-full bg-white/60" />
                         {item.label}
                       </span>
@@ -308,7 +308,7 @@ export function ProcessStages() {
                               >
                                 <CheckCircle2
                                   size={13}
-                                  className="mt-0.5 shrink-0 text-crimson/60"
+                                  className="mt-0.5 shrink-0 text-gold/60"
                                 />
                                 {c}
                               </li>
@@ -392,7 +392,7 @@ export function ProcessStages() {
                             key={a}
                             className="flex items-start gap-3 text-[14px] text-on-surface"
                           >
-                            <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-crimson" />
+                            <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-gold" />
                             {a}
                           </li>
                         ))}

@@ -63,14 +63,14 @@ export function ProofMetricsSection() {
       <div className="mx-auto max-w-7xl px-6 lg:px-12">
         {/* Header */}
         <div className="mb-16 text-center max-w-xl mx-auto">
-          <p className="mb-5 inline-flex items-center gap-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-crimson">
-            <span className="h-px w-8 bg-crimson" />
+          <p className="mb-5 inline-flex items-center gap-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-gold">
+            <span className="h-px w-8 bg-gold" />
             Track Record
-            <span className="h-px w-8 bg-crimson" />
+            <span className="h-px w-8 bg-gold" />
           </p>
           <h2 className="font-display text-4xl font-bold leading-tight text-navy lg:text-5xl">
             Performance You Can{" "}
-            <span className="italic text-crimson">Measure</span>
+            <span className="italic text-gold">Measure</span>
           </h2>
         </div>
 
@@ -85,7 +85,7 @@ export function ProofMetricsSection() {
               {i === 0 && (
                 <div
                   aria-hidden
-                  className="absolute inset-x-0 top-0 h-0.5 bg-linear-to-r from-navy via-crimson to-transparent"
+                  className="absolute inset-x-0 top-0 h-0.5 bg-linear-to-r from-navy via-gold to-transparent"
                 />
               )}
               <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-navy-light group-hover:bg-navy/15 transition-colors duration-300">
@@ -115,17 +115,13 @@ export function ProofMetricsSection() {
                 aria-hidden
                 className="absolute inset-x-0 top-0 h-0.5 bg-linear-to-r from-navy/20 via-navy/8 to-transparent"
               />
-              <Quote size={24} className="shrink-0 text-crimson/30" />
+              <Quote size={24} className="shrink-0 text-gold/30" />
               <p className="flex-1 text-[15px] leading-relaxed text-on-surface">
                 &ldquo;{t.outcome}&rdquo;
               </p>
               <div className="flex gap-0.5">
                 {Array.from({ length: t.rating }).map((_, i) => (
-                  <Star
-                    key={i}
-                    size={13}
-                    className="fill-crimson text-crimson"
-                  />
+                  <Star key={i} size={13} className="fill-gold text-gold" />
                 ))}
               </div>
               <div className="flex items-center gap-3 border-t border-divider pt-5">

@@ -78,7 +78,7 @@ export default function LatestUpdateCard({ update }: Props) {
                   >
                     <ChevronRight
                       size={14}
-                      className="mt-0.5 shrink-0 text-(--color-crimson)"
+                      className="mt-0.5 shrink-0 text-(--color-gold)"
                     />
                     {step}
                   </li>

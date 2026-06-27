@@ -78,7 +78,7 @@ export function Footer() {
   return (
     <footer className="bg-navy-dark text-white">
       {/* Top border accent */}
-      <div className="h-0.75 bg-linear-to-r from-crimson via-navy to-transparent" />
+      <div className="h-0.75 bg-linear-to-r from-gold via-navy to-transparent" />
 
       <div className="mx-auto max-w-7xl px-6 lg:px-12">
         {/* Main grid */}
@@ -87,7 +87,7 @@ export function Footer() {
           <div>
             <Link href="/" className="mb-5 inline-block">
               <span className="font-display text-2xl font-bold">
-                Terra<span className="text-crimson">lume</span>
+                Terra<span className="text-gold">lume</span>
               </span>
             </Link>
             <p className="mb-7 max-w-72 text-sm leading-relaxed text-white/55">
@@ -118,7 +118,7 @@ export function Footer() {
                   key={badge}
                   className="inline-flex items-center gap-1.5 rounded-full border border-white/15 px-3 py-1 text-[11px] font-semibold uppercase tracking-wider text-white/50"
                 >
-                  <span className="h-1.5 w-1.5 rounded-full bg-crimson" />
+                  <span className="h-1.5 w-1.5 rounded-full bg-gold" />
                   {badge}
                 </span>
               ))}
@@ -127,11 +127,11 @@ export function Footer() {
             {/* Contact */}
             <ul className="space-y-2.5 text-sm text-white/50">
               <li className="flex items-center gap-2.5">
-                <MapPin size={13} className="shrink-0 text-crimson" />
+                <MapPin size={13} className="shrink-0 text-gold" />
                 <span>Lagos, Nigeria</span>
               </li>
               <li className="flex items-center gap-2.5">
-                <Mail size={13} className="shrink-0 text-crimson" />
+                <Mail size={13} className="shrink-0 text-gold" />
                 <a
                   href="mailto:info@terralume.org"
                   className="transition-colors hover:text-white"
@@ -140,7 +140,7 @@ export function Footer() {
                 </a>
               </li>
               <li className="flex items-center gap-2.5">
-                <Phone size={13} className="shrink-0 text-crimson" />
+                <Phone size={13} className="shrink-0 text-gold" />
                 <a
                   href="tel:+2347046676828"
                   className="transition-colors hover:text-white"

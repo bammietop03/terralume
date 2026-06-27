@@ -42,7 +42,7 @@ export default function EngagementSummaryCard({ engagement, pm }: Props) {
   return (
     <div className="relative overflow-hidden rounded-2xl border border-white/60 bg-white/80 backdrop-blur-sm shadow-[0_1px_3px_rgba(27,42,107,0.06),0_8px_24px_rgba(27,42,107,0.04)]">
       {/* Navy accent stripe at top */}
-      <div className="h-1 w-full bg-linear-to-r from-(--color-navy) via-(--color-crimson) to-(--color-navy)" />
+      <div className="h-1 w-full bg-linear-to-r from-(--color-navy) via-(--color-gold) to-(--color-navy)" />
 
       <div className="p-6">
         <div className="flex items-start justify-between gap-4 mb-5">
@@ -81,11 +81,8 @@ export default function EngagementSummaryCard({ engagement, pm }: Props) {
               </p>
             </div>
           </div>
-          <div className="flex items-start gap-2.5 rounded-xl bg-(--color-crimson-light)/40 border border-(--color-crimson)/5 p-3.5">
-            <Clock
-              size={15}
-              className="mt-0.5 text-(--color-crimson) shrink-0"
-            />
+          <div className="flex items-start gap-2.5 rounded-xl bg-(--color-gold-light)/40 border border-(--color-gold)/5 p-3.5">
+            <Clock size={15} className="mt-0.5 text-(--color-gold) shrink-0" />
             <div>
               <p className="text-[11px] text-on-surface-muted">
                 Target completion

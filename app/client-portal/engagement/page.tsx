@@ -356,7 +356,7 @@ export default async function ClientEngagementPage() {
                     ) : (
                       <div className="space-y-1.5">
                         {pendingInvoices.length > 0 && (
-                          <Badge variant="crimson">
+                          <Badge variant="gold">
                             {pendingInvoices.length} invoice
                             {pendingInvoices.length > 1 ? "s" : ""} due
                           </Badge>

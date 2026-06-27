@@ -58,7 +58,7 @@ export function Step2AboutYou({ data, set, errors, readOnly = false }: Props) {
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <div>
           <Label className="mb-1 block">
-            Full legal name <span className="text-crimson">*</span>
+            Full legal name <span className="text-gold">*</span>
           </Label>
           <Input
             type="text"
@@ -83,7 +83,7 @@ export function Step2AboutYou({ data, set, errors, readOnly = false }: Props) {
       {/* Email */}
       <div>
         <Label className="mb-1 block">
-          Email address <span className="text-crimson">*</span>
+          Email address <span className="text-gold">*</span>
         </Label>
         <Input
           type="email"
@@ -99,7 +99,7 @@ export function Step2AboutYou({ data, set, errors, readOnly = false }: Props) {
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <div>
           <Label className="mb-1 block">
-            Phone / WhatsApp <span className="text-crimson">*</span>
+            Phone / WhatsApp <span className="text-gold">*</span>
           </Label>
           <Input
             type="tel"
@@ -124,7 +124,7 @@ export function Step2AboutYou({ data, set, errors, readOnly = false }: Props) {
       {/* Location */}
       <div>
         <Label className="mb-1 block">
-          Where are you currently based? <span className="text-crimson">*</span>
+          Where are you currently based? <span className="text-gold">*</span>
         </Label>
         <Select
           value={data.location}

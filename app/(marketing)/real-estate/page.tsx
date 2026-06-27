@@ -39,7 +39,7 @@ const pillars = [
       "Title failure is the single largest source of contested property transactions in Nigeria. Clients deserve certainty before they commit.",
     youReceive:
       "A title-verification summary in plain language — not a stack of documents you're expected to interpret yourself.",
-    accent: "crimson",
+    accent: "gold",
   },
   {
     icon: DollarSign,
@@ -65,7 +65,7 @@ const pillars = [
       "A property is only as good as the area around it — current value matters less than trajectory.",
     youReceive:
       "An economic-outlook note specific to that property and location.",
-    accent: "crimson",
+    accent: "gold",
   },
   {
     icon: LogOut,
@@ -201,8 +201,8 @@ export default function RealEstatePage() {
       <section className="bg-surface py-24 lg:py-32">
         <div className="mx-auto max-w-6xl px-6 lg:px-12">
           <div className="mb-16 max-w-2xl">
-            <p className="mb-4 flex items-center gap-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-crimson">
-              <span className="h-px w-8 bg-crimson" />
+            <p className="mb-4 flex items-center gap-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-gold">
+              <span className="h-px w-8 bg-gold" />
               The Four Pillars
             </p>
             <h2 className="font-display text-3xl font-bold text-navy lg:text-4xl">
@@ -222,11 +222,11 @@ export default function RealEstatePage() {
               return (
                 <div key={pillar.name} className="flex flex-col bg-surface p-8">
                   <div
-                    className={`mb-5 flex h-12 w-12 items-center justify-center rounded-xl ${isNavy ? "bg-navy-light" : "bg-crimson-light"}`}
+                    className={`mb-5 flex h-12 w-12 items-center justify-center rounded-xl ${isNavy ? "bg-navy-light" : "bg-gold-light"}`}
                   >
                     <Icon
                       size={22}
-                      className={isNavy ? "text-navy" : "text-crimson"}
+                      className={isNavy ? "text-navy" : "text-gold"}
                     />
                   </div>
                   <span className="mb-1 text-[11px] font-semibold uppercase tracking-[0.15em] text-on-surface-muted">
@@ -272,7 +272,7 @@ export default function RealEstatePage() {
                 key={a.label}
                 className="flex items-start gap-4 rounded-2xl border border-divider bg-surface p-6"
               >
-                <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-crimson">
+                <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-gold">
                   <Users size={12} className="text-white" />
                 </span>
                 <div>
@@ -291,8 +291,8 @@ export default function RealEstatePage() {
       <section id="evaluation-framework" className="bg-surface py-24 lg:py-32">
         <div className="mx-auto max-w-6xl px-6 lg:px-12">
           <div className="mb-16 max-w-2xl">
-            <p className="mb-4 flex items-center gap-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-crimson">
-              <span className="h-px w-8 bg-crimson" />
+            <p className="mb-4 flex items-center gap-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-gold">
+              <span className="h-px w-8 bg-gold" />
               The Evaluation Framework
             </p>
             <h2 className="font-display text-3xl font-bold text-navy lg:text-4xl">
@@ -318,19 +318,19 @@ export default function RealEstatePage() {
                   >
                     <div
                       aria-hidden
-                      className={`absolute inset-x-0 top-0 h-0.5 ${isNavy ? "bg-linear-to-r from-gold/60 via-gold/20 to-transparent" : "bg-linear-to-r from-crimson/60 via-crimson/20 to-transparent"}`}
+                      className={`absolute inset-x-0 top-0 h-0.5 ${isNavy ? "bg-linear-to-r from-gold/60 via-gold/20 to-transparent" : "bg-linear-to-r from-gold/60 via-gold/20 to-transparent"}`}
                     />
                     <div
                       aria-hidden
-                      className={`pointer-events-none absolute -right-12 -top-12 h-48 w-48 rounded-full blur-3xl ${isNavy ? "bg-gold/10" : "bg-crimson/15"}`}
+                      className={`pointer-events-none absolute -right-12 -top-12 h-48 w-48 rounded-full blur-3xl ${isNavy ? "bg-gold/10" : "bg-gold/15"}`}
                     />
                     <div className="relative flex items-center gap-4">
                       <div
-                        className={`flex h-11 w-11 items-center justify-center rounded-xl border ${isNavy ? "border-gold/30 bg-gold/15" : "border-crimson/30 bg-crimson/15"}`}
+                        className={`flex h-11 w-11 items-center justify-center rounded-xl border ${isNavy ? "border-gold/30 bg-gold/15" : "border-gold/30 bg-gold/15"}`}
                       >
                         <Icon
                           size={20}
-                          className={isNavy ? "text-gold" : "text-crimson"}
+                          className={isNavy ? "text-gold" : "text-gold"}
                         />
                       </div>
                       <div>
@@ -358,7 +358,7 @@ export default function RealEstatePage() {
                       {
                         heading: "Why it matters",
                         body: pillar.whyItMatters,
-                        color: "crimson",
+                        color: "gold",
                       },
                       {
                         heading: "What you receive",
@@ -368,7 +368,7 @@ export default function RealEstatePage() {
                     ].map((col) => (
                       <div key={col.heading} className="px-7 py-7">
                         <p
-                          className={`mb-2 text-[11px] font-semibold uppercase tracking-[0.15em] ${col.color === "crimson" ? "text-crimson" : "text-navy"}`}
+                          className={`mb-2 text-[11px] font-semibold uppercase tracking-[0.15em] ${col.color === "gold" ? "text-gold" : "text-navy"}`}
                         >
                           {col.heading}
                         </p>
@@ -410,8 +410,8 @@ export default function RealEstatePage() {
       <section className="bg-surface-alt py-24 lg:py-32">
         <div className="mx-auto max-w-6xl px-6 lg:px-12">
           <div className="mb-16 max-w-2xl">
-            <p className="mb-4 flex items-center gap-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-crimson">
-              <span className="h-px w-8 bg-crimson" />
+            <p className="mb-4 flex items-center gap-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-gold">
+              <span className="h-px w-8 bg-gold" />
               How Acquisition Works
             </p>
             <h2 className="font-display text-3xl font-bold text-navy lg:text-4xl">

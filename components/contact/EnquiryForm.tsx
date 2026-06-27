@@ -91,7 +91,7 @@ export function EnquiryForm() {
       {/* Full name */}
       <div>
         <label htmlFor="fullName" className={labelClass}>
-          Full name <span className="text-crimson">*</span>
+          Full name <span className="text-gold">*</span>
         </label>
         <input
           id="fullName"
@@ -107,7 +107,7 @@ export function EnquiryForm() {
       {/* Email */}
       <div>
         <label htmlFor="email" className={labelClass}>
-          Email address <span className="text-crimson">*</span>
+          Email address <span className="text-gold">*</span>
         </label>
         <input
           id="email"
@@ -176,7 +176,7 @@ export function EnquiryForm() {
       {/* Transaction type */}
       <div>
         <label htmlFor="transactionType" className={labelClass}>
-          What are you looking to do? <span className="text-crimson">*</span>
+          What are you looking to do? <span className="text-gold">*</span>
         </label>
         <div className="relative">
           <select

@@ -58,14 +58,14 @@ export function LifecycleSection() {
       <div className="mx-auto max-w-7xl px-6 lg:px-12">
         {/* Header */}
         <div className="mb-16 text-center max-w-2xl mx-auto">
-          <p className="mb-5 inline-flex items-center gap-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-crimson">
-            <span className="h-px w-8 bg-crimson" />
+          <p className="mb-5 inline-flex items-center gap-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-gold">
+            <span className="h-px w-8 bg-gold" />
             How We Work
-            <span className="h-px w-8 bg-crimson" />
+            <span className="h-px w-8 bg-gold" />
           </p>
           <h2 className="font-display text-4xl font-bold leading-tight text-navy lg:text-5xl">
             One Process.{" "}
-            <span className="italic text-crimson">Two Starting Points.</span>
+            <span className="italic text-gold">Two Starting Points.</span>
           </h2>
           <p className="mt-5 text-[17px] leading-relaxed text-on-surface-muted">
             Whether you begin with a property brief or an energy challenge — one
@@ -80,11 +80,11 @@ export function LifecycleSection() {
             <div className="relative bg-navy px-7 py-6">
               <div
                 aria-hidden
-                className="absolute inset-x-0 top-0 h-0.5 bg-linear-to-r from-crimson/50 via-crimson/20 to-transparent"
+                className="absolute inset-x-0 top-0 h-0.5 bg-linear-to-r from-gold/50 via-gold/20 to-transparent"
               />
               <div className="flex items-center gap-3">
-                <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-crimson/15 border border-crimson/25">
-                  <Building2 size={16} className="text-crimson" />
+                <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-gold/15 border border-gold/25">
+                  <Building2 size={16} className="text-gold" />
                 </div>
                 <div>
                   <p className="text-[10px] font-semibold uppercase tracking-widest text-white/50">
@@ -120,11 +120,11 @@ export function LifecycleSection() {
             <div className="relative bg-navy-dark px-7 py-6">
               <div
                 aria-hidden
-                className="absolute inset-x-0 top-0 h-0.5 bg-linear-to-r from-crimson/50 via-crimson/20 to-transparent"
+                className="absolute inset-x-0 top-0 h-0.5 bg-linear-to-r from-gold/50 via-gold/20 to-transparent"
               />
               <div className="flex items-center gap-3">
-                <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-crimson/15 border border-crimson/25">
-                  <Zap size={16} className="text-crimson" />
+                <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-gold/15 border border-gold/25">
+                  <Zap size={16} className="text-gold" />
                 </div>
                 <div>
                   <p className="text-[10px] font-semibold uppercase tracking-widest text-white/50">

@@ -78,7 +78,7 @@ export default function AdminIntakeForm({ clients }: Props) {
       {/* Client selector */}
       <div className="rounded-2xl border border-divider bg-surface p-5 shadow-sm">
         <p className="mb-3 text-sm font-semibold text-on-surface">
-          Select client <span className="text-crimson">*</span>
+          Select client <span className="text-gold">*</span>
         </p>
 
         {selectedClient ? (

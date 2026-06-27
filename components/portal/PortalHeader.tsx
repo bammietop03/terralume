@@ -122,7 +122,7 @@ function NotificationsPanel({
         >
           <Bell size={17} />
           {unread > 0 && (
-            <span className="absolute top-1 right-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-crimson px-1 text-[9px] font-bold text-white leading-none">
+            <span className="absolute top-1 right-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-gold px-1 text-[9px] font-bold text-white leading-none">
               {unread > 9 ? "9+" : unread}
             </span>
           )}
@@ -144,7 +144,7 @@ function NotificationsPanel({
               Notifications
             </h3>
             {unread > 0 && (
-              <span className="inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-crimson px-1.5 text-[10px] font-bold text-white">
+              <span className="inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-gold px-1.5 text-[10px] font-bold text-white">
                 {unread > 99 ? "99+" : unread}
               </span>
             )}
@@ -191,7 +191,7 @@ function NotificationsPanel({
                     <div
                       className={cn(
                         "mt-0.5 h-2 w-2 shrink-0 rounded-full transition-colors",
-                        n.read ? "bg-transparent" : "bg-(--color-crimson)",
+                        n.read ? "bg-transparent" : "bg-(--color-gold)",
                       )}
                     />
                     <div className="flex-1 min-w-0">
@@ -268,7 +268,7 @@ export default function PortalHeader({
 
   const roleBadgeStyle =
     role === "ADMIN"
-      ? "bg-white text-crimson"
+      ? "bg-white text-gold"
       : role === "PM"
         ? "bg-white/15 text-white/70"
         : "bg-white/10 text-white/50";
@@ -296,7 +296,7 @@ export default function PortalHeader({
         {/* Mobile logo */}
         <Link href="/" className="lg:hidden">
           <span className="font-display text-[17px] font-bold tracking-tight text-white">
-            Terra<span className="text-crimson">lume</span>
+            Terra<span className="text-gold">lume</span>
           </span>
         </Link>
 
@@ -334,7 +334,7 @@ export default function PortalHeader({
                     {photoUrl && (
                       <AvatarImage src={photoUrl} alt={displayName} />
                     )}
-                    <AvatarFallback className="bg-linear-to-br from-crimson to-[#6b1220] text-white text-xs font-bold">
+                    <AvatarFallback className="bg-linear-to-br from-gold to-[#6b1220] text-white text-xs font-bold">
                       {initials}
                     </AvatarFallback>
                   </Avatar>
@@ -373,7 +373,7 @@ export default function PortalHeader({
               <div className="h-10 w-10 rounded-full ring-2 ring-navy/15 overflow-hidden shrink-0">
                 <Avatar className="h-10 w-10">
                   {photoUrl && <AvatarImage src={photoUrl} alt={displayName} />}
-                  <AvatarFallback className="bg-linear-to-br from-crimson to-[#6b1220] text-white text-xs font-bold">
+                  <AvatarFallback className="bg-linear-to-br from-gold to-[#6b1220] text-white text-xs font-bold">
                     {initials}
                   </AvatarFallback>
                 </Avatar>

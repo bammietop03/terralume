@@ -47,7 +47,7 @@ export function Header() {
             <span className="font-display text-[28px] font-bold text-white tracking-tight">
               Terra
             </span>
-            <span className="font-display text-[28px] font-bold text-crimson tracking-tight">
+            <span className="font-display text-[28px] font-bold text-gold tracking-tight">
               lume
             </span>
           </Link>

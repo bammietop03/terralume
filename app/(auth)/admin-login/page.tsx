@@ -25,14 +25,14 @@ export default function AdminLoginPage() {
         <div
           aria-hidden
           className="absolute -top-40 -left-40 w-95 h-95 rounded-full opacity-[0.06]"
-          style={{ background: "var(--color-crimson)" }}
+          style={{ background: "var(--color-gold)" }}
         />
 
         {/* Logo + Internal badge */}
         <div className="relative z-10 flex items-center justify-between">
           <Link href="/" className="inline-block">
             <span className="font-display text-2xl font-bold text-white tracking-tight">
-              Terra<span className="text-(--color-crimson)">lume</span>
+              Terra<span className="text-(--color-gold)">lume</span>
             </span>
           </Link>
           <span className="text-[10px] font-bold tracking-[0.12em] uppercase bg-white/10 text-white/50 px-2.5 py-1 rounded-full">
@@ -51,7 +51,7 @@ export default function AdminLoginPage() {
           <h1 className="font-display text-[2.6rem] font-bold text-white leading-[1.15] mb-5">
             Terralume
             <br />
-            <em className="not-italic text-(--color-crimson)">Team Access</em>
+            <em className="not-italic text-(--color-gold)">Team Access</em>
           </h1>
           <p className="text-white/55 text-[0.9rem] leading-relaxed max-w-xs">
             Restricted to authorised Terralume project managers and

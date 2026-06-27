@@ -7,15 +7,15 @@ export function FooterCTA() {
     <section className="bg-navy-dark py-20 lg:py-24">
       <div className="mx-auto max-w-5xl px-6 lg:px-12">
         <div className="flex flex-col items-center gap-8 text-center">
-          <p className="inline-flex items-center gap-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-crimson">
-            <span className="h-px w-8 bg-crimson" />
+          <p className="inline-flex items-center gap-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-gold">
+            <span className="h-px w-8 bg-gold" />
             Get Started
-            <span className="h-px w-8 bg-crimson" />
+            <span className="h-px w-8 bg-gold" />
           </p>
 
           <h2 className="font-display text-4xl font-bold text-white lg:text-5xl">
             Ready to move forward?{" "}
-            <em className="italic text-crimson">We&apos;re ready too.</em>
+            <em className="italic text-gold">We&apos;re ready too.</em>
           </h2>
 
           <p className="max-w-xl text-[17px] leading-relaxed text-white/60">

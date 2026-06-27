@@ -115,7 +115,7 @@ export function ConsultationForm() {
       {/* Full name */}
       <div className="space-y-1.5">
         <Label htmlFor="fullName">
-          Full name <span className="text-crimson">*</span>
+          Full name <span className="text-gold">*</span>
         </Label>
         <Input
           id="fullName"
@@ -131,7 +131,7 @@ export function ConsultationForm() {
       {/* Phone */}
       <div className="space-y-1.5">
         <Label htmlFor="phone">
-          Phone number <span className="text-crimson">*</span>
+          Phone number <span className="text-gold">*</span>
         </Label>
         <div className="flex gap-2">
           <select
@@ -161,7 +161,7 @@ export function ConsultationForm() {
       {/* Email */}
       <div className="space-y-1.5">
         <Label htmlFor="email">
-          Email address <span className="text-crimson">*</span>
+          Email address <span className="text-gold">*</span>
         </Label>
         <Input
           id="email"
@@ -239,7 +239,7 @@ export function ConsultationForm() {
       </div>
 
       {error && (
-        <p role="alert" className="text-sm font-medium text-crimson">
+        <p role="alert" className="text-sm font-medium text-gold">
           {error}
         </p>
       )}

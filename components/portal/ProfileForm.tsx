@@ -119,7 +119,7 @@ export default function ProfileForm({ user }: Props) {
                   {avatarUrl && (
                     <AvatarImage src={avatarUrl} alt={user.fullName ?? ""} />
                   )}
-                  <AvatarFallback className="bg-linear-to-br from-crimson to-[#6b1220] text-white text-xl font-bold">
+                  <AvatarFallback className="bg-linear-to-br from-gold to-[#6b1220] text-white text-xl font-bold">
                     {initials}
                   </AvatarFallback>
                 </Avatar>

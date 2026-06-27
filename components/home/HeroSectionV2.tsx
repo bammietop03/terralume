@@ -79,7 +79,7 @@ export function HeroSectionV2() {
           <Button
             asChild
             size="lg"
-            className="bg-crimson hover:bg-crimson-dark text-white border border-white/20 gap-2 px-7 h-13 text-[15px]"
+            className="bg-gold hover:bg-gold-dark text-white border border-white/20 gap-2 px-7 h-13 text-[15px]"
           >
             <Link href="#real-estate">
               <Building2 size={17} />

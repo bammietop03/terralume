@@ -27,7 +27,7 @@ export function Step1Goal({ data, set }: Props) {
       {/* Transaction type cards */}
       <div>
         <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-on-surface-muted">
-          What are you looking to do? <span className="text-crimson">*</span>
+          What are you looking to do? <span className="text-gold">*</span>
         </p>
         <div className="grid grid-cols-3 gap-3">
           {TRANSACTION_TYPES.map((type) => {

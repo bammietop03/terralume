@@ -130,10 +130,10 @@ export default function HowItWorksPage() {
       <section className="bg-surface py-24 lg:py-32">
         <div className="mx-auto max-w-7xl px-6 lg:px-12">
           <div className="mb-16 text-center max-w-2xl mx-auto">
-            <p className="mb-4 inline-flex items-center gap-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-crimson">
-              <span className="h-px w-8 bg-crimson" />
+            <p className="mb-4 inline-flex items-center gap-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-gold">
+              <span className="h-px w-8 bg-gold" />
               Both Paths
-              <span className="h-px w-8 bg-crimson" />
+              <span className="h-px w-8 bg-gold" />
             </p>
             <h2 className="font-display text-3xl font-bold text-navy lg:text-4xl">
               Choose your starting point
@@ -151,15 +151,15 @@ export default function HowItWorksPage() {
               <div className="relative overflow-hidden bg-navy px-8 py-8">
                 <div
                   aria-hidden
-                  className="absolute inset-x-0 top-0 h-0.5 bg-linear-to-r from-crimson/50 via-crimson/20 to-transparent"
+                  className="absolute inset-x-0 top-0 h-0.5 bg-linear-to-r from-gold/50 via-gold/20 to-transparent"
                 />
                 <div
                   aria-hidden
-                  className="pointer-events-none absolute -right-12 -top-12 h-40 w-40 rounded-full bg-crimson/15 blur-3xl"
+                  className="pointer-events-none absolute -right-12 -top-12 h-40 w-40 rounded-full bg-gold/15 blur-3xl"
                 />
                 <div className="relative flex items-center gap-3 mb-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-crimson/15 border border-crimson/25">
-                    <Building2 size={18} className="text-crimson" />
+                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gold/15 border border-gold/25">
+                    <Building2 size={18} className="text-gold" />
                   </div>
                   <span className="text-[11px] font-semibold uppercase tracking-[0.15em] text-white/60">
                     Track A
@@ -179,7 +179,7 @@ export default function HowItWorksPage() {
                   {/* Vertical line */}
                   <div
                     aria-hidden
-                    className="absolute left-3.75 top-4 bottom-4 w-px bg-linear-to-b from-crimson/30 via-divider to-transparent"
+                    className="absolute left-3.75 top-4 bottom-4 w-px bg-linear-to-b from-gold/30 via-divider to-transparent"
                   />
                   {reSteps.map((s, i) => (
                     <li
@@ -334,10 +334,10 @@ export default function HowItWorksPage() {
       {/* ── CTA ─────────────────────────────────────────────────── */}
       <section className="bg-surface py-24 lg:py-32">
         <div className="mx-auto max-w-3xl px-6 text-center lg:px-12">
-          <p className="mb-5 inline-flex items-center gap-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-crimson">
-            <span className="h-px w-8 bg-crimson" />
+          <p className="mb-5 inline-flex items-center gap-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-gold">
+            <span className="h-px w-8 bg-gold" />
             Get Started
-            <span className="h-px w-8 bg-crimson" />
+            <span className="h-px w-8 bg-gold" />
           </p>
           <h2 className="font-display text-4xl font-bold text-navy lg:text-5xl">
             Not sure where to start?

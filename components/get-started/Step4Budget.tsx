@@ -61,7 +61,7 @@ export function Step4Budget({ data, set, errors }: Props) {
       <div>
         <Label className="mb-1 block">
           {isLease ? "Annual rent / lease budget" : "Total budget"}{" "}
-          <span className="text-crimson">*</span>
+          <span className="text-gold">*</span>
         </Label>
         <div className="flex items-center gap-2">
           <div className="flex-1">
@@ -94,7 +94,7 @@ export function Step4Budget({ data, set, errors }: Props) {
       {/* Source of funds */}
       <div>
         <Label className="mb-1 block">
-          Primary source of funds <span className="text-crimson">*</span>
+          Primary source of funds <span className="text-gold">*</span>
         </Label>
         <Select
           value={data.sourceOfFunds}
@@ -142,9 +142,9 @@ export function Step4Budget({ data, set, errors }: Props) {
 
       {/* Rental warning */}
       {data.transactionType === "rent" && (
-        <div className="flex gap-3 rounded-xl border border-crimson/30 bg-crimson/5 px-4 py-3">
-          <div className="mt-0.5 h-full w-1 shrink-0 rounded-full bg-crimson" />
-          <p className="text-xs leading-relaxed text-crimson">
+        <div className="flex gap-3 rounded-xl border border-gold/30 bg-gold/5 px-4 py-3">
+          <div className="mt-0.5 h-full w-1 shrink-0 rounded-full bg-gold" />
+          <p className="text-xs leading-relaxed text-gold">
             Lagos standard: most landlords require 1–2 years rent upfront. We
             negotiate payment structures on your behalf and will always tell you
             what the market actually demands.

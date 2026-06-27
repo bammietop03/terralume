@@ -64,7 +64,7 @@ export default function AssignPmButton({
     <>
       <div className="flex items-center gap-2">
         {pmChangeRequested && (
-          <Badge variant="crimson" className="gap-1 text-[11px]">
+          <Badge variant="gold" className="gap-1 text-[11px]">
             <AlertCircle size={10} />
             Change requested
           </Badge>

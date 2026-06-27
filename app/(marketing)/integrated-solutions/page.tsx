@@ -38,7 +38,7 @@ const steps = [
     label: "Intake",
     detail:
       "A single intake form. Purpose, location, budget, timeline, financing status — everything our team needs to start work.",
-    accent: "crimson",
+    accent: "gold",
   },
   {
     phase: "Real Estate",
@@ -56,7 +56,7 @@ const steps = [
     label: "Curated Shortlist",
     detail:
       "You receive a shortlist of verified properties, each annotated against all four pillars. No guesswork, no unverified listings.",
-    accent: "crimson",
+    accent: "gold",
   },
   {
     phase: "Integration Point",
@@ -83,7 +83,7 @@ const steps = [
     label: "Integrated Delivery",
     detail:
       "The acquisition completes. The client receives a property with its power solution already proposed, costed, and ready to deploy.",
-    accent: "crimson",
+    accent: "gold",
   },
 ];
 
@@ -158,7 +158,7 @@ export default function IntegratedSolutionsPage() {
           <div className="grid grid-cols-1 gap-12 lg:grid-cols-[1fr_2px_1fr] lg:items-start">
             {/* Left: narrative */}
             <div>
-              <p className="mb-4 text-[11px] font-semibold uppercase tracking-[0.18em] text-crimson">
+              <p className="mb-4 text-[11px] font-semibold uppercase tracking-[0.18em] text-gold">
                 A Real Example
               </p>
               <h2 className="font-display text-2xl font-bold text-black lg:text-3xl">
@@ -183,7 +183,7 @@ export default function IntegratedSolutionsPage() {
 
             {/* Right: outcome */}
             <div>
-              <p className="mb-4 text-[11px] font-semibold uppercase tracking-[0.18em] text-crimson">
+              <p className="mb-4 text-[11px] font-semibold uppercase tracking-[0.18em] text-gold">
                 The Outcome
               </p>
               <h2 className="font-display text-2xl font-bold text-black lg:text-3xl">
@@ -210,8 +210,8 @@ export default function IntegratedSolutionsPage() {
       <section className="bg-surface py-14 lg:py-17">
         <div className="mx-auto max-w-6xl px-6 lg:px-12">
           <div className="mb-16 max-w-2xl">
-            <p className="mb-4 flex items-center gap-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-crimson">
-              <span className="h-px w-8 bg-crimson" />
+            <p className="mb-4 flex items-center gap-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-gold">
+              <span className="h-px w-8 bg-gold" />
               How It Works
             </p>
             <h2 className="font-display text-3xl font-bold text-navy lg:text-4xl">
@@ -227,7 +227,7 @@ export default function IntegratedSolutionsPage() {
             {steps.map((step) => {
               const Icon = step.icon;
               const isPivot = step.accent === "pivot";
-              const isCrimson = step.accent === "crimson";
+              const isgold = step.accent === "gold";
 
               if (isPivot) {
                 return (
@@ -238,11 +238,11 @@ export default function IntegratedSolutionsPage() {
                     <div className="relative overflow-hidden px-7 py-6">
                       <div
                         aria-hidden
-                        className="pointer-events-none absolute -right-10 -top-10 h-36 w-36 rounded-full bg-crimson/20 blur-3xl"
+                        className="pointer-events-none absolute -right-10 -top-10 h-36 w-36 rounded-full bg-gold/20 blur-3xl"
                       />
                       <div className="relative flex items-center gap-3">
-                        <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-crimson/40 bg-crimson/20">
-                          <Icon size={18} className="text-crimson" />
+                        <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-gold/40 bg-gold/20">
+                          <Icon size={18} className="text-gold" />
                         </div>
                         <div>
                           <span className="block text-[10px] font-semibold uppercase tracking-[0.15em] text-white/45">
@@ -258,9 +258,9 @@ export default function IntegratedSolutionsPage() {
                       <p className="flex-1 text-[14px] leading-relaxed text-white/65">
                         {step.detail}
                       </p>
-                      <div className="mt-5 inline-flex items-center gap-2 rounded-full bg-crimson/20 px-4 py-2 self-start">
-                        <MoveRight size={13} className="text-crimson" />
-                        <span className="text-[12px] font-medium text-crimson">
+                      <div className="mt-5 inline-flex items-center gap-2 rounded-full bg-gold/20 px-4 py-2 self-start">
+                        <MoveRight size={13} className="text-gold" />
+                        <span className="text-[12px] font-medium text-gold">
                           Integration point
                         </span>
                       </div>
@@ -278,19 +278,19 @@ export default function IntegratedSolutionsPage() {
                   <div className="relative overflow-hidden bg-navy px-7 py-6">
                     <div
                       aria-hidden
-                      className={`absolute inset-x-0 top-0 h-0.5 ${isCrimson ? "bg-linear-to-r from-crimson/60 via-crimson/20 to-transparent" : "bg-linear-to-r from-gold/50 via-gold/15 to-transparent"}`}
+                      className={`absolute inset-x-0 top-0 h-0.5 ${isgold ? "bg-linear-to-r from-gold/60 via-gold/20 to-transparent" : "bg-linear-to-r from-gold/50 via-gold/15 to-transparent"}`}
                     />
                     <div
                       aria-hidden
-                      className={`pointer-events-none absolute -right-10 -top-10 h-36 w-36 rounded-full blur-3xl ${isCrimson ? "bg-crimson/15" : "bg-gold/10"}`}
+                      className={`pointer-events-none absolute -right-10 -top-10 h-36 w-36 rounded-full blur-3xl ${isgold ? "bg-gold/15" : "bg-gold/10"}`}
                     />
                     <div className="relative flex items-center gap-3">
                       <div
-                        className={`flex h-10 w-10 items-center justify-center rounded-xl border ${isCrimson ? "border-crimson/30 bg-crimson/15" : "border-gold/30 bg-gold/15"}`}
+                        className={`flex h-10 w-10 items-center justify-center rounded-xl border ${isgold ? "border-gold/30 bg-gold/15" : "border-gold/30 bg-gold/15"}`}
                       >
                         <Icon
                           size={18}
-                          className={isCrimson ? "text-crimson" : "text-gold"}
+                          className={isgold ? "text-gold" : "text-gold"}
                         />
                       </div>
                       <div>
@@ -346,10 +346,7 @@ export default function IntegratedSolutionsPage() {
                 key={d.label}
                 className="flex items-start gap-5 rounded-2xl border border-divider bg-surface p-7"
               >
-                <CheckCircle2
-                  size={20}
-                  className="mt-0.5 shrink-0 text-crimson"
-                />
+                <CheckCircle2 size={20} className="mt-0.5 shrink-0 text-gold" />
                 <div>
                   <p className="font-semibold text-navy">{d.label}</p>
                   <p className="mt-1.5 text-[14px] leading-relaxed text-on-surface-muted">
@@ -371,15 +368,15 @@ export default function IntegratedSolutionsPage() {
               <div className="relative overflow-hidden bg-navy px-8 py-7">
                 <div
                   aria-hidden
-                  className="absolute inset-x-0 top-0 h-0.5 bg-linear-to-r from-crimson/60 via-crimson/20 to-transparent"
+                  className="absolute inset-x-0 top-0 h-0.5 bg-linear-to-r from-gold/60 via-gold/20 to-transparent"
                 />
                 <div
                   aria-hidden
-                  className="pointer-events-none absolute -right-10 -top-10 h-36 w-36 rounded-full bg-crimson/15 blur-3xl"
+                  className="pointer-events-none absolute -right-10 -top-10 h-36 w-36 rounded-full bg-gold/15 blur-3xl"
                 />
                 <div className="relative flex items-center gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-crimson/30 bg-crimson/15">
-                    <Building2 size={18} className="text-crimson" />
+                  <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-gold/30 bg-gold/15">
+                    <Building2 size={18} className="text-gold" />
                   </div>
                   <h3 className="font-display text-[20px] font-bold text-white">
                     Start with Real Estate

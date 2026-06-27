@@ -29,7 +29,7 @@ export default async function ClientDashboardPage() {
     return (
       <>
         <div className="px-6 pt-8 pb-2 max-w-6xl mx-auto">
-          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-(--color-crimson) mb-1">
+          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-(--color-gold) mb-1">
             Client Portal
           </p>
           <h1 className="font-display text-2xl font-bold text-on-surface">
@@ -94,7 +94,7 @@ export default async function ClientDashboardPage() {
   return (
     <>
       <div className="px-6 pt-8 pb-2 max-w-6xl mx-auto">
-        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-(--color-crimson) mb-1">
+        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-(--color-gold) mb-1">
           Client Portal
         </p>
         <h1 className="font-display text-2xl font-bold text-on-surface">

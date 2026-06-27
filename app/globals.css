@@ -38,8 +38,10 @@
   --color-navy: #1b2a6b;
   --color-navy-dark: #111d4e;
   --color-crimson: #9b1c2e;
+  --color-gold: #c4943a;
   --color-navy-light: #e8ebf5;
   --color-crimson-light: #f5e8ea;
+  --color-gold-light: #fdf4e3;
 
   /* ── Semantic surface tokens (theme-responsive) ─────────── */
   --color-surface: var(--surface);

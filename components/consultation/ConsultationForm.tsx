@@ -4,6 +4,7 @@ import { useState, useTransition } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import {
   Select,
   SelectContent,
@@ -26,12 +27,18 @@ const COUNTRY_CODES = [
   { code: "+49", flag: "🇩🇪", name: "Germany" },
 ];
 
-const INTEREST_TYPES: { value: LeadInterestType; label: string }[] = [
-  { value: "BUY", label: "Buy a property" },
-  { value: "INVEST", label: "Invest in real estate" },
-  { value: "DEVELOP", label: "Develop / build" },
-  { value: "LEGAL_SUPPORT", label: "Legal support / due diligence" },
-  { value: "CROSS_BORDER", label: "Cross-border / diaspora acquisition" },
+const SERVICE_OPTIONS: { value: LeadInterestType; label: string }[] = [
+  { value: "REAL_ESTATE", label: "Real estate" },
+  { value: "ENERGY", label: "Energy" },
+  { value: "BOTH", label: "Both" },
+  { value: "NOT_SURE", label: "Not sure" },
+];
+
+const LOCATIONS = [
+  { value: "Lagos", label: "Lagos" },
+  { value: "Abuja", label: "Abuja" },
+  { value: "Port Harcourt", label: "Port Harcourt" },
+  { value: "Other", label: "Other" },
 ];
 
 export function ConsultationForm() {
@@ -40,7 +47,8 @@ export function ConsultationForm() {
   const [error, setError] = useState<string | null>(null);
 
   const [countryCode, setCountryCode] = useState("+234");
-  const [interestType, setInterestType] = useState<LeadInterestType | "">("");
+  const [serviceArea, setServiceArea] = useState<LeadInterestType | "">("");
+  const [location, setLocation] = useState("");
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -52,7 +60,7 @@ export function ConsultationForm() {
     const fullName = (data.get("fullName") as string)?.trim();
     const phoneLocal = (data.get("phone") as string)?.trim();
     const email = (data.get("email") as string)?.trim();
-    const location = (data.get("location") as string)?.trim();
+    const description = (data.get("description") as string)?.trim();
 
     if (!fullName || !phoneLocal || !email) {
       setError("Please fill in all required fields.");
@@ -67,7 +75,8 @@ export function ConsultationForm() {
         phone,
         email,
         location: location || undefined,
-        interestType: interestType || undefined,
+        interestType: serviceArea || undefined,
+        notes: description || undefined,
       });
 
       if (result.success) {
@@ -165,46 +174,68 @@ export function ConsultationForm() {
         />
       </div>
 
-      {/* Location */}
+      {/* What do you need help with */}
       <div className="space-y-1.5">
-        <Label htmlFor="location">
-          Where are you based?{" "}
-          <span className="text-on-surface-muted font-normal">(optional)</span>
-        </Label>
-        <Input
-          id="location"
-          name="location"
-          type="text"
-          placeholder="e.g. London, UK"
-          autoComplete="address-level2"
-          className="h-12 rounded-xl border-divider text-sm focus-visible:ring-navy/20"
-        />
-      </div>
-
-      {/* Interest type */}
-      <div className="space-y-1.5">
-        <Label htmlFor="interestType">
-          What are you interested in?{" "}
+        <Label htmlFor="serviceArea">
+          What do you need help with?{" "}
           <span className="text-on-surface-muted font-normal">(optional)</span>
         </Label>
         <Select
-          value={interestType}
-          onValueChange={(v) => setInterestType(v as LeadInterestType)}
+          value={serviceArea}
+          onValueChange={(v) => setServiceArea(v as LeadInterestType)}
         >
           <SelectTrigger
-            id="interestType"
+            id="serviceArea"
             className="h-12 rounded-xl border-divider text-sm"
           >
             <SelectValue placeholder="Select an option" />
           </SelectTrigger>
           <SelectContent>
-            {INTEREST_TYPES.map((t) => (
-              <SelectItem key={t.value} value={t.value}>
-                {t.label}
+            {SERVICE_OPTIONS.map((o) => (
+              <SelectItem key={o.value} value={o.value}>
+                {o.label}
               </SelectItem>
             ))}
           </SelectContent>
         </Select>
+      </div>
+
+      {/* Location */}
+      <div className="space-y-1.5">
+        <Label htmlFor="location">
+          Location{" "}
+          <span className="text-on-surface-muted font-normal">(optional)</span>
+        </Label>
+        <Select value={location} onValueChange={setLocation}>
+          <SelectTrigger
+            id="location"
+            className="h-12 rounded-xl border-divider text-sm"
+          >
+            <SelectValue placeholder="Select a city" />
+          </SelectTrigger>
+          <SelectContent>
+            {LOCATIONS.map((l) => (
+              <SelectItem key={l.value} value={l.value}>
+                {l.label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+
+      {/* Description */}
+      <div className="space-y-1.5">
+        <Label htmlFor="description">
+          Brief description of what you&apos;re looking for{" "}
+          <span className="text-on-surface-muted font-normal">(optional)</span>
+        </Label>
+        <Textarea
+          id="description"
+          name="description"
+          placeholder="e.g. Looking for a 3-bedroom home in Lekki, budget ₦80m, ready to buy within 3 months."
+          rows={4}
+          className="rounded-xl border-divider text-sm focus-visible:ring-navy/20 resize-none"
+        />
       </div>
 
       {error && (

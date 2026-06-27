@@ -8,8 +8,9 @@ import { Button } from "@/components/ui/button";
 
 const navLinks = [
   { label: "How It Works", href: "/how-it-works" },
-  { label: "Services", href: "/services" },
-  { label: "Area Guides", href: "/area-guides" },
+  { label: "Real Estate", href: "/real-estate" },
+  { label: "Energy", href: "/energy" },
+  { label: "Integrated Solutions", href: "/integrated-solutions" },
   { label: "Market Intelligence", href: "/market-intelligence" },
   { label: "About", href: "/about" },
   { label: "Contact", href: "/contact" },
@@ -68,20 +69,20 @@ export function Header() {
           <div className="flex items-center gap-3 shrink-0">
             <Button
               asChild
-              size="sm"
+              size="lg"
               variant="secondary"
               className="hidden lg:inline-flex"
             >
-              <Link href="/consultation">Free Consultation</Link>
+              <Link href="/consultation">Get Started</Link>
             </Button>
-            <Button
+            {/* <Button
               asChild
               size="sm"
               variant="outline"
               className="hidden lg:inline-flex"
             >
               <Link href="/login">Log In</Link>
-            </Button>
+            </Button> */}
             <button
               className="lg:hidden p-2 rounded-sm text-white/70 hover:text-white hover:bg-white/10 transition-colors"
               onClick={() => setMobileOpen(!mobileOpen)}
@@ -112,14 +113,14 @@ export function Header() {
             </Link>
           ))}
           <div className="pt-4 flex flex-col gap-2">
-            <Button asChild variant="outline" className="w-full">
+            {/* <Button asChild variant="outline" className="w-full">
               <Link href="/login" onClick={() => setMobileOpen(false)}>
                 Log In
               </Link>
-            </Button>
+            </Button> */}
             <Button asChild variant="secondary" className="w-full">
               <Link href="/consultation" onClick={() => setMobileOpen(false)}>
-                Free Consultation
+                Get Started
               </Link>
             </Button>
           </div>

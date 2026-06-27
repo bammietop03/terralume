@@ -54,11 +54,10 @@ enum IntakeStatus {
 }
 
 enum LeadInterestType {
-  BUY
-  INVEST
-  DEVELOP
-  LEGAL_SUPPORT
-  CROSS_BORDER
+  REAL_ESTATE
+  ENERGY
+  BOTH
+  NOT_SURE
 }
 
 enum LeadStatus {

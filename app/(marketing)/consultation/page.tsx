@@ -55,7 +55,7 @@ export default function ConsultationPage() {
           <>
             Let&apos;s talk about
             <br />
-            <span className="text-crimson">your goals.</span>
+            <span className="text-gold">your goals.</span>
           </>
         }
         description="Tell us what you're looking for and a project manager will be in touch within 12–24 hours to arrange your free, no-obligation consultation."

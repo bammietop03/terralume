@@ -1,4 +1,31 @@
-import { Star, Quote } from "lucide-react";
+import { TrendingUp, Users, BarChart2, Star, Quote } from "lucide-react";
+
+const metrics = [
+  {
+    icon: TrendingUp,
+    value: "120+",
+    label: "Transactions",
+    detail: "Property deals sourced, negotiated, and closed",
+  },
+  {
+    icon: Users,
+    value: "67",
+    label: "Active Clients",
+    detail: "Investors, developers, and diaspora clients currently engaged",
+  },
+  {
+    icon: BarChart2,
+    value: "12%",
+    label: "ROI Range",
+    detail: "Average investment return across portfolio transactions",
+  },
+  {
+    icon: Star,
+    value: "4.5/5",
+    label: "Satisfaction",
+    detail: "Client-reported satisfaction across all engagements",
+  },
+];
 
 const testimonials = [
   {
@@ -30,45 +57,55 @@ const testimonials = [
   },
 ];
 
-const metrics = [
-  { value: "120+", label: "Properties Investigated" },
-  { value: "67", label: "Deals Completed" },
-  { value: "61", label: "Deals Flagged" },
-  { value: "12%", label: "Avg. Saving Negotiated" },
-  { value: "4.3/5", label: "Client Satisfaction" },
-];
-
-export function SocialProofSection() {
+export function ProofMetricsSection() {
   return (
-    <section id="social-proof" className="bg-surface-alt py-24 lg:py-32">
+    <section className="bg-surface py-28 lg:py-36 overflow-hidden">
       <div className="mx-auto max-w-7xl px-6 lg:px-12">
-        <div className="mb-16 text-center">
-          <p className="mb-4 inline-flex items-center gap-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-crimson">
+        {/* Header */}
+        <div className="mb-16 text-center max-w-xl mx-auto">
+          <p className="mb-5 inline-flex items-center gap-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-crimson">
             <span className="h-px w-8 bg-crimson" />
-            Client results
+            Track Record
             <span className="h-px w-8 bg-crimson" />
           </p>
-          <h2 className="font-display text-4xl font-bold text-navy lg:text-5xl">
-            Trusted by serious buyers
+          <h2 className="font-display text-4xl font-bold leading-tight text-navy lg:text-5xl">
+            Performance You Can{" "}
+            <span className="italic text-crimson">Measure</span>
           </h2>
         </div>
 
-        {/* Metrics strip */}
-        <div className="mb-16 grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-divider bg-divider lg:grid-cols-5">
-          {metrics.map((m) => (
-            <div key={m.label} className="bg-surface px-8 py-10 text-center">
-              <span className="block font-display text-5xl font-bold leading-none text-navy">
+        {/* Metrics grid */}
+        <div className="grid grid-cols-1 gap-px bg-divider overflow-hidden rounded-3xl border border-divider sm:grid-cols-2 lg:grid-cols-4">
+          {metrics.map((m, i) => (
+            <div
+              key={m.label}
+              className="relative flex flex-col items-center justify-center bg-surface p-12 text-center group overflow-hidden hover:bg-surface-alt transition-colors duration-300"
+            >
+              {/* Accent top border on first */}
+              {i === 0 && (
+                <div
+                  aria-hidden
+                  className="absolute inset-x-0 top-0 h-0.5 bg-linear-to-r from-navy via-crimson to-transparent"
+                />
+              )}
+              <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-navy-light group-hover:bg-navy/15 transition-colors duration-300">
+                <m.icon size={22} className="text-navy" />
+              </div>
+              <span className="font-display text-[52px] font-bold leading-none text-navy lg:text-[58px]">
                 {m.value}
               </span>
-              <span className="mt-2 block text-[12px] uppercase tracking-wider text-on-surface-muted">
+              <span className="mt-2 text-[13px] font-semibold uppercase tracking-widest text-on-surface-muted">
                 {m.label}
               </span>
+              <p className="mt-3 text-[13px] leading-relaxed text-on-surface-muted/70 max-w-45">
+                {m.detail}
+              </p>
             </div>
           ))}
         </div>
 
         {/* Testimonials */}
-        <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
+        <div className="grid grid-cols-1 gap-5 md:grid-cols-3 pt-12">
           {testimonials.map((t) => (
             <div
               key={t.name}

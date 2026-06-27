@@ -85,7 +85,7 @@ export default async function MarketIntelligencePage() {
         title={
           <>
             Research that works{" "}
-            <em className="italic text-crimson">for buyers.</em>
+            <em className="italic text-gold">for buyers.</em>
           </>
         }
         description="Guides, price data, legal explainers, area analyses, and fraud warnings — everything you need to move through a Lagos property transaction with confidence."

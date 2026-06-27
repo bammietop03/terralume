@@ -35,6 +35,7 @@ export async function submitConsultationRequest(data: {
   email: string;
   location?: string;
   interestType?: LeadInterestType;
+  notes?: string;
 }): Promise<{ success: boolean; error?: string }> {
   if (!data.fullName?.trim() || !data.phone?.trim() || !data.email?.trim()) {
     return { success: false, error: "Name, phone, and email are required." };
@@ -43,13 +44,14 @@ export async function submitConsultationRequest(data: {
     return { success: false, error: "Invalid email address." };
   }
 
-  const lead = await prisma.lead.create({
+  await prisma.lead.create({
     data: {
       fullName: data.fullName.trim(),
       phone: data.phone.trim(),
       email: data.email.toLowerCase().trim(),
       location: data.location?.trim() || null,
       interestType: data.interestType ?? null,
+      notes: data.notes?.trim() || null,
     },
   });
 

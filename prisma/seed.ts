@@ -17,7 +17,6 @@ import { PrismaPg } from "@prisma/adapter-pg";
 import { Pool } from "pg";
 import { articles } from "../lib/articles-data";
 import { articleBodies } from "../lib/articles-content";
-import { tiers as staticTiers } from "../lib/services-data";
 import type { ContentBlock } from "../lib/articles-content";
 
 // ─── Service tier price map (numeric, NGN) ────────────────────────────────────
@@ -236,43 +235,6 @@ async function main() {
 
   console.log(
     `\n✅  Articles: ${created} created, ${skipped} already existed.\n`,
-  );
-
-  // ─── Seed service tiers ─────────────────────────────────────────────────────
-
-  console.log("📦  Seeding service tiers…\n");
-
-  let tiersCreated = 0;
-  let tiersSkipped = 0;
-
-  for (const tier of staticTiers) {
-    const existing = await prisma.serviceTier.findUnique({
-      where: { slug: tier.slug },
-    });
-
-    if (existing) {
-      tiersSkipped++;
-      continue;
-    }
-
-    await prisma.serviceTier.create({
-      data: {
-        name: tier.name,
-        slug: tier.slug,
-        description: tier.tagline,
-        price: TIER_PRICES[tier.slug] ?? 0,
-        currency: "NGN",
-        isActive: true,
-        createdById: adminUserId,
-      },
-    });
-
-    console.log(`  ✓  ${tier.slug}`);
-    tiersCreated++;
-  }
-
-  console.log(
-    `\n✅  Service tiers: ${tiersCreated} created, ${tiersSkipped} already existed.\n`,
   );
 }
 

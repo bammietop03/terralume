@@ -1,68 +1,51 @@
 import Link from "next/link";
-import Image from "next/image";
+import { ArrowRight, CalendarDays } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, ShieldCheck } from "lucide-react";
 
 export function FooterCTA() {
   return (
-    <section className="relative overflow-hidden py-32 lg:py-44">
-      {/* Background image */}
-      <Image
-        src="/images/image1.jpg"
-        alt="Lagos premium property"
-        fill
-        className="object-cover object-center"
-        quality={85}
-      />
-      {/* Dark overlay */}
-      <div
-        aria-hidden
-        className="absolute inset-0 bg-linear-to-t from-[#060c18] via-[#060c18]/80 to-[#060c18]/50"
-      />
-      {/* Left vignette */}
-      <div
-        aria-hidden
-        className="absolute inset-0 bg-linear-to-r from-[#060c18]/60 via-transparent to-transparent"
-      />
+    <section className="bg-navy-dark py-20 lg:py-24">
+      <div className="mx-auto max-w-5xl px-6 lg:px-12">
+        <div className="flex flex-col items-center gap-8 text-center">
+          <p className="inline-flex items-center gap-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-crimson">
+            <span className="h-px w-8 bg-crimson" />
+            Get Started
+            <span className="h-px w-8 bg-crimson" />
+          </p>
 
-      <div className="relative z-10 mx-auto max-w-4xl px-6 text-center lg:px-12">
-        <p className="mb-5 inline-flex items-center gap-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-crimson">
-          <span className="h-px w-8 bg-crimson" />
-          Ready to start?
-          <span className="h-px w-8 bg-crimson" />
-        </p>
-        <h2 className="font-display text-5xl font-bold leading-tight text-white lg:text-6xl">
-          Buy or rent in Lagos{" "}
-          <span className="italic text-crimson">the right way.</span>
-        </h2>
-        <p className="mx-auto mt-6 max-w-xl text-[17px] leading-relaxed text-white/60">
-          Don&apos;t navigate the Lagos property market alone. Let Terralume put
-          an expert buyer&apos;s agent in your corner from day one.
-        </p>
-        <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
-          <Button asChild size="lg" variant="secondary">
-            <Link href="/consultation">
-              Start Your Enquiry
-              <ArrowRight size={16} />
-            </Link>
-          </Button>
-        </div>
+          <h2 className="font-display text-4xl font-bold text-white lg:text-5xl">
+            Ready to move forward?{" "}
+            <em className="italic text-crimson">We&apos;re ready too.</em>
+          </h2>
 
-        {/* Trust signals */}
-        <div className="mt-12 flex flex-wrap items-center justify-center gap-6 border-t border-white/10 pt-10">
-          <div className="flex items-center gap-2 text-[13px] text-white/50">
-            <ShieldCheck size={14} className="text-crimson" />
-            LASRERA Registered
+          <p className="max-w-xl text-[17px] leading-relaxed text-white/60">
+            Whether you&apos;re buying a property, solving an energy problem, or
+            both — start with a short intake and let Terralume manage the rest.
+          </p>
+
+          <div className="flex flex-col gap-4 sm:flex-row sm:justify-center">
+            <Button asChild size="lg" variant="secondary">
+              <Link href="/consultation">
+                Start an intake
+                <ArrowRight size={16} className="ml-2" />
+              </Link>
+            </Button>
+            <Button
+              asChild
+              size="lg"
+              variant="outline"
+              className="border-white/30 text-navy hover:bg-white/10 hover:text-white"
+            >
+              <Link href="/contact">
+                <CalendarDays size={16} className="mr-2" />
+                Contact Us
+              </Link>
+            </Button>
           </div>
-          <div className="h-4 w-px bg-white/15" />
-          <div className="flex items-center gap-2 text-[13px] text-white/50">
-            <ShieldCheck size={14} className="text-crimson" />
-            CAC Registered
-          </div>
-          <div className="h-4 w-px bg-white/15" />
-          <span className="text-[13px] text-white/30">
-            Initial consultation is free — no commitment required.
-          </span>
+
+          <p className="text-[12px] uppercase tracking-widest text-white/30">
+            CAC &amp; LASRERA Registered · Lagos, Nigeria
+          </p>
         </div>
       </div>
     </section>

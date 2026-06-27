@@ -16,65 +16,16 @@ import PageHero from "@/components/layout/PageHero";
 import { FooterCTA } from "@/components/home/FooterCTA";
 
 export const metadata: Metadata = {
-  title: "About Terralume — Buyer-Side Real Estate Advisory, Lagos",
+  title: "About Terralume — Real Estate & Clean Energy, Nigeria",
   description:
-    "Terralume is Lagos's dedicated buyer-side real estate advisory firm. We work exclusively for property buyers and renters — never sellers, landlords, or developers.",
+    "Terralume runs two divisions — Real Estate Acquisition & Intelligence, and Renewable Energy as a Service — united by one operating model: rigorous evaluation, honest delivery.",
   openGraph: {
     title: "About Terralume",
     description:
-      "Founded to solve a structural problem in the Lagos property market — we work exclusively for buyers.",
+      "Vision: To become the top structured real estate and clean energy provider across Nigeria. One process, two divisions.",
     type: "website",
   },
 };
-
-/* ─── Data ───────────────────────────────────────────────── */
-
-const team = [
-  {
-    initials: "AO",
-    name: "Amara Okonkwo",
-    title: "Founder & Head of Advisory",
-    background:
-      "Former investment banker with 11 years of Lagos real estate transaction experience. Structured over ₦4.2 billion in residential and commercial acquisitions before founding Terralume.",
-    mission:
-      "Property in Lagos should be navigable by anyone with the right guide.",
-  },
-  {
-    initials: "FH",
-    name: "Fatima Al-Hassan",
-    title: "Head of Legal & Due Diligence",
-    background:
-      "Qualified Nigerian solicitor with dual specialisation in property law and fraud litigation. Previously practised at a top-tier Lagos commercial law firm, advising on title disputes and Land Registry challenges.",
-    mission: "Every buyer deserves to know exactly what they are signing.",
-  },
-  {
-    initials: "CE",
-    name: "Chidi Ezekwu",
-    title: "Senior Project Manager",
-    background:
-      "Eight years managing residential and commercial property transactions across Lagos. Previously at a major Lagos developer where he observed first-hand the gap between buyer and seller representation.",
-    mission:
-      "A great process eliminates the anxiety that should never accompany buying a home.",
-  },
-  {
-    initials: "NB",
-    name: "Ngozi Balogun",
-    title: "Project Manager — Diaspora Desk",
-    background:
-      "Based between Lagos and London, Ngozi leads the Terralume diaspora advisory programme. Former Deloitte analyst with deep knowledge of cross-border property transactions and FX structuring.",
-    mission:
-      "Being abroad should never mean being vulnerable in a Lagos property deal.",
-  },
-  {
-    initials: "TK",
-    name: "Taiwo Komolafe",
-    title: "Market Intelligence Analyst",
-    background:
-      "Urban economist and data analyst specialising in Lagos residential market trends. Produces Terralume's quarterly market intelligence reports and area guides, drawing on registered transaction datasets and primary research.",
-    mission:
-      "Better data means better decisions — and fewer buyers getting burned.",
-  },
-];
 
 const values = [
   {
@@ -154,11 +105,11 @@ export default function AboutPage() {
         eyebrow="About Terralume"
         title={
           <>
-            Built for the buyer.{" "}
-            <em className="italic text-crimson">Only the buyer.</em>
+            One operating model.{" "}
+            <em className="italic text-gold">Two divisions.</em>
           </>
         }
-        description="Terralume exists because buyers in the Lagos property market have historically had no one working exclusively for them. We are changing that — one transaction at a time."
+        description="Terralume runs Real Estate Acquisition & Intelligence and Renewable Energy as a Service — united by one conviction: understand what a client actually needs, verify it rigorously, and deliver only what holds up."
         breadcrumbs={[{ label: "Home", href: "/" }, { label: "About" }]}
         minHeight="50vh"
       />
@@ -228,6 +179,84 @@ export default function AboutPage() {
                   </span>
                 </div>
               ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── Vision & Mission ─────────────────────────────── */}
+      <section className="bg-navy py-16">
+        <div className="container mx-auto max-w-5xl px-6">
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+            <div className="rounded-3xl border border-white/10 bg-white/5 px-8 py-8">
+              <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-gold">
+                Vision
+              </p>
+              <p className="font-display text-xl font-bold leading-snug text-white lg:text-2xl">
+                To become the top structured real estate services and clean
+                energy service provider across Nigeria.
+              </p>
+            </div>
+            <div className="rounded-3xl border border-white/10 bg-white/5 px-8 py-8">
+              <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-gold">
+                Mission
+              </p>
+              <p className="font-display text-xl font-bold leading-snug text-white lg:text-2xl">
+                To illuminate the lives of Nigerians with adequate housing and
+                clean energy solutions for their homes.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── One Operating Model ───────────────────────────── */}
+      <section className="bg-surface-alt py-20 lg:py-24">
+        <div className="container mx-auto max-w-5xl px-6">
+          <div className="grid grid-cols-1 gap-12 lg:grid-cols-2 lg:items-start">
+            <div>
+              <div className="mb-4 flex items-center gap-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-crimson">
+                <span className="h-px w-8 bg-crimson" />
+                One Operating Model, Not Two Businesses
+              </div>
+              <h2 className="font-display text-3xl font-bold text-navy lg:text-4xl">
+                Two divisions. One process.
+              </h2>
+              <p className="mt-5 text-[16px] leading-relaxed text-on-surface-muted">
+                Terralume runs two divisions — Real Estate Acquisition &amp;
+                Intelligence, and Renewable Energy as a Service — but they share
+                one process: understand what a client actually needs, verify it
+                rigorously, and deliver only what holds up.
+              </p>
+              <p className="mt-4 text-[16px] leading-relaxed text-on-surface-muted">
+                We built Terralume to close the gap between property and power —
+                not to bundle two products for the sake of it.
+              </p>
+            </div>
+            <div className="space-y-4">
+              <div className="rounded-2xl border border-divider bg-surface p-7">
+                <p className="mb-2 font-semibold text-navy">
+                  A property without reliable power is an incomplete asset.
+                </p>
+                <p className="text-[14px] leading-relaxed text-on-surface-muted">
+                  A clean title and a fair price mean little if the building
+                  runs on a generator eight hours a day. Our real estate clients
+                  can choose to add an energy assessment before acquisition
+                  closes — because the two decisions belong together.
+                </p>
+              </div>
+              <div className="rounded-2xl border border-divider bg-surface p-7">
+                <p className="mb-2 font-semibold text-navy">
+                  Power without a sound property strategy is a system with
+                  nothing to protect.
+                </p>
+                <p className="text-[14px] leading-relaxed text-on-surface-muted">
+                  Our energy division stands on its own — you don&apos;t need to
+                  be a real estate client to engage it. But when both are in
+                  scope, the integration happens inside one intake, one team,
+                  and one timeline.
+                </p>
+              </div>
             </div>
           </div>
         </div>
@@ -335,51 +364,21 @@ export default function AboutPage() {
       {/* ── Team ──────────────────────────────────────────── */}
       <section className="bg-surface py-20">
         <div className="container mx-auto max-w-5xl px-6">
-          <div className="mb-12">
+          <div className="mb-12 max-w-2xl">
             <div className="mb-4 flex items-center gap-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-crimson">
               <span className="h-px w-8 bg-crimson" />
-              The Team
+              Leadership
             </div>
-            <h2 className="font-display text-4xl font-bold text-navy">
-              The people behind every transaction
+            <h2 className="mb-4 font-display text-4xl font-bold text-navy">
+              Founder-led. Data-driven.
             </h2>
-          </div>
-
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {team.map((member) => (
-              <div
-                key={member.name}
-                className="group flex flex-col rounded-2xl border border-divider bg-surface-card p-7 transition-shadow hover:shadow-md"
-              >
-                {/* Avatar */}
-                <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-full bg-navy text-[16px] font-bold text-white">
-                  {member.initials}
-                </div>
-
-                {/* Name + title */}
-                <p className="mb-0.5 font-display text-[18px] font-bold text-navy">
-                  {member.name}
-                </p>
-                <p className="mb-4 text-[12px] font-semibold uppercase tracking-widest text-crimson">
-                  {member.title}
-                </p>
-
-                {/* Background */}
-                <p className="mb-5 flex-1 text-[13px] leading-relaxed text-on-surface-muted">
-                  {member.background}
-                </p>
-
-                {/* Personal mission */}
-                <div className="border-t border-divider pt-4">
-                  <p className="mb-1 text-[10px] font-semibold uppercase tracking-widest text-on-surface-muted">
-                    Personal mission
-                  </p>
-                  <p className="text-[13px] italic leading-relaxed text-on-surface">
-                    &ldquo;{member.mission}&rdquo;
-                  </p>
-                </div>
-              </div>
-            ))}
+            <p className="text-[16px] leading-relaxed text-on-surface-muted">
+              Terralume is founder-led, with strategy and business development
+              built around structured, data-led decision-making — applying the
+              same discipline real estate and energy investors expect from
+              institutional partners to individual clients and estates across
+              Nigeria.
+            </p>
           </div>
         </div>
       </section>
@@ -414,8 +413,8 @@ export default function AboutPage() {
                     {i + 1}
                   </span>
 
-                  <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl bg-navy-light">
-                    <Icon className="h-5 w-5 text-navy" />
+                  <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl bg-crimson-light">
+                    <Icon className="h-5 w-5 text-crimson" />
                   </div>
 
                   <p className="mb-2 font-display text-[16px] font-bold text-navy">
@@ -449,6 +448,25 @@ export default function AboutPage() {
                 make our registration details public so you can verify them
                 independently.
               </p>
+              <div className="mt-8 rounded-2xl border border-navy/20 bg-navy-light p-6">
+                <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.15em] text-navy">
+                  Regulatory Grounding
+                </p>
+                <p className="text-[14px] leading-relaxed text-on-surface-muted">
+                  Our real estate evaluations and energy deployments are
+                  informed by Nigeria&apos;s{" "}
+                  <span className="font-semibold text-navy">
+                    Electricity Act 2023
+                  </span>{" "}
+                  and the Nigerian Electricity Regulatory Commission&apos;s
+                  Mini-Grid and Net Billing regulations, alongside standard real
+                  estate practice and the data-protection obligations of the{" "}
+                  <span className="font-semibold text-navy">
+                    Nigeria Data Protection Act 2023
+                  </span>
+                  .
+                </p>
+              </div>
             </div>
 
             <div className="space-y-4">
@@ -482,46 +500,6 @@ export default function AboutPage() {
                   .
                 </p>
               </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ── Media kit ─────────────────────────────────────── */}
-      <section className="border-y border-divider bg-surface-alt py-16">
-        <div className="container mx-auto max-w-5xl px-6">
-          <div className="flex flex-col items-start justify-between gap-8 sm:flex-row sm:items-center">
-            <div>
-              <div className="mb-3 flex items-center gap-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-crimson">
-                <span className="h-px w-8 bg-crimson" />
-                Press & Partnerships
-              </div>
-              <h2 className="mb-2 font-display text-2xl font-bold text-navy">
-                Media kit & partnership enquiries
-              </h2>
-              <p className="max-w-lg text-[15px] text-on-surface-muted">
-                For press coverage, podcast appearances, speaking engagements,
-                or partnership discussions — download our media kit or reach out
-                directly.
-              </p>
-            </div>
-
-            <div className="flex shrink-0 flex-col gap-3 sm:items-end">
-              <a
-                href="/terralume-media-kit.pdf"
-                download
-                className="flex items-center gap-2 rounded-lg bg-navy px-6 py-3 text-[14px] font-semibold text-white transition-colors hover:bg-navy-dark"
-              >
-                Download media kit
-                <ExternalLink className="h-4 w-4" />
-              </a>
-              <Link
-                href="/contact"
-                className="flex items-center gap-2 rounded-lg border border-divider bg-surface px-6 py-3 text-[14px] font-semibold text-navy transition-colors hover:border-navy/30 hover:bg-surface-card"
-              >
-                Partnership enquiry
-                <ArrowRight className="h-4 w-4" />
-              </Link>
             </div>
           </div>
         </div>

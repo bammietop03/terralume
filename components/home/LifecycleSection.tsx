@@ -9,7 +9,8 @@ const reSteps = [
   },
   {
     label: "Four-Pillar Evaluation",
-    detail: "Acquisition, Intelligence, Market Analysis & Advisory.",
+    detail:
+      "Title, Financial Implication, Economic Implication & Exit strategy.",
   },
   {
     label: "Curated Shortlist",

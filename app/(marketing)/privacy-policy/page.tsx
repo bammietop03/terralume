@@ -78,8 +78,8 @@ export default function PrivacyPolicyPage() {
           <p className="text-muted-foreground leading-relaxed">
             Terralume Limited ("Terralume," "we," "us," "our") operates a
             platform across two divisions — Real Estate Acquisition &
-            Intelligence and Renewable Energy as a Service (EaaS) — and this
-            policy explains what personal data we collect through{" "}
+            Intelligence and Renewable Energy Acquisition Service (EaaS) — and
+            this policy explains what personal data we collect through{" "}
             <Link href="/" className="text-primary hover:underline">
               terralume.com
             </Link>{" "}

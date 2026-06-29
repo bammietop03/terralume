@@ -98,8 +98,7 @@ export function IntegratedModelSection() {
 
               <Button
                 asChild
-                variant="outline"
-                className="mt-auto border-gold/40 text-gold hover:bg-gold/10 hover:text-gold w-fit gap-2"
+                className="bg-gold-gradient hover:bg-gold-dark text-white border border-white/20 gap-2 px-7 h-13 text-[15px]"
               >
                 <Link href="/real-estate">
                   View Full Capability
@@ -154,7 +153,7 @@ export function IntegratedModelSection() {
               </div>
 
               <h3 className="font-display text-[28px] font-bold text-white leading-tight mb-4 lg:text-[32px]">
-                Renewable Energy as a Service
+                Renewable Energy Acquisition Service
               </h3>
               <p className="text-[15px] leading-relaxed text-white/55 mb-10">
                 We design, deploy, and maintain clean energy infrastructure for
@@ -176,8 +175,7 @@ export function IntegratedModelSection() {
 
               <Button
                 asChild
-                variant="outline"
-                className="mt-auto border-gold/40 text-gold hover:bg-gold/10 hover:text-gold w-fit gap-2"
+                className="bg-gold-gradient hover:bg-gold-dark text-white border border-white/20 gap-2 px-7 h-13 text-[15px]"
               >
                 <Link href="/energy">
                   View Full Capability

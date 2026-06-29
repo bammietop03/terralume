@@ -22,13 +22,14 @@ const reSteps = [
   {
     n: "01",
     label: "Intake",
-    detail: "Submit your brief — property type, budget, location, timeline.",
+    detail:
+      "Submit your brief — property type, budget, location, timeline, intention.",
   },
   {
     n: "02",
     label: "Four-Pillar Evaluation",
     detail:
-      "Acquisition, Intelligence, Market Analysis & Strategic Advisory applied to your brief.",
+      "Title, Financial Implication, Economic Implication & Exit strategy applied to your brief.",
   },
   {
     n: "03",

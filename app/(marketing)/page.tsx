@@ -13,12 +13,11 @@ import { HeroSection } from "@/components/home/HeroSection";
 export default function Home() {
   return (
     <main className="flex flex-col flex-1">
-      {/* <HeroSection /> */}
       <HeroSectionV2 />
       <BigIdeaSection />
       <IntegratedModelSection />
-      <RealEstateDetailSection />
-      <EnergyDetailSection />
+      {/* <RealEstateDetailSection />
+      <EnergyDetailSection /> */}
       <LifecycleSection />
       <WhoWeServeSection />
       <ProofMetricsSection />

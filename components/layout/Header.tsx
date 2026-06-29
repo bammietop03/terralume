@@ -1,8 +1,10 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { usePathname } from "next/navigation";
 import Link from "next/link";
-import { Menu, X } from "lucide-react";
+import Image from "next/image";
+import { Menu, X, ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 
@@ -19,6 +21,7 @@ const navLinks = [
 export function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const pathname = usePathname();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
@@ -44,25 +47,38 @@ export function Header() {
             className="flex items-center gap-0 shrink-0 group"
             aria-label="Terralume home"
           >
-            <span className="font-display text-[28px] font-bold text-white tracking-tight">
-              Terra
-            </span>
-            <span className="font-display text-[28px] font-bold text-gold tracking-tight">
-              lume
-            </span>
+            <Image
+              src="/images/terralume-logo.png"
+              alt="Terralume"
+              width={180}
+              height={50}
+              className="h-10 w-auto"
+              priority
+            />
           </Link>
 
           {/* Desktop nav */}
           <nav className="hidden lg:flex items-center gap-7 flex-1 justify-center">
-            {navLinks.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className="text-[14px] font-medium text-white/75 hover:text-white transition-colors duration-200 tracking-wide"
-              >
-                {link.label}
-              </Link>
-            ))}
+            {navLinks.map((link) => {
+              const isActive = pathname === link.href;
+              return (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className={cn(
+                    "text-[14px] font-medium transition-colors duration-200 tracking-wide relative",
+                    isActive
+                      ? "text-gold font-semibold"
+                      : "text-white/75 hover:text-white",
+                  )}
+                >
+                  {link.label}
+                  {isActive && (
+                    <span className="absolute -bottom-1 left-0 right-0 h-0.5 bg-gold rounded-full" />
+                  )}
+                </Link>
+              );
+            })}
           </nav>
 
           {/* Right actions */}
@@ -71,9 +87,12 @@ export function Header() {
               asChild
               size="lg"
               variant="secondary"
-              className="hidden lg:inline-flex"
+              className="hidden lg:inline-flex gap-2"
             >
-              <Link href="/consultation">Get Started</Link>
+              <Link href="/consultation">
+                Get Started
+                <ArrowRight size={16} />
+              </Link>
             </Button>
             {/* <Button
               asChild
@@ -102,16 +121,24 @@ export function Header() {
         )}
       >
         <div className="bg-navy-dark border-t border-white/10 px-6 py-6 space-y-1">
-          {navLinks.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className="flex py-2.5 text-[15px] font-medium text-white/70 hover:text-white transition-colors border-b border-white/5"
-              onClick={() => setMobileOpen(false)}
-            >
-              {link.label}
-            </Link>
-          ))}
+          {navLinks.map((link) => {
+            const isActive = pathname === link.href;
+            return (
+              <Link
+                key={link.href}
+                href={link.href}
+                className={cn(
+                  "flex py-2.5 text-[15px] font-medium transition-colors border-b border-white/5",
+                  isActive
+                    ? "text-gold font-semibold"
+                    : "text-white/70 hover:text-white",
+                )}
+                onClick={() => setMobileOpen(false)}
+              >
+                {link.label}
+              </Link>
+            );
+          })}
           <div className="pt-4 flex flex-col gap-2">
             {/* <Button asChild variant="outline" className="w-full">
               <Link href="/login" onClick={() => setMobileOpen(false)}>

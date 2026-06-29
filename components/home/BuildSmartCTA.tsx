@@ -12,6 +12,7 @@ export function BuildSmartCTA() {
         alt="Premium Nigerian real estate"
         fill
         className="object-cover object-center"
+        loading="eager"
         quality={85}
       />
       {/* Dark overlay — deep navy gradient */}
@@ -49,7 +50,7 @@ export function BuildSmartCTA() {
           <Button
             asChild
             size="lg"
-            className="bg-gold hover:bg-gold-dark text-white font-semibold gap-2.5 px-8 h-14 text-[16px]"
+            className="bg-gold-gradient hover:bg-gold-dark text-white font-semibold gap-2.5 px-8 h-14 text-[16px]"
           >
             <Link href="/consultation">
               <CalendarDays size={18} />

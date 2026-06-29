@@ -9,6 +9,7 @@ const nextConfig: NextConfig = {
         hostname: "fesjzoimswhbpaygdbhj.supabase.co",
       },
     ],
+    qualities: [75, 85, 90],
   },
 };
 

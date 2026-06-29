@@ -73,7 +73,9 @@ export function EnergyDetailSection() {
             </p>
             <h2 className="font-display text-4xl font-bold leading-tight text-navy lg:text-5xl">
               Energy Infrastructure,{" "}
-              <em className="italic text-gold">Delivered as a Service</em>
+              <em className="italic text-gold">
+                Delivered Acquisition Service
+              </em>
             </h2>
           </div>
           <div className="flex flex-col gap-5 lg:ml-auto lg:max-w-sm">

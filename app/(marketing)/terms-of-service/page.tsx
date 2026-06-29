@@ -22,7 +22,7 @@ import { Separator } from "@/components/ui/separator";
 export const metadata: Metadata = {
   title: "Terms of Service — Terralume",
   description:
-    "Terms of Service for Terralume's Real Estate Acquisition & Intelligence and Renewable Energy as a Service (EaaS) platforms.",
+    "Terms of Service for Terralume's Real Estate Acquisition & Intelligence and Renewable Energy Acquisition Service (EaaS) platforms.",
   openGraph: {
     title: "Terms of Service — Terralume",
     description:
@@ -37,7 +37,7 @@ export default function TermsOfServicePage() {
       <PageHero
         eyebrow="Legal"
         title="Terms of Service"
-        description="Legal terms governing your use of Terralume's Real Estate Acquisition & Intelligence and Renewable Energy as a Service platforms."
+        description="Legal terms governing your use of Terralume's Real Estate Acquisition & Intelligence and Renewable Energy Acquisition Service platforms."
         breadcrumbs={[
           { label: "Home", href: "/" },
           { label: "Terms of Service" },
@@ -117,7 +117,7 @@ export default function TermsOfServicePage() {
               <CardHeader>
                 <CardTitle className="text-base flex items-center gap-2">
                   <Zap className="h-5 w-5" />
-                  Renewable Energy as a Service (EaaS)
+                  Renewable Energy Acquisition Service (EaaS)
                 </CardTitle>
               </CardHeader>
               <CardContent className="text-sm text-muted-foreground">

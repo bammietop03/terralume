@@ -10,6 +10,7 @@ import {
   Home,
   Building2,
   Briefcase,
+  Factory,
   ClipboardList,
   DollarSign,
   Wifi,
@@ -20,11 +21,11 @@ import PageHero from "@/components/layout/PageHero";
 import { FooterCTA } from "@/components/home/FooterCTA";
 
 export const metadata: Metadata = {
-  title: "Renewable Energy as a Service (EaaS) — Terralume",
+  title: "Renewable Energy Acquisition Service (EaaS) — Terralume",
   description:
     "Reliable power, sized for how you actually live and work. Terralume consults first, then matches the right vetted solution — residential, estate, or commercial scale.",
   openGraph: {
-    title: "Renewable Energy as a Service — Terralume",
+    title: "Renewable Energy Acquisition Service — Terralume",
     description:
       "You don't need to be buying a property to work with Terralume on energy. We consult first, understand your actual needs, then pull the right solution.",
     type: "website",
@@ -113,6 +114,13 @@ const solutionsLibrary = [
       "Energy continuity for businesses where downtime has a direct cost — hybrid systems and storage sized against your operating hours and load profile, with PPA-style models available so power becomes a predictable line item, not a capital risk.",
     accent: "gold",
   },
+  {
+    icon: Factory,
+    segment: "Industrial",
+    description:
+      "High-capacity power systems for manufacturing, processing, and industrial operations — engineered for continuous uptime, peak load management, and integration with existing infrastructure. Designed to minimize production interruptions and reduce operational energy costs at scale.",
+    accent: "navy",
+  },
 ];
 
 /* ─── Page ───────────────────────────────────────────────── */
@@ -122,7 +130,7 @@ export default function EnergyPage() {
     <main className="flex flex-col flex-1">
       {/* ── Hero ─────────────────────────────────────────────── */}
       <PageHero
-        eyebrow="Renewable Energy as a Service"
+        eyebrow="Renewable Energy Acquisition Service"
         title={
           <>
             Reliable power, sized for how you{" "}
@@ -132,6 +140,7 @@ export default function EnergyPage() {
         description="You don't need to be buying a property to work with Terralume on energy. This division stands on its own — we consult first, understand your actual needs, then pull the right solution from our vetted technology data."
         breadcrumbs={[{ label: "Home", href: "/" }, { label: "Energy" }]}
         minHeight="56vh"
+        imageSrc="/images/energy.jpg"
         actions={
           <>
             <Button asChild size="lg" variant="secondary">

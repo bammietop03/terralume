@@ -32,7 +32,7 @@ export default function PageHero({
   title,
   description,
   breadcrumbs,
-  imageSrc = "/images/hero.png",
+  imageSrc = "/images/lagos.jpg",
   imageAlt = "Lagos skyline",
   minHeight = "52vh",
   chips,

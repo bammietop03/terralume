@@ -16,7 +16,7 @@
   --card-foreground: #2c2c2a;
   --primary: #142134;
   --primary-foreground: #ffffff;
-  --secondary: #c4943a;
+  --secondary: #D4AF37;
   --secondary-foreground: #ffffff;
   --muted: #f9fafb;
   --muted-foreground: #5f5e5a;
@@ -37,10 +37,10 @@
   /* ── Brand colours (constant) ──────────────────────────── */
   --color-navy: #142134;
   --color-navy-dark: #142134;
-  /* --color-crimson: #9b1c2e; */
-  --color-gold: #c4943a;
+  --color-gold-gradient: linear-gradient(to right, #af8301, #D4AF37, #af8301);
+  /* --color-gold: #c4943a; */
+  --color-gold: #D4AF37;
   --color-navy-light: #e8ebf5;
-  /* --color-crimson-light: #f5e8ea; */
   --color-gold-light: #fdf4e3;
 
   /* ── Semantic surface tokens (theme-responsive) ─────────── */
@@ -151,4 +151,13 @@ h3 {
 * {
   scrollbar-width: thin;
   scrollbar-color: rgba(27, 42, 107, 0.12) transparent;
+}
+
+/* ── Custom utilities ──────────────────────────────────────── */
+.bg-gold-gradient {
+  background: var(--color-gold-gradient);
+}
+
+.text-gold {
+  color: var(--color-gold);
 }

@@ -43,7 +43,7 @@ const slides = [
         variant: "white" as const,
       },
     ],
-    image: "/images/lagos2.jpg",
+    image: "/images/lagos2.png",
   },
   {
     id: "real-estate",
@@ -97,7 +97,7 @@ const slides = [
         variant: "white" as const,
       },
     ],
-    image: "/images/energy.jpg", // Replace with energy specific image
+    image: "/images/energy.png", // Replace with energy specific image
   },
   {
     id: "satisfaction",

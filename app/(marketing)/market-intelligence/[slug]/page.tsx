@@ -185,7 +185,7 @@ export default async function ArticlePage({ params }: Props) {
             {/* Article content */}
             <article>
               {/* Lead excerpt */}
-              <p className="mb-8 border-l-4 border-crimson pl-5 font-display text-[18px] italic leading-relaxed text-on-surface-muted">
+              <p className="mb-8 border-l-4 border-gold pl-5 font-display text-[18px] italic leading-relaxed text-on-surface-muted">
                 {article.excerpt}
               </p>
 
@@ -288,7 +288,7 @@ export default async function ArticlePage({ params }: Props) {
                   </p>
                   <Link
                     href="/contact"
-                    className="flex w-full items-center justify-center gap-2 rounded-lg bg-crimson px-4 py-3 text-[13px] font-semibold text-white transition-colors hover:bg-crimson/90"
+                    className="flex w-full items-center justify-center gap-2 rounded-lg bg-gold px-4 py-3 text-[13px] font-semibold text-white transition-colors hover:bg-gold/90"
                   >
                     Start your enquiry
                     <ArrowRight className="h-4 w-4" />
@@ -320,8 +320,8 @@ export default async function ArticlePage({ params }: Props) {
       {related.length > 0 && (
         <section className="border-t border-divider bg-surface-alt py-16">
           <div className="container mx-auto max-w-5xl px-6">
-            <div className="mb-8 flex items-center gap-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-crimson">
-              <span className="h-px w-8 bg-crimson" />
+            <div className="mb-8 flex items-center gap-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-gold">
+              <span className="h-px w-8 bg-gold" />
               More in {category.label}
             </div>
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">

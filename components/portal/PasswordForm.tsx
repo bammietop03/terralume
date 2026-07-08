@@ -56,7 +56,7 @@ export default function PasswordForm() {
     <form onSubmit={handleSubmit} className="max-w-lg space-y-6">
       <Card className="rounded-2xl border-divider/60 shadow-sm">
         {/* Card header accent */}
-        <div className="h-1 w-full rounded-t-2xl bg-linear-to-r from-crimson to-navy-light" />
+        <div className="h-1 w-full rounded-t-2xl bg-linear-to-r from-gold to-navy-light" />
 
         <CardContent className="px-5 py-5 space-y-5">
           <div className="flex items-center gap-3 pb-4 border-b border-divider/60">

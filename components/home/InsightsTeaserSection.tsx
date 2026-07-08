@@ -15,7 +15,7 @@ const insights = [
   },
   {
     category: "Legal Guide",
-    categoryStyle: "text-crimson bg-crimson-light",
+    categoryStyle: "text-gold bg-gold-light",
     date: "February 2026",
     title: "Title Verification in Nigeria: What Buyers Must Know",
     excerpt:
@@ -42,13 +42,13 @@ export function InsightsTeaserSection() {
         {/* Header */}
         <div className="mb-16 flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <p className="mb-5 flex items-center gap-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-crimson">
-              <span className="h-px w-8 bg-crimson" />
+            <p className="mb-5 flex items-center gap-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-gold">
+              <span className="h-px w-8 bg-gold" />
               Intelligence &amp; Insights
             </p>
             <h2 className="font-display text-4xl font-bold leading-tight text-navy lg:text-5xl">
               Market Intelligence{" "}
-              <span className="italic text-crimson">&amp; Insights</span>
+              <span className="italic text-gold">&amp; Insights</span>
             </h2>
           </div>
           <Button
@@ -74,7 +74,7 @@ export function InsightsTeaserSection() {
               {/* Color accent top bar */}
               <div
                 aria-hidden
-                className={`h-0.5 ${i === 0 ? "bg-navy" : i === 1 ? "bg-crimson" : "bg-navy"}`}
+                className={`h-0.5 ${i === 0 ? "bg-navy" : i === 1 ? "bg-gold" : "bg-navy"}`}
               />
 
               <div className="flex flex-1 flex-col p-8">

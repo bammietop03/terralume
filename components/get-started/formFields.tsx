@@ -22,7 +22,7 @@ export function Field({
     <div>
       <label className={labelClass}>
         {label}
-        {required && <span className="ml-0.5 text-crimson">*</span>}
+        {required && <span className="ml-0.5 text-gold">*</span>}
       </label>
       {children}
       {hint && <p className={hintClass}>{hint}</p>}

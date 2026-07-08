@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { MapPin, Mail, Phone } from "lucide-react";
 
 const footerLinks = {
@@ -32,7 +33,7 @@ const footerLinks = {
 const socialLinks = [
   {
     platform: "LinkedIn",
-    href: "https://linkedin.com/company/terralume",
+    href: "https://www.linkedin.com/company/terralume-limited/",
     icon: (
       <svg
         viewBox="0 0 24 24"
@@ -46,7 +47,7 @@ const socialLinks = [
   },
   {
     platform: "Instagram",
-    href: "https://instagram.com/terralume",
+    href: "https://www.instagram.com/terralume_ltd?utm_source=qr",
     icon: (
       <svg
         viewBox="0 0 24 24"
@@ -59,8 +60,8 @@ const socialLinks = [
     ),
   },
   {
-    platform: "X",
-    href: "https://x.com/terralume",
+    platform: "Facebook",
+    href: "https://facebook.com/terralume",
     icon: (
       <svg
         viewBox="0 0 24 24"
@@ -68,7 +69,7 @@ const socialLinks = [
         className="h-4 w-4"
         aria-hidden="true"
       >
-        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.747l7.73-8.835L1.254 2.25H8.08l4.253 5.622L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z" />
+        <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
       </svg>
     ),
   },
@@ -78,7 +79,7 @@ export function Footer() {
   return (
     <footer className="bg-navy-dark text-white">
       {/* Top border accent */}
-      <div className="h-0.75 bg-linear-to-r from-crimson via-navy to-transparent" />
+      <div className="h-0.75 bg-linear-to-r from-gold via-navy to-transparent" />
 
       <div className="mx-auto max-w-7xl px-6 lg:px-12">
         {/* Main grid */}
@@ -86,9 +87,13 @@ export function Footer() {
           {/* Brand column */}
           <div>
             <Link href="/" className="mb-5 inline-block">
-              <span className="font-display text-2xl font-bold">
-                Terra<span className="text-crimson">lume</span>
-              </span>
+              <Image
+                src="/images/terralume-logo.png"
+                alt="Terralume"
+                width={160}
+                height={45}
+                className="h-8 w-auto"
+              />
             </Link>
             <p className="mb-7 max-w-72 text-sm leading-relaxed text-white/55">
               Real Estate Acquisition &amp; Intelligence and Renewable Energy as
@@ -118,7 +123,7 @@ export function Footer() {
                   key={badge}
                   className="inline-flex items-center gap-1.5 rounded-full border border-white/15 px-3 py-1 text-[11px] font-semibold uppercase tracking-wider text-white/50"
                 >
-                  <span className="h-1.5 w-1.5 rounded-full bg-crimson" />
+                  <span className="h-1.5 w-1.5 rounded-full bg-gold" />
                   {badge}
                 </span>
               ))}
@@ -127,11 +132,11 @@ export function Footer() {
             {/* Contact */}
             <ul className="space-y-2.5 text-sm text-white/50">
               <li className="flex items-center gap-2.5">
-                <MapPin size={13} className="shrink-0 text-crimson" />
+                <MapPin size={13} className="shrink-0 text-gold" />
                 <span>Lagos, Nigeria</span>
               </li>
               <li className="flex items-center gap-2.5">
-                <Mail size={13} className="shrink-0 text-crimson" />
+                <Mail size={13} className="shrink-0 text-gold" />
                 <a
                   href="mailto:info@terralume.org"
                   className="transition-colors hover:text-white"
@@ -140,7 +145,7 @@ export function Footer() {
                 </a>
               </li>
               <li className="flex items-center gap-2.5">
-                <Phone size={13} className="shrink-0 text-crimson" />
+                <Phone size={13} className="shrink-0 text-gold" />
                 <a
                   href="tel:+2347046676828"
                   className="transition-colors hover:text-white"
@@ -212,8 +217,8 @@ export function Footer() {
         {/* Bottom bar */}
         <div className="flex flex-col gap-3 border-t border-white/8 py-6 sm:flex-row sm:items-center sm:justify-between">
           <p className="text-[12px] text-white/30">
-            © {new Date().getFullYear()} Terralume Ltd. All rights reserved. ·
-            CAC No. RC 1847392 · LASRERA/2024/BUY/00471
+            © {new Date().getFullYear()} Terralume Ltd. All rights reserved.
+            {/* · CAC No. RC 1847392 · LASRERA/2024/BUY/00471 */}
           </p>
           <div className="flex gap-5">
             {[

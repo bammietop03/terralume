@@ -34,15 +34,14 @@ export function IntegratedModelSection() {
       <div className="mx-auto max-w-7xl px-6 lg:px-12">
         {/* Header */}
         <div className="mb-20 text-center max-w-3xl mx-auto">
-          <p className="mb-5 inline-flex items-center gap-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-crimson">
-            <span className="h-px w-8 bg-crimson" />
+          <p className="mb-5 inline-flex items-center gap-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-gold">
+            <span className="h-px w-8 bg-gold" />
             The Terralume Model
-            <span className="h-px w-8 bg-crimson" />
+            <span className="h-px w-8 bg-gold" />
           </p>
           <h2 className="font-display text-4xl font-bold leading-tight text-navy lg:text-5xl">
             Two Divisions.{" "}
-            <span className="italic text-crimson">One Outcome:</span> Better
-            Assets
+            <span className="italic text-gold">One Outcome:</span> Better Assets
           </h2>
           <p className="mt-6 text-[17px] leading-relaxed text-on-surface-muted">
             Each division is a specialist capability. Together, they create the
@@ -60,11 +59,11 @@ export function IntegratedModelSection() {
             {/* Glow */}
             <div
               aria-hidden
-              className="pointer-events-none absolute -right-20 -top-20 h-64 w-64 rounded-full bg-crimson/15 blur-3xl"
+              className="pointer-events-none absolute -right-20 -top-20 h-64 w-64 rounded-full bg-gold/15 blur-3xl"
             />
             <div
               aria-hidden
-              className="absolute inset-x-0 top-0 h-0.5 bg-linear-to-r from-crimson/50 via-crimson/20 to-transparent rounded-t-3xl"
+              className="absolute inset-x-0 top-0 h-0.5 bg-linear-to-r from-gold/50 via-gold/20 to-transparent rounded-t-3xl"
             />
 
             <div className="relative">
@@ -89,8 +88,8 @@ export function IntegratedModelSection() {
               <ul className="space-y-4 mb-12">
                 {reFeatures.map((f) => (
                   <li key={f.label} className="flex items-center gap-3">
-                    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-crimson/15 border border-crimson/20">
-                      <f.icon size={14} className="text-crimson" />
+                    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-gold/15 border border-gold/20">
+                      <f.icon size={14} className="text-gold" />
                     </div>
                     <span className="text-[14px] text-white/80">{f.label}</span>
                   </li>
@@ -99,8 +98,7 @@ export function IntegratedModelSection() {
 
               <Button
                 asChild
-                variant="outline"
-                className="mt-auto border-crimson/40 text-crimson hover:bg-crimson/10 hover:text-crimson w-fit gap-2"
+                className="bg-gold-gradient hover:bg-gold-dark text-white border border-white/20 gap-2 px-7 h-13 text-[15px]"
               >
                 <Link href="/real-estate">
                   View Full Capability
@@ -155,7 +153,7 @@ export function IntegratedModelSection() {
               </div>
 
               <h3 className="font-display text-[28px] font-bold text-white leading-tight mb-4 lg:text-[32px]">
-                Renewable Energy as a Service
+                Renewable Energy Acquisition Service
               </h3>
               <p className="text-[15px] leading-relaxed text-white/55 mb-10">
                 We design, deploy, and maintain clean energy infrastructure for
@@ -177,8 +175,7 @@ export function IntegratedModelSection() {
 
               <Button
                 asChild
-                variant="outline"
-                className="mt-auto border-crimson/40 text-crimson hover:bg-crimson/10 hover:text-crimson w-fit gap-2"
+                className="bg-gold-gradient hover:bg-gold-dark text-white border border-white/20 gap-2 px-7 h-13 text-[15px]"
               >
                 <Link href="/energy">
                   View Full Capability

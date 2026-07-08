@@ -18,14 +18,14 @@ export const metadata = { title: "Audit Log — Terralume Admin Portal" };
 
 const ACTION_VARIANTS: Record<
   string,
-  "default" | "outline" | "crimson" | "white"
+  "default" | "outline" | "gold" | "white"
 > = {
-  USER_DELETED: "crimson",
+  USER_DELETED: "gold",
   AGREEMENT_SIGNED: "default",
   INVOICE_PAID: "default",
   ONBOARDING_COMPLETE: "default",
-  PASSWORD_CHANGED: "crimson",
-  DOCUMENT_UPLOADED: "crimson",
+  PASSWORD_CHANGED: "gold",
+  DOCUMENT_UPLOADED: "gold",
   MESSAGE_SENT: "outline",
 };
 

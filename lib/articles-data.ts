@@ -22,8 +22,8 @@ export const CATEGORIES: Category[] = [
   {
     slug: "legal-guides",
     label: "Legal Guides",
-    color: "bg-crimson-light",
-    textColor: "text-crimson",
+    color: "bg-gold-light",
+    textColor: "text-gold",
   },
   {
     slug: "area-analysis",

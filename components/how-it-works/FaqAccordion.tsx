@@ -46,10 +46,10 @@ export function FaqAccordion() {
     <section className="bg-surface-alt py-24 lg:py-32">
       <div className="mx-auto max-w-3xl px-6 lg:px-12">
         <div className="mb-14 text-center">
-          <p className="mb-4 inline-flex items-center gap-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-crimson">
-            <span className="h-px w-8 bg-crimson" />
+          <p className="mb-4 inline-flex items-center gap-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-gold">
+            <span className="h-px w-8 bg-gold" />
             FAQs
-            <span className="h-px w-8 bg-crimson" />
+            <span className="h-px w-8 bg-gold" />
           </p>
           <h2 className="font-display text-4xl font-bold text-navy lg:text-5xl">
             Common questions

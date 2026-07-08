@@ -100,14 +100,14 @@ export default function UpdatePasswordPage() {
         <div
           aria-hidden
           className="absolute -bottom-32 -left-32 w-90 h-90 rounded-full opacity-[0.06]"
-          style={{ background: "var(--color-crimson)" }}
+          style={{ background: "var(--color-gold)" }}
         />
 
         {/* Logo */}
         <div className="relative z-10">
           <Link href="/" className="inline-block">
             <span className="font-display text-2xl font-bold text-white tracking-tight">
-              Terra<span className="text-(--color-crimson)">lume</span>
+              Terra<span className="text-(--color-gold)">lume</span>
             </span>
           </Link>
         </div>
@@ -123,7 +123,7 @@ export default function UpdatePasswordPage() {
           <h1 className="font-display text-[2.6rem] font-bold text-white leading-[1.15] mb-5">
             Set your
             <br />
-            <em className="not-italic text-(--color-crimson)">new password</em>
+            <em className="not-italic text-(--color-gold)">new password</em>
           </h1>
           <p className="text-white/55 text-[0.9rem] leading-relaxed max-w-xs">
             Choose a strong password to secure your Terralume client portal

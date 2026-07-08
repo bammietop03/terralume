@@ -31,7 +31,7 @@ const posts = [
 
 const categoryColors: Record<string, string> = {
   "Market Report": "text-navy bg-navy-light",
-  "Buyer Guide": "text-crimson bg-crimson-light",
+  "Buyer Guide": "text-gold bg-gold-light",
   "Due Diligence": "text-navy bg-navy-light",
 };
 
@@ -41,8 +41,8 @@ export function MarketIntelligenceTeaser() {
       <div className="mx-auto max-w-7xl px-6 lg:px-12">
         <div className="mb-16 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
           <div className="max-w-xl">
-            <p className="mb-4 flex items-center gap-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-crimson">
-              <span className="h-px w-8 bg-crimson" />
+            <p className="mb-4 flex items-center gap-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-gold">
+              <span className="h-px w-8 bg-gold" />
               Market intelligence
             </p>
             <h2 className="font-display text-4xl font-bold text-navy lg:text-5xl">
@@ -64,7 +64,7 @@ export function MarketIntelligenceTeaser() {
               href={`/market-intelligence/${post.slug}`}
               className="group flex flex-col overflow-hidden rounded-2xl border border-divider bg-surface-card transition-all hover:-translate-y-1 hover:shadow-xl"
             >
-              <div className="h-0.75 bg-linear-to-r from-crimson to-navy" />
+              <div className="h-0.75 bg-linear-to-r from-gold to-navy" />
               <div className="flex flex-1 flex-col gap-4 p-7 xl:p-8">
                 <div className="flex items-center justify-between">
                   <span
@@ -78,7 +78,7 @@ export function MarketIntelligenceTeaser() {
                   </span>
                 </div>
 
-                <h3 className="font-display text-[18px] font-semibold leading-snug text-navy transition-colors group-hover:text-crimson">
+                <h3 className="font-display text-[18px] font-semibold leading-snug text-navy transition-colors group-hover:text-gold">
                   {post.title}
                 </h3>
 
@@ -86,7 +86,7 @@ export function MarketIntelligenceTeaser() {
                   {post.excerpt}
                 </p>
 
-                <span className="inline-flex items-center gap-1.5 text-[13px] font-bold uppercase tracking-wide text-navy transition-all group-hover:gap-3 group-hover:text-crimson">
+                <span className="inline-flex items-center gap-1.5 text-[13px] font-bold uppercase tracking-wide text-navy transition-all group-hover:gap-3 group-hover:text-gold">
                   Read article <ArrowRight size={13} />
                 </span>
               </div>

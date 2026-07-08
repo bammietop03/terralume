@@ -25,23 +25,21 @@ export default function StageProgressTracker({ currentStage }: Props) {
 
   return (
     <div className="relative overflow-hidden rounded-2xl border border-white/60 bg-white/80 backdrop-blur-sm shadow-[0_1px_3px_rgba(27,42,107,0.06),0_8px_24px_rgba(27,42,107,0.04)]">
-      {/* Crimson accent top stripe */}
-      <div className="h-1 w-full bg-linear-to-r from-(--color-crimson) to-(--color-navy)" />
+      {/* gold accent top stripe */}
+      <div className="h-1 w-full bg-linear-to-r from-(--color-gold) to-(--color-navy)" />
 
       <div className="p-6">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-sm font-semibold text-on-surface">
             Your Journey
           </h2>
-          <span className="text-xs font-bold text-(--color-crimson)">
-            {pct}%
-          </span>
+          <span className="text-xs font-bold text-(--color-gold)">{pct}%</span>
         </div>
 
         {/* Progress bar */}
         <div className="mb-5 h-1.5 w-full rounded-full bg-(--color-navy-light) overflow-hidden">
           <div
-            className="h-full rounded-full bg-linear-to-r from-(--color-crimson) to-(--color-navy) transition-all duration-500"
+            className="h-full rounded-full bg-linear-to-r from-(--color-gold) to-(--color-navy) transition-all duration-500"
             style={{ width: `${pct}%` }}
           />
         </div>
@@ -61,7 +59,7 @@ export default function StageProgressTracker({ currentStage }: Props) {
                     className={cn(
                       "absolute left-3.25 top-7 w-0.5 h-full -z-10",
                       isDone
-                        ? "bg-linear-to-b from-(--color-crimson) to-(--color-navy-light)"
+                        ? "bg-linear-to-b from-(--color-gold) to-(--color-navy-light)"
                         : "bg-divider",
                     )}
                   />
@@ -73,7 +71,7 @@ export default function StageProgressTracker({ currentStage }: Props) {
                     className={cn(
                       "h-7 w-7 rounded-full flex items-center justify-center border-2 transition-all",
                       isDone &&
-                        "border-(--color-crimson) bg-(--color-crimson) text-white",
+                        "border-(--color-gold) bg-(--color-gold) text-white",
                       isCurrent &&
                         "border-(--color-navy) bg-(--color-navy) text-white ring-4 ring-(--color-navy)/15",
                       isUpcoming &&

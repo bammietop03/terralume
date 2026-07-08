@@ -3,15 +3,15 @@ import { TrendingDown, AlertTriangle, Unplug, Merge } from "lucide-react";
 const pillars = [
   {
     icon: TrendingDown,
-    color: "text-crimson",
-    bg: "bg-crimson/8",
+    color: "text-gold",
+    bg: "bg-gold/8",
     title: "Property value tied to infrastructure",
     body: "In Nigeria, a property's worth is directly linked to its access to reliable power, water, and services. Infrastructure gaps silently erode asset value — often invisibly, until a deal falls through.",
   },
   {
     icon: Unplug,
-    color: "text-crimson",
-    bg: "bg-crimson/8",
+    color: "text-gold",
+    bg: "bg-gold/8",
     title: "Energy instability reduces asset performance",
     body: "Diesel dependency inflates operating costs, reduces tenant quality, and compresses yields. An asset without stable power is not performing at its potential — regardless of its location.",
   },
@@ -30,13 +30,13 @@ export function BigIdeaSection() {
       <div className="mx-auto max-w-7xl px-6 lg:px-12">
         {/* Section header */}
         <div className="mb-20 max-w-3xl">
-          <p className="mb-5 flex items-center gap-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-crimson">
-            <span className="h-px w-8 bg-crimson" />
+          <p className="mb-5 flex items-center gap-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-gold">
+            <span className="h-px w-8 bg-gold" />
             The Integrated View
           </p>
           <h2 className="font-display text-4xl font-bold leading-tight text-navy lg:text-5xl xl:text-[52px]">
             Real Estate and Energy{" "}
-            <span className="italic text-crimson">Are the Same Problem</span>
+            <span className="italic text-gold">Are the Same Problem</span>
           </h2>
           <p className="mt-6 text-[18px] leading-relaxed text-on-surface-muted max-w-2xl">
             The highest-performing assets in Nigeria share one common trait —

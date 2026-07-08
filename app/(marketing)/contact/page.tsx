@@ -37,8 +37,8 @@ const directContacts = [
 const socialLinks = [
   {
     platform: "LinkedIn",
-    handle: "Terralume",
-    href: "https://linkedin.com/company/terralume",
+    handle: "terralume-limited",
+    href: "https://www.linkedin.com/company/terralume-limited/",
     icon: (
       <svg
         viewBox="0 0 24 24"
@@ -52,8 +52,8 @@ const socialLinks = [
   },
   {
     platform: "Instagram",
-    handle: "@terralume",
-    href: "https://instagram.com/terralume",
+    handle: "@terralume_ltd",
+    href: "https://www.instagram.com/terralume_ltd?utm_source=qr",
     icon: (
       <svg
         viewBox="0 0 24 24"
@@ -66,9 +66,9 @@ const socialLinks = [
     ),
   },
   {
-    platform: "X (Twitter)",
-    handle: "@terralume",
-    href: "https://x.com/terralume",
+    platform: "Facebook",
+    handle: "Terralume",
+    href: "https://facebook.com/terralume",
     icon: (
       <svg
         viewBox="0 0 24 24"
@@ -76,7 +76,7 @@ const socialLinks = [
         className="h-5 w-5"
         aria-hidden="true"
       >
-        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.747l7.73-8.835L1.254 2.25H8.08l4.253 5.622L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z" />
+        <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
       </svg>
     ),
   },
@@ -101,8 +101,8 @@ export default function ContactPage() {
       <section className="bg-surface py-24 lg:py-32">
         <div className="mx-auto max-w-5xl px-6 lg:px-12">
           <div className="mb-14 max-w-xl">
-            <p className="mb-4 flex items-center gap-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-crimson">
-              <span className="h-px w-8 bg-crimson" />
+            <p className="mb-4 flex items-center gap-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-gold">
+              <span className="h-px w-8 bg-gold" />
               Direct Contact
             </p>
             <h2 className="font-display text-3xl font-bold text-navy lg:text-4xl">
@@ -123,11 +123,11 @@ export default function ContactPage() {
                 <div className="relative overflow-hidden bg-navy px-7 py-6">
                   <div
                     aria-hidden
-                    className="absolute inset-x-0 top-0 h-0.5 bg-linear-to-r from-crimson/60 via-crimson/20 to-transparent"
+                    className="absolute inset-x-0 top-0 h-0.5 bg-linear-to-r from-gold/60 via-gold/20 to-transparent"
                   />
                   <div
                     aria-hidden
-                    className="pointer-events-none absolute -right-10 -top-10 h-32 w-32 rounded-full bg-crimson/15 blur-3xl"
+                    className="pointer-events-none absolute -right-10 -top-10 h-32 w-32 rounded-full bg-gold/15 blur-3xl"
                   />
                   <div className="relative flex h-11 w-11 items-center justify-center rounded-xl border border-gold/30 bg-gold/15">
                     <Icon size={20} className="text-gold" />
@@ -140,7 +140,7 @@ export default function ContactPage() {
                   {href ? (
                     <a
                       href={href}
-                      className="font-display text-[18px] font-bold text-navy transition-colors hover:text-crimson"
+                      className="font-display text-[18px] font-bold text-navy transition-colors hover:text-gold"
                     >
                       {value}
                     </a>
@@ -214,7 +214,7 @@ export default function ContactPage() {
           <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
             <div className="flex flex-col justify-between rounded-2xl border border-divider bg-surface-card p-8">
               <div>
-                <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.15em] text-crimson">
+                <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.15em] text-gold">
                   Real Estate
                 </p>
                 <h3 className="font-display text-xl font-bold text-navy">
@@ -236,7 +236,7 @@ export default function ContactPage() {
             </div>
             <div className="flex flex-col justify-between rounded-2xl border border-divider bg-surface-card p-8">
               <div>
-                <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.15em] text-crimson">
+                <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.15em] text-gold">
                   Energy
                 </p>
                 <h3 className="font-display text-xl font-bold text-navy">

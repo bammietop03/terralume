@@ -9,8 +9,7 @@ const badgeVariants = cva(
       variant: {
         default:
           "border-transparent bg-(--color-navy-light) text-(--color-navy)",
-        crimson:
-          "border-transparent bg-(--color-crimson-light) text-(--color-crimson)",
+        gold: "border-transparent bg-(--color-gold-light) text-(--color-gold)",
         outline: "border-(--color-border) text-(--color-text-muted)",
         white: "border-white/30 bg-white/10 text-white",
       },
@@ -33,5 +32,3 @@ function Badge({ className, variant, ...props }: BadgeProps) {
 }
 
 export { Badge, badgeVariants };
-
-

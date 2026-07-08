@@ -10,7 +10,7 @@ export interface BreadcrumbItem {
 interface PageHeroProps {
   /** Eyebrow label above the title */
   eyebrow: string;
-  /** Main heading — accepts ReactNode so you can embed italic/crimson spans */
+  /** Main heading — accepts ReactNode so you can embed italic/gold spans */
   title: ReactNode;
   /** Supporting description text */
   description: string;
@@ -32,7 +32,7 @@ export default function PageHero({
   title,
   description,
   breadcrumbs,
-  imageSrc = "/images/hero.png",
+  imageSrc = "/images/lagos.jpg",
   imageAlt = "Lagos skyline",
   minHeight = "52vh",
   chips,

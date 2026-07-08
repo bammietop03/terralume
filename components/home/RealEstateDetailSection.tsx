@@ -18,7 +18,7 @@ const services = [
       "We access off-market inventory unavailable through public listings — sourced through an established network of developers, estate managers, and institutional sellers.",
     outcome:
       "Properties sourced before they reach the market, at better terms.",
-    accent: "crimson",
+    accent: "gold",
   },
   {
     icon: BarChart3,
@@ -38,7 +38,7 @@ const services = [
       "Proprietary pricing data across Lekki, Ikoyi, Victoria Island, and emerging corridors gives clients a negotiation advantage. We don't rely on asking prices — we know market values.",
     outcome:
       "Evidence-based negotiation that consistently closes below asking.",
-    accent: "crimson",
+    accent: "gold",
   },
   {
     icon: Lightbulb,
@@ -56,7 +56,7 @@ const services = [
     description:
       "From the moment of acquisition, we structure an exit plan — whether resale, rental yield optimisation, or development conversion — to maximise long-term asset performance.",
     outcome: "Assets acquired with a destination in mind, not just a price.",
-    accent: "crimson",
+    accent: "gold",
   },
 ];
 
@@ -70,13 +70,13 @@ export function RealEstateDetailSection() {
         {/* Header */}
         <div className="mb-16 grid grid-cols-1 gap-8 lg:grid-cols-2 lg:items-end">
           <div>
-            <p className="mb-5 flex items-center gap-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-crimson">
-              <span className="h-px w-8 bg-crimson" />
+            <p className="mb-5 flex items-center gap-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-gold">
+              <span className="h-px w-8 bg-gold" />
               Division 01
             </p>
             <h2 className="font-display text-4xl font-bold leading-tight text-navy lg:text-5xl">
               Real Estate, Done{" "}
-              <em className="italic text-crimson">with Intelligence</em>
+              <em className="italic text-gold">with Intelligence</em>
             </h2>
           </div>
           <div className="flex flex-col gap-5 lg:ml-auto lg:max-w-sm">
@@ -99,7 +99,7 @@ export function RealEstateDetailSection() {
         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {services.map((s) => {
             const Icon = s.icon;
-            const isCrimson = s.accent === "crimson";
+            const isgold = s.accent === "gold";
             return (
               <div
                 key={s.number}
@@ -109,19 +109,19 @@ export function RealEstateDetailSection() {
                 <div className="relative overflow-hidden bg-navy px-7 py-6">
                   <div
                     aria-hidden
-                    className={`absolute inset-x-0 top-0 h-0.5 ${isCrimson ? "bg-linear-to-r from-crimson/60 via-crimson/20 to-transparent" : "bg-linear-to-r from-gold/50 via-gold/15 to-transparent"}`}
+                    className={`absolute inset-x-0 top-0 h-0.5 ${isgold ? "bg-linear-to-r from-gold/60 via-gold/20 to-transparent" : "bg-linear-to-r from-gold/50 via-gold/15 to-transparent"}`}
                   />
                   <div
                     aria-hidden
-                    className={`pointer-events-none absolute -right-10 -top-10 h-36 w-36 rounded-full blur-3xl ${isCrimson ? "bg-crimson/15" : "bg-gold/10"}`}
+                    className={`pointer-events-none absolute -right-10 -top-10 h-36 w-36 rounded-full blur-3xl ${isgold ? "bg-gold/15" : "bg-gold/10"}`}
                   />
                   <div className="relative flex items-center gap-3">
                     <div
-                      className={`flex h-10 w-10 items-center justify-center rounded-xl border ${isCrimson ? "border-crimson/30 bg-crimson/15" : "border-gold/30 bg-gold/15"}`}
+                      className={`flex h-10 w-10 items-center justify-center rounded-xl border ${isgold ? "border-gold/30 bg-gold/15" : "border-gold/30 bg-gold/15"}`}
                     >
                       <Icon
                         size={18}
-                        className={isCrimson ? "text-crimson" : "text-gold"}
+                        className={isgold ? "text-gold" : "text-gold"}
                       />
                     </div>
                     <div>

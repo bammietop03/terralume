@@ -252,14 +252,14 @@ export function IntakeForm({
           All data confidential
         </div>
       </div>
-      {/* Crimson rule */}
+      {/* gold rule */}
       <div className="h-[3px] bg-[#9B1C2E]" />
 
       <div className="p-6 sm:p-8">
         <ProgressBar step={step} />
 
         <div className="mb-6">
-          <p className="text-xs font-semibold uppercase tracking-wide text-crimson mb-1">
+          <p className="text-xs font-semibold uppercase tracking-wide text-gold mb-1">
             Step {step} of {TOTAL_STEPS}
           </p>
           <h2 className="font-display text-xl font-bold text-on-surface">

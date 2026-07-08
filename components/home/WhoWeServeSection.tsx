@@ -80,11 +80,11 @@ function SegmentCard({ segment }: { segment: (typeof segments)[number] }) {
     <div className="group relative overflow-hidden rounded-2xl border border-white/8 bg-white/4 p-8 hover:border-white/15 hover:bg-white/6 transition-all duration-300">
       <div
         aria-hidden
-        className="pointer-events-none absolute -right-8 -top-8 h-32 w-32 rounded-full bg-crimson/5 blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+        className="pointer-events-none absolute -right-8 -top-8 h-32 w-32 rounded-full bg-gold/5 blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"
       />
       <div className="relative">
-        <div className="mb-5 inline-flex h-11 w-11 items-center justify-center rounded-xl bg-crimson/10 border border-crimson/20">
-          <segment.icon size={20} className="text-crimson/80" />
+        <div className="mb-5 inline-flex h-11 w-11 items-center justify-center rounded-xl bg-gold/10 border border-gold/20">
+          <segment.icon size={20} className="text-gold/80" />
         </div>
         <h3 className="mb-3 font-display text-[20px] font-semibold text-white leading-snug">
           {segment.title}

@@ -142,14 +142,14 @@ function NavLink({
       className={cn(
         "group relative flex items-center gap-3 rounded-xl text-sm font-medium transition-all duration-200",
         isActive
-          ? "bg-crimson text-white"
+          ? "bg-gold text-white"
           : "text-white/45 hover:bg-white/5 hover:text-white/80",
         collapsed ? "justify-center p-2.5" : "px-3 py-2.5",
       )}
     >
-      {/* Crimson active left-bar */}
+      {/* gold active left-bar */}
       {isActive && !collapsed && (
-        <span className="absolute left-0 top-1/2 -translate-y-1/2 h-5 w-0.75 rounded-r-full bg-crimson" />
+        <span className="absolute left-0 top-1/2 -translate-y-1/2 h-5 w-0.75 rounded-r-full bg-gold" />
       )}
 
       {/* Icon wrapper */}
@@ -158,14 +158,14 @@ function NavLink({
           "relative flex shrink-0 items-center justify-center rounded-lg transition-all duration-200",
           collapsed ? "h-9 w-9" : "h-8 w-8",
           isActive
-            ? "bg-crimson/20 text-white"
+            ? "bg-gold/20 text-white"
             : "text-white/40 group-hover:bg-white/6 group-hover:text-white/75",
         )}
       >
         <Icon size={16} />
         {/* Badge on icon (collapsed mode) */}
         {collapsed && badge && badge > 0 && (
-          <span className="absolute -top-1 -right-1 flex items-center justify-center rounded-full bg-(--color-crimson) text-white text-[9px] font-bold min-w-3.75 h-3.75 px-0.5 tabular-nums leading-none">
+          <span className="absolute -top-1 -right-1 flex items-center justify-center rounded-full bg-(--color-gold) text-white text-[9px] font-bold min-w-3.75 h-3.75 px-0.5 tabular-nums leading-none">
             {badge > 99 ? "99+" : badge}
           </span>
         )}
@@ -248,7 +248,7 @@ function SidebarContent({
             <span className="font-display text-[17px] font-bold tracking-tight text-white leading-none">
               Terra
             </span>
-            <span className="font-display text-[17px] font-bold tracking-tight text-(--color-crimson) leading-none">
+            <span className="font-display text-[17px] font-bold tracking-tight text-(--color-gold) leading-none">
               lume
             </span>
           </Link>
@@ -306,7 +306,7 @@ function SidebarContent({
                 {photoUrl && (
                   <AvatarImage src={photoUrl} alt={userName ?? userEmail} />
                 )}
-                <AvatarFallback className="bg-linear-to-br from-(--color-crimson) to-[#6b1220] text-white text-xs font-bold">
+                <AvatarFallback className="bg-linear-to-br from-(--color-gold) to-[#6b1220] text-white text-xs font-bold">
                   {initials}
                 </AvatarFallback>
               </Avatar>
@@ -331,7 +331,7 @@ function SidebarContent({
                   {photoUrl && (
                     <AvatarImage src={photoUrl} alt={userName ?? userEmail} />
                   )}
-                  <AvatarFallback className="bg-linear-to-br from-(--color-crimson) to-[#6b1220] text-white text-xs font-bold">
+                  <AvatarFallback className="bg-linear-to-br from-(--color-gold) to-[#6b1220] text-white text-xs font-bold">
                     {initials}
                   </AvatarFallback>
                 </Avatar>

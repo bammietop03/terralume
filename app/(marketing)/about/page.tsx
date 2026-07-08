@@ -18,7 +18,7 @@ import { FooterCTA } from "@/components/home/FooterCTA";
 export const metadata: Metadata = {
   title: "About Terralume — Real Estate & Clean Energy, Nigeria",
   description:
-    "Terralume runs two divisions — Real Estate Acquisition & Intelligence, and Renewable Energy as a Service — united by one operating model: rigorous evaluation, honest delivery.",
+    "Terralume runs two divisions — Real Estate Acquisition & Intelligence, and Renewable Energy Acquisition Service — united by one operating model: rigorous evaluation, honest delivery.",
   openGraph: {
     title: "About Terralume",
     description:
@@ -109,7 +109,7 @@ export default function AboutPage() {
             <em className="italic text-gold">Two divisions.</em>
           </>
         }
-        description="Terralume runs Real Estate Acquisition & Intelligence and Renewable Energy as a Service — united by one conviction: understand what a client actually needs, verify it rigorously, and deliver only what holds up."
+        description="Terralume runs Real Estate Acquisition & Intelligence and Renewable Energy Acquisition Service — united by one conviction: understand what a client actually needs, verify it rigorously, and deliver only what holds up."
         breadcrumbs={[{ label: "Home", href: "/" }, { label: "About" }]}
         minHeight="50vh"
       />
@@ -120,8 +120,8 @@ export default function AboutPage() {
           <div className="grid gap-14 lg:grid-cols-2 lg:items-center">
             {/* Text */}
             <div>
-              <div className="mb-4 flex items-center gap-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-crimson">
-                <span className="h-px w-8 bg-crimson" />
+              <div className="mb-4 flex items-center gap-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-gold">
+                <span className="h-px w-8 bg-gold" />
                 Our Story
               </div>
               <h2 className="mb-6 font-display text-4xl font-bold text-navy lg:text-5xl">
@@ -129,7 +129,7 @@ export default function AboutPage() {
               </h2>
               <div className="space-y-5 text-[16px] leading-relaxed text-on-surface-muted">
                 <p>
-                  The Lagos property market has a structural problem that has
+                  The Nigeria property market has a structural problem that has
                   existed for decades. When a buyer engages a traditional real
                   estate agent, that agent's commission comes from the seller —
                   typically 5–10% of the transaction value. The agent is
@@ -145,10 +145,10 @@ export default function AboutPage() {
                 </p>
                 <p>
                   Terralume was founded on a single conviction: that buyers
-                  deserve professional representation, paid for by them,
-                  accountable to them alone. We charge a fixed advisory fee —
-                  published publicly — and we take no commission from any
-                  seller, landlord, or developer, under any circumstance.
+                  deserve professional representation, accountable to them
+                  alone. We charge a fixed advisory fee — published publicly —
+                  and we take no commission from any seller, landlord, or
+                  developer, under any circumstance.
                 </p>
                 <p>
                   Since 2022, we have advised over 180 clients across more than
@@ -162,7 +162,7 @@ export default function AboutPage() {
             {/* Stats panel */}
             <div className="grid grid-cols-2 gap-4">
               {[
-                { value: "180+", label: "Clients advised" },
+                { value: "180+", label: "Clients Helped" },
                 { value: "₦12B+", label: "In protected transactions" },
                 { value: "0", label: "Title disputes post-completion" },
                 { value: "4.9★", label: "Average client satisfaction" },
@@ -193,8 +193,8 @@ export default function AboutPage() {
                 Vision
               </p>
               <p className="font-display text-xl font-bold leading-snug text-white lg:text-2xl">
-                To become the top structured real estate services and clean
-                energy service provider across Nigeria.
+                To become the top structured real estate and clean energy
+                acquisition service provider across Nigeria.
               </p>
             </div>
             <div className="rounded-3xl border border-white/10 bg-white/5 px-8 py-8">
@@ -203,7 +203,7 @@ export default function AboutPage() {
               </p>
               <p className="font-display text-xl font-bold leading-snug text-white lg:text-2xl">
                 To illuminate the lives of Nigerians with adequate housing and
-                clean energy solutions for their homes.
+                clean energy solutions.
               </p>
             </div>
           </div>
@@ -215,8 +215,8 @@ export default function AboutPage() {
         <div className="container mx-auto max-w-5xl px-6">
           <div className="grid grid-cols-1 gap-12 lg:grid-cols-2 lg:items-start">
             <div>
-              <div className="mb-4 flex items-center gap-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-crimson">
-                <span className="h-px w-8 bg-crimson" />
+              <div className="mb-4 flex items-center gap-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-gold">
+                <span className="h-px w-8 bg-gold" />
                 One Operating Model, Not Two Businesses
               </div>
               <h2 className="font-display text-3xl font-bold text-navy lg:text-4xl">
@@ -224,9 +224,9 @@ export default function AboutPage() {
               </h2>
               <p className="mt-5 text-[16px] leading-relaxed text-on-surface-muted">
                 Terralume runs two divisions — Real Estate Acquisition &amp;
-                Intelligence, and Renewable Energy as a Service — but they share
-                one process: understand what a client actually needs, verify it
-                rigorously, and deliver only what holds up.
+                Intelligence, and Renewable Energy Intelligence Service —
+                Sharing one process: understand what a client actually needs,
+                verify it rigorously, and deliver only what holds up.
               </p>
               <p className="mt-4 text-[16px] leading-relaxed text-on-surface-muted">
                 We built Terralume to close the gap between property and power —
@@ -266,10 +266,10 @@ export default function AboutPage() {
       <section className="bg-surface-alt py-20">
         <div className="container mx-auto max-w-5xl px-6">
           <div className="mx-auto max-w-3xl text-center">
-            <div className="mb-4 flex items-center justify-center gap-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-crimson">
-              <span className="h-px w-8 bg-crimson" />
+            <div className="mb-4 flex items-center justify-center gap-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-gold">
+              <span className="h-px w-8 bg-gold" />
               The Problem
-              <span className="h-px w-8 bg-crimson" />
+              <span className="h-px w-8 bg-gold" />
             </div>
             <h2 className="mb-6 font-display text-4xl font-bold text-navy">
               Who works for the buyer in Lagos?
@@ -301,7 +301,7 @@ export default function AboutPage() {
               },
               {
                 party: "Terralume",
-                paid_by: "Buyer (fixed fee)",
+                paid_by: "Buyer (process/success fee)",
                 works_for: "Protecting the buyer",
                 verdict: "No conflict",
                 bad: false,
@@ -348,7 +348,7 @@ export default function AboutPage() {
                   <div
                     className={`mt-4 rounded-lg px-3 py-2 text-center text-[12px] font-semibold uppercase tracking-widest ${
                       row.bad
-                        ? "bg-crimson-light text-crimson"
+                        ? "bg-gold-light text-gold"
                         : "bg-white/10 text-white"
                     }`}
                   >
@@ -365,8 +365,8 @@ export default function AboutPage() {
       <section className="bg-surface py-20">
         <div className="container mx-auto max-w-5xl px-6">
           <div className="mb-12 max-w-2xl">
-            <div className="mb-4 flex items-center gap-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-crimson">
-              <span className="h-px w-8 bg-crimson" />
+            <div className="mb-4 flex items-center gap-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-gold">
+              <span className="h-px w-8 bg-gold" />
               Leadership
             </div>
             <h2 className="mb-4 font-display text-4xl font-bold text-navy">
@@ -387,8 +387,8 @@ export default function AboutPage() {
       <section className="bg-surface-alt py-20">
         <div className="container mx-auto max-w-5xl px-6">
           <div className="mb-12 max-w-2xl">
-            <div className="mb-4 flex items-center gap-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-crimson">
-              <span className="h-px w-8 bg-crimson" />
+            <div className="mb-4 flex items-center gap-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-gold">
+              <span className="h-px w-8 bg-gold" />
               Our Values
             </div>
             <h2 className="mb-4 font-display text-4xl font-bold text-navy">
@@ -413,8 +413,8 @@ export default function AboutPage() {
                     {i + 1}
                   </span>
 
-                  <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl bg-crimson-light">
-                    <Icon className="h-5 w-5 text-crimson" />
+                  <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl bg-gold-light">
+                    <Icon className="h-5 w-5 text-gold" />
                   </div>
 
                   <p className="mb-2 font-display text-[16px] font-bold text-navy">
@@ -431,12 +431,12 @@ export default function AboutPage() {
       </section>
 
       {/* ── Compliance ────────────────────────────────────── */}
-      <section className="bg-surface py-20">
+      {/* <section className="bg-surface py-20">
         <div className="container mx-auto max-w-5xl px-6">
           <div className="grid gap-12 lg:grid-cols-2 lg:items-start">
             <div>
-              <div className="mb-4 flex items-center gap-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-crimson">
-                <span className="h-px w-8 bg-crimson" />
+              <div className="mb-4 flex items-center gap-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-gold">
+                <span className="h-px w-8 bg-gold" />
                 Compliance & Registration
               </div>
               <h2 className="mb-4 font-display text-4xl font-bold text-navy">
@@ -503,7 +503,7 @@ export default function AboutPage() {
             </div>
           </div>
         </div>
-      </section>
+      </section> */}
 
       <FooterCTA />
     </>

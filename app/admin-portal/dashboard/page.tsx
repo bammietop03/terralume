@@ -160,7 +160,7 @@ export default async function AdminDashboardPage() {
     return (
       <>
         <div className="px-6 pt-8 pb-2 max-w-7xl mx-auto">
-          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-(--color-crimson) mb-1">
+          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-(--color-gold) mb-1">
             Admin Portal
           </p>
           <h1 className="font-display text-2xl font-bold text-on-surface">
@@ -193,11 +193,9 @@ export default async function AdminDashboardPage() {
             <StatCard
               label="Open enquiries"
               value={adminStats.openEnquiries}
-              icon={
-                <FileQuestion size={18} className="text-(--color-crimson)" />
-              }
-              gradient="bg-linear-to-r from-(--color-crimson) to-(--color-crimson-light)"
-              iconBg="bg-(--color-crimson-light)"
+              icon={<FileQuestion size={18} className="text-(--color-gold)" />}
+              gradient="bg-linear-to-r from-(--color-gold) to-(--color-gold-light)"
+              iconBg="bg-(--color-gold-light)"
             />
             <StatCard
               label="New leads (7d)"
@@ -221,7 +219,7 @@ export default async function AdminDashboardPage() {
           <div className="grid grid-cols-1 xl:grid-cols-5 gap-6">
             {/* Stage Pipeline */}
             <div className="xl:col-span-3 rounded-2xl border border-white/60 bg-white/80 backdrop-blur-sm shadow-[0_1px_3px_rgba(27,42,107,0.06),0_8px_24px_rgba(27,42,107,0.04)] overflow-hidden">
-              <div className="h-1 bg-linear-to-r from-(--color-navy) via-indigo-400 to-(--color-crimson)" />
+              <div className="h-1 bg-linear-to-r from-(--color-navy) via-indigo-400 to-(--color-gold)" />
               <div className="px-6 py-5">
                 <div className="flex items-center justify-between mb-5">
                   <div className="flex items-center gap-3">
@@ -289,10 +287,10 @@ export default async function AdminDashboardPage() {
 
             {/* Recent Activity */}
             <div className="xl:col-span-2 rounded-2xl border border-white/60 bg-white/80 backdrop-blur-sm shadow-[0_1px_3px_rgba(27,42,107,0.06),0_8px_24px_rgba(27,42,107,0.04)] overflow-hidden">
-              <div className="h-1 bg-linear-to-r from-(--color-crimson) to-(--color-navy-light)" />
+              <div className="h-1 bg-linear-to-r from-(--color-gold) to-(--color-navy-light)" />
               <div className="px-6 py-5">
                 <div className="flex items-center gap-3 mb-5">
-                  <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-linear-to-br from-(--color-crimson) to-[#6d1220] text-white shadow-sm">
+                  <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-linear-to-br from-(--color-gold) to-[#6d1220] text-white shadow-sm">
                     <FileText size={14} />
                   </div>
                   <h2 className="text-sm font-semibold text-on-surface">
@@ -462,7 +460,7 @@ export default async function AdminDashboardPage() {
   return (
     <>
       <div className="px-6 pt-8 pb-2 max-w-7xl mx-auto">
-        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-(--color-crimson) mb-1">
+        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-(--color-gold) mb-1">
           PM Portal
         </p>
         <h1 className="font-display text-2xl font-bold text-on-surface">
@@ -573,10 +571,10 @@ export default async function AdminDashboardPage() {
           {/* Right column: Meetings + Quick links */}
           <div className="flex flex-col gap-5">
             <div className="rounded-2xl border border-white/60 bg-white/80 backdrop-blur-sm shadow-[0_1px_3px_rgba(27,42,107,0.06),0_8px_24px_rgba(27,42,107,0.04)] overflow-hidden">
-              <div className="h-1 bg-linear-to-r from-(--color-crimson) to-(--color-navy-light)" />
+              <div className="h-1 bg-linear-to-r from-(--color-gold) to-(--color-navy-light)" />
               <div className="px-6 py-5">
                 <div className="flex items-center gap-3 mb-4">
-                  <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-linear-to-br from-(--color-crimson) to-[#6d1220] text-white shadow-sm">
+                  <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-linear-to-br from-(--color-gold) to-[#6d1220] text-white shadow-sm">
                     <Calendar size={14} />
                   </div>
                   <h2 className="text-sm font-semibold text-on-surface">

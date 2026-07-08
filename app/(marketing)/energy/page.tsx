@@ -10,6 +10,7 @@ import {
   Home,
   Building2,
   Briefcase,
+  Factory,
   ClipboardList,
   DollarSign,
   Wifi,
@@ -20,11 +21,11 @@ import PageHero from "@/components/layout/PageHero";
 import { FooterCTA } from "@/components/home/FooterCTA";
 
 export const metadata: Metadata = {
-  title: "Renewable Energy as a Service (EaaS) — Terralume",
+  title: "Renewable Energy Acquisition Service (EaaS) — Terralume",
   description:
     "Reliable power, sized for how you actually live and work. Terralume consults first, then matches the right vetted solution — residential, estate, or commercial scale.",
   openGraph: {
-    title: "Renewable Energy as a Service — Terralume",
+    title: "Renewable Energy Acquisition Service — Terralume",
     description:
       "You don't need to be buying a property to work with Terralume on energy. We consult first, understand your actual needs, then pull the right solution.",
     type: "website",
@@ -40,7 +41,7 @@ const solutionCategories = [
     name: "Solar PV",
     description:
       "Generation sized to your consumption profile — residential, estate, or commercial scale.",
-    accent: "crimson",
+    accent: "gold",
   },
   {
     icon: Battery,
@@ -56,7 +57,7 @@ const solutionCategories = [
     name: "Hybrid Systems",
     description:
       "Grid, solar, and storage working together for maximum reliability and efficiency.",
-    accent: "crimson",
+    accent: "gold",
   },
   {
     icon: Network,
@@ -97,7 +98,7 @@ const solutionsLibrary = [
     segment: "Residential",
     description:
       "Power solutions sized for individual homes — solar PV and storage configurations that handle daily essentials through grid outages, without paying for capacity you'll never use.",
-    accent: "crimson",
+    accent: "gold",
   },
   {
     icon: Building2,
@@ -111,7 +112,14 @@ const solutionsLibrary = [
     segment: "Commercial / SME",
     description:
       "Energy continuity for businesses where downtime has a direct cost — hybrid systems and storage sized against your operating hours and load profile, with PPA-style models available so power becomes a predictable line item, not a capital risk.",
-    accent: "crimson",
+    accent: "gold",
+  },
+  {
+    icon: Factory,
+    segment: "Industrial",
+    description:
+      "High-capacity power systems for manufacturing, processing, and industrial operations — engineered for continuous uptime, peak load management, and integration with existing infrastructure. Designed to minimize production interruptions and reduce operational energy costs at scale.",
+    accent: "navy",
   },
 ];
 
@@ -122,7 +130,7 @@ export default function EnergyPage() {
     <main className="flex flex-col flex-1">
       {/* ── Hero ─────────────────────────────────────────────── */}
       <PageHero
-        eyebrow="Renewable Energy as a Service"
+        eyebrow="Renewable Energy Acquisition Service"
         title={
           <>
             Reliable power, sized for how you{" "}
@@ -132,6 +140,7 @@ export default function EnergyPage() {
         description="You don't need to be buying a property to work with Terralume on energy. This division stands on its own — we consult first, understand your actual needs, then pull the right solution from our vetted technology data."
         breadcrumbs={[{ label: "Home", href: "/" }, { label: "Energy" }]}
         minHeight="56vh"
+        imageSrc="/images/energy.jpg"
         actions={
           <>
             <Button asChild size="lg" variant="secondary">
@@ -178,8 +187,8 @@ export default function EnergyPage() {
       <section className="bg-surface py-24 lg:py-32">
         <div className="mx-auto max-w-6xl px-6 lg:px-12">
           <div className="mb-16 max-w-2xl">
-            <p className="mb-4 flex items-center gap-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-crimson">
-              <span className="h-px w-8 bg-crimson" />
+            <p className="mb-4 flex items-center gap-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-gold">
+              <span className="h-px w-8 bg-gold" />
               Solution Categories
             </p>
             <h2 className="font-display text-3xl font-bold text-navy lg:text-4xl">
@@ -199,11 +208,11 @@ export default function EnergyPage() {
               return (
                 <div key={cat.name} className="flex flex-col bg-surface p-8">
                   <div
-                    className={`mb-5 flex h-12 w-12 items-center justify-center rounded-xl ${isNavy ? "bg-navy-light" : "bg-crimson-light"}`}
+                    className={`mb-5 flex h-12 w-12 items-center justify-center rounded-xl ${isNavy ? "bg-navy-light" : "bg-gold-light"}`}
                   >
                     <Icon
                       size={22}
-                      className={isNavy ? "text-navy" : "text-crimson"}
+                      className={isNavy ? "text-navy" : "text-gold"}
                     />
                   </div>
                   <span className="mb-1 text-[11px] font-semibold uppercase tracking-[0.15em] text-on-surface-muted">
@@ -272,8 +281,8 @@ export default function EnergyPage() {
                     key={item.label}
                     className="flex items-start gap-5 rounded-2xl border border-divider bg-surface p-6"
                   >
-                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-crimson-light">
-                      <Icon size={18} className="text-crimson" />
+                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gold-light">
+                      <Icon size={18} className="text-gold" />
                     </div>
                     <div>
                       <p className="font-semibold text-navy">{item.label}</p>
@@ -293,8 +302,8 @@ export default function EnergyPage() {
       <section id="solutions-library" className="bg-surface py-24 lg:py-32">
         <div className="mx-auto max-w-6xl px-6 lg:px-12">
           <div className="mb-16 max-w-2xl">
-            <p className="mb-4 flex items-center gap-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-crimson">
-              <span className="h-px w-8 bg-crimson" />
+            <p className="mb-4 flex items-center gap-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-gold">
+              <span className="h-px w-8 bg-gold" />
               Solutions Library
             </p>
             <h2 className="font-display text-3xl font-bold text-navy lg:text-4xl">
@@ -320,19 +329,19 @@ export default function EnergyPage() {
                   <div className="relative overflow-hidden bg-navy px-8 py-7">
                     <div
                       aria-hidden
-                      className={`absolute inset-x-0 top-0 h-0.5 ${isNavy ? "bg-linear-to-r from-gold/60 via-gold/20 to-transparent" : "bg-linear-to-r from-crimson/60 via-crimson/20 to-transparent"}`}
+                      className={`absolute inset-x-0 top-0 h-0.5 ${isNavy ? "bg-linear-to-r from-gold/60 via-gold/20 to-transparent" : "bg-linear-to-r from-gold/60 via-gold/20 to-transparent"}`}
                     />
                     <div
                       aria-hidden
-                      className={`pointer-events-none absolute -right-12 -top-12 h-48 w-48 rounded-full blur-3xl ${isNavy ? "bg-gold/10" : "bg-crimson/15"}`}
+                      className={`pointer-events-none absolute -right-12 -top-12 h-48 w-48 rounded-full blur-3xl ${isNavy ? "bg-gold/10" : "bg-gold/15"}`}
                     />
                     <div className="relative flex items-center gap-4">
                       <div
-                        className={`flex h-11 w-11 items-center justify-center rounded-xl border ${isNavy ? "border-gold/30 bg-gold/15" : "border-crimson/30 bg-crimson/15"}`}
+                        className={`flex h-11 w-11 items-center justify-center rounded-xl border ${isNavy ? "border-gold/30 bg-gold/15" : "border-gold/30 bg-gold/15"}`}
                       >
                         <Icon
                           size={20}
-                          className={isNavy ? "text-gold" : "text-crimson"}
+                          className={isNavy ? "text-gold" : "text-gold"}
                         />
                       </div>
                       <h3 className="font-display text-[22px] font-bold text-white">

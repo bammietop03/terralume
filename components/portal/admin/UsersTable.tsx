@@ -396,7 +396,7 @@ export default function UsersTable({ initialUsers, segment }: Props) {
                 <TableHead className="text-xs font-semibold text-on-surface-muted uppercase tracking-wide hidden md:table-cell">
                   Phone
                 </TableHead>
-                {segment === "clients" && (
+                {/* {segment === "clients" && (
                   <TableHead className="text-xs font-semibold text-on-surface-muted uppercase tracking-wide hidden lg:table-cell">
                     Assigned PM
                   </TableHead>
@@ -405,7 +405,7 @@ export default function UsersTable({ initialUsers, segment }: Props) {
                   <TableHead className="text-xs font-semibold text-on-surface-muted uppercase tracking-wide hidden lg:table-cell">
                     Onboarded
                   </TableHead>
-                )}
+                )} */}
                 <TableHead className="text-xs font-semibold text-on-surface-muted uppercase tracking-wide hidden xl:table-cell">
                   Joined
                 </TableHead>
@@ -460,7 +460,7 @@ export default function UsersTable({ initialUsers, segment }: Props) {
                     {user.phone ?? ""}
                   </TableCell>
 
-                  {segment === "clients" && (
+                  {/* {segment === "clients" && (
                     <TableCell className="hidden lg:table-cell py-3">
                       {(user as any).assignedPm ? (
                         <div className="flex items-center gap-2">
@@ -501,7 +501,7 @@ export default function UsersTable({ initialUsers, segment }: Props) {
                         </span>
                       )}
                     </TableCell>
-                  )}
+                  )} */}
 
                   <TableCell className="text-sm text-on-surface-muted hidden xl:table-cell py-3">
                     {formatDate(user.createdAt)}

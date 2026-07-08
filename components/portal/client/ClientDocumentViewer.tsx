@@ -10,6 +10,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import { Download } from "lucide-react";
 
 interface Props {
   name: string;
@@ -37,8 +38,16 @@ export default function ClientDocumentViewer({
         </Button>
       </DialogTrigger>
       <DialogContent className="max-w-3xl w-full">
-        <DialogHeader>
-          <DialogTitle className="truncate pr-6">{displayName}</DialogTitle>
+        <DialogHeader className="flex flex-row items-center justify-between pr-8">
+          <DialogTitle className="truncate">{displayName}</DialogTitle>
+          <a
+            href={signedUrl}
+            download={name}
+            className="flex items-center gap-1.5 rounded-lg border border-divider px-3 py-1.5 text-xs font-medium text-on-surface hover:bg-surface-muted transition-colors"
+          >
+            <Download size={14} />
+            Download
+          </a>
         </DialogHeader>
         <div className="mt-2 overflow-hidden">
           {isPdf && (

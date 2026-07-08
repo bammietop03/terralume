@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
 import {
@@ -294,10 +295,15 @@ export default function PortalHeader({
         </button>
 
         {/* Mobile logo */}
-        <Link href="/" className="lg:hidden">
-          <span className="font-display text-[17px] font-bold tracking-tight text-white">
-            Terra<span className="text-gold">lume</span>
-          </span>
+        <Link href="/" className="lg:hidden" aria-label="Terralume home">
+          <Image
+            src="/images/terralume-logo.png"
+            alt="Terralume"
+            width={180}
+            height={50}
+            className="h-8 w-auto"
+            priority
+          />
         </Link>
 
         {/* Desktop: page context */}

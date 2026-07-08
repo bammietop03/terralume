@@ -25,7 +25,7 @@ export function FooterCTA() {
 
           <div className="flex flex-col gap-4 sm:flex-row sm:justify-center">
             <Button asChild size="lg" variant="secondary">
-              <Link href="/consultation">
+              <Link href="/get-started">
                 Start an intake
                 <ArrowRight size={16} className="ml-2" />
               </Link>

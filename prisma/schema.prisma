@@ -10,7 +10,6 @@ datasource db {
   provider = "postgresql"
 }
 
-
 // ─── Enums ───────────────────────────────────────────────────────────────────
 
 enum Role {
@@ -53,70 +52,97 @@ enum IntakeStatus {
   CLOSED
 }
 
-enum LeadInterestType {
+enum ServiceType {
   REAL_ESTATE
-  ENERGY
-  BOTH
-  NOT_SURE
+  RENEWABLE_ENERGY
+  INTEGRATED
 }
 
-enum LeadStatus {
-  NEW
-  CONSULTATION_SCHEDULED
-  AWAITING_DECISION
-  INTAKE_INVITED
-  INTAKE_SUBMITTED
-  DECLINED
+enum ProjectStageStatus {
+  NOT_STARTED
+  IN_PROGRESS
+  COMPLETED
+  BLOCKED
+}
+
+enum TaskStatus {
+  PENDING
+  IN_PROGRESS
+  SUBMITTED
+  APPROVED
+  REJECTED
+  CANCELLED
+}
+
+enum TaskPriority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
+enum ActivityType {
+  PROJECT_CREATED
+  PM_ASSIGNED
+  STAGE_STARTED
+  STAGE_COMPLETED
+  TASK_CREATED
+  TASK_SUBMITTED
+  TASK_APPROVED
+  TASK_REJECTED
+  DOCUMENT_UPLOADED
+  MESSAGE_SENT
+  MANUAL_UPDATE
 }
 
 // ─── Models ──────────────────────────────────────────────────────────────────
 
 model User {
   /// Maps to auth.users.id in Supabase — UUID stored as String
-  id                 String    @id @db.Uuid
-  email              String    @unique
-  role               Role      @default(CLIENT)
-  createdAt          DateTime  @default(now()) @map("created_at")
-  lastLogin          DateTime? @map("last_login")
+  id        String    @id @db.Uuid
+  email     String    @unique
+  role      Role      @default(CLIENT)
+  createdAt DateTime  @default(now()) @map("created_at")
+  lastLogin DateTime? @map("last_login")
 
   // Profile — shared across all roles
-  fullName           String?   @map("full_name")
-  preferredName      String?   @map("preferred_name")
-  phone              String?
-  photoUrl           String?   @map("photo_url")
+  fullName      String? @map("full_name")
+  preferredName String? @map("preferred_name")
+  phone         String?
+  photoUrl      String? @map("photo_url")
 
   // Client-only fields (nullable; only populated when role = CLIENT)
   nationality        String?
   location           String?
-  idType             String?   @map("id_type")
-  idNumber           String?   @map("id_number")
-  onboardingComplete Boolean   @default(false) @map("onboarding_complete")
+  idType             String? @map("id_type")
+  idNumber           String? @map("id_number")
+  onboardingComplete Boolean @default(false) @map("onboarding_complete")
 
   // PM assigned to this client (null for PM/ADMIN users)
-  assignedPmId       String?   @map("assigned_pm_id") @db.Uuid
-  assignedPm         User?     @relation("ClientPm", fields: [assignedPmId], references: [id], onDelete: SetNull)
-  managedClients     User[]    @relation("ClientPm")
+  assignedPmId   String? @map("assigned_pm_id") @db.Uuid
+  assignedPm     User?   @relation("ClientPm", fields: [assignedPmId], references: [id], onDelete: SetNull)
+  managedClients User[]  @relation("ClientPm")
 
   // Client's PM-change request flags
-  pmChangeRequested  Boolean   @default(false) @map("pm_change_requested")
-  pmChangeReason     String?   @map("pm_change_reason")
+  pmChangeRequested Boolean @default(false) @map("pm_change_requested")
+  pmChangeReason    String? @map("pm_change_reason")
 
   // Relations
-  enquiries          Enquiry[]
-  engagements        Engagement[]
-  managedEngagements Engagement[]   @relation("EngagementPm")
-  notifications      Notification[]
-  sentMessages       Message[]      @relation("SentMessages")
-  auditLogs          AuditLog[]
-  updates            Update[]
-  articles           Article[]
-  intakeSubmissions  IntakeSubmission[]
-  leadAsClient       Lead?          @relation("LeadClient")
-  assignedLeads      Lead[]         @relation("LeadPm")
-  evaluationsAsPm    ClientEvaluation[] @relation("EvaluationPm")
-  meetingsAsPm       StrategyMeeting[]  @relation("MeetingPm")
-  serviceTiersCreated ServiceTier[]
-  signedAgreements   ServiceAgreement[] @relation("AgreementSigner")
+  enquiries           Enquiry[]
+  engagements         Engagement[]
+  managedEngagements  Engagement[]       @relation("EngagementPm")
+  notifications       Notification[]
+  sentMessages        Message[]          @relation("SentMessages")
+  auditLogs           AuditLog[]
+  updates             Update[]
+  articles            Article[]
+  intakeSubmissions   IntakeSubmission[]
+  meetingsAsPm        StrategyMeeting[]  @relation("MeetingPm")
+  signedAgreements    ServiceAgreement[] @relation("AgreementSigner")
+  createdTasks        Task[]             @relation("TaskCreator")
+  assignedTasks       Task[]             @relation("TaskAssignee")
+  reviewedSubmissions TaskSubmission[]   @relation("SubmissionReviewer")
+  activityLogs        ActivityLog[]      @relation("ActivityActor")
 
   @@map("users")
 }
@@ -137,17 +163,32 @@ model Enquiry {
 }
 
 model Engagement {
-  id              String    @id @default(cuid())
-  userId          String    @map("user_id") @db.Uuid
-  pmId            String?   @map("pm_id") @db.Uuid
-  serviceTier     String?   @map("service_tier")
-  serviceTierId   String?   @map("service_tier_id")
-  stage           String    @default("discovery")
-  startDate       DateTime? @map("start_date")
-  targetDate      DateTime? @map("target_date")
-  status          String    @default("active")
+  id     String  @id @default(cuid())
+  userId String  @map("user_id") @db.Uuid
+  pmId   String? @map("pm_id") @db.Uuid
+
+  // Service configuration
+  serviceId          String? @map("service_id")
+  workflowTemplateId String? @map("workflow_template_id")
+  intakeSubmissionId String? @unique @map("intake_submission_id")
+
+  // Deprecated fields (keep for old data)
+  serviceTier   String? @map("service_tier")
+  serviceTierId String? @map("service_tier_id")
+  stage         String  @default("discovery")
+
+  startDate  DateTime? @map("start_date")
+  targetDate DateTime? @map("target_date")
+  status     String    @default("active")
+  createdAt  DateTime  @default(now()) @map("created_at")
+  updatedAt  DateTime  @updatedAt @map("updated_at")
 
   user             User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  pm               User?             @relation("EngagementPm", fields: [pmId], references: [id], onDelete: SetNull)
+  service          Service?          @relation(fields: [serviceId], references: [id], onDelete: SetNull)
+  workflowTemplate WorkflowTemplate? @relation(fields: [workflowTemplateId], references: [id], onDelete: SetNull)
+  intakeSubmission IntakeSubmission? @relation(fields: [intakeSubmissionId], references: [id], onDelete: SetNull)
+
   documents        Document[]
   updates          Update[]
   messages         Message[]
@@ -155,8 +196,9 @@ model Engagement {
   invoices         Invoice[]
   agreement        ServiceAgreement?
   strategyMeetings StrategyMeeting[]
-  pm               User?      @relation("EngagementPm", fields: [pmId], references: [id], onDelete: SetNull)
-  tierRef          ServiceTier? @relation(fields: [serviceTierId], references: [id], onDelete: SetNull)
+  projectStages    ProjectStage[]
+  tasks            Task[]
+  activityLogs     ActivityLog[]
 
   @@map("engagements")
 }
@@ -209,16 +251,16 @@ model Message {
 }
 
 model Payment {
-  id           String        @id @default(cuid())
-  engagementId String        @map("engagement_id")
-  type         PaymentType   @default(OTHER)
+  id           String          @id @default(cuid())
+  engagementId String          @map("engagement_id")
+  type         PaymentType     @default(OTHER)
   amount       Float
-  currency     String        @default("NGN")
+  currency     String          @default("NGN")
   provider     PaymentProvider @default(PAYSTACK)
-  status       PaymentStatus @default(PENDING)
-  reference    String?       @unique
-  paidAt       DateTime?     @map("paid_at")
-  createdAt    DateTime      @default(now()) @map("created_at")
+  status       PaymentStatus   @default(PENDING)
+  reference    String?         @unique
+  paidAt       DateTime?       @map("paid_at")
+  createdAt    DateTime        @default(now()) @map("created_at")
 
   engagement Engagement @relation(fields: [engagementId], references: [id], onDelete: Cascade)
 
@@ -277,138 +319,66 @@ model AuditLog {
 }
 
 model IntakeSubmission {
-  id                String       @id @default(cuid())
-  referenceNumber   String       @unique @map("reference_number")
-  status            IntakeStatus @default(PENDING)
+  id              String       @id @default(cuid())
+  referenceNumber String       @unique @map("reference_number")
+  status          IntakeStatus @default(PENDING)
 
   // Optional link to a user account (created on submit)
-  userId            String?      @map("user_id") @db.Uuid
-  user              User?        @relation(fields: [userId], references: [id], onDelete: SetNull)
+  userId String? @map("user_id") @db.Uuid
+  user   User?   @relation(fields: [userId], references: [id], onDelete: SetNull)
 
-  // Step 1 — Goal
-  transactionType   String       @map("transaction_type")
-  purpose           String?
+  // Service Selection (NEW)
+  selectedServices       String[] @default([]) @map("selected_services")
+  energyNeedsDescription String?  @map("energy_needs_description")
+  combinedServices       Boolean  @default(false) @map("combined_services")
+
+  // Step 1 — Goal (conditional: only if Real Estate selected)
+  transactionType String? @map("transaction_type")
+  purpose         String?
 
   // Step 2 — About you
-  fullName          String       @map("full_name")
-  preferredName     String?      @map("preferred_name")
-  email             String
-  phone             String
-  location          String
-  nationality       String?
+  fullName      String  @map("full_name")
+  preferredName String? @map("preferred_name")
+  email         String
+  phone         String
+  location      String
+  nationality   String?
 
-  // Step 3 — Property
-  targetAreas       String[]     @map("target_areas")
-  propertyType      String?      @map("property_type")
-  bedrooms          String?
-  floorAreaSqm      String?      @map("floor_area_sqm")
-  mustHaves         String[]     @map("must_haves")
-  dealBreakers      String?      @map("deal_breakers")
+  // Step 3 — Property (conditional: only if Real Estate selected)
+  targetAreas  String[] @default([]) @map("target_areas")
+  propertyType String?  @map("property_type")
+  bedrooms     String?
+  floorAreaSqm String?  @map("floor_area_sqm")
+  mustHaves    String[] @default([]) @map("must_haves")
+  dealBreakers String?  @map("deal_breakers")
 
   // Step 4 — Budget
-  currency          String       @default("NGN")
-  budgetMin         String?      @map("budget_min")
-  budgetMax         String?      @map("budget_max")
-  sourceOfFunds     String?      @map("source_of_funds")
-  mortgageStatus    String?      @map("mortgage_status")
+  currency       String  @default("NGN")
+  budgetMin      String? @map("budget_min")
+  budgetMax      String? @map("budget_max")
+  sourceOfFunds  String? @map("source_of_funds")
+  mortgageStatus String? @map("mortgage_status")
 
   // Step 5 — Timeline & background
-  targetDate        String?      @map("target_date")
-  decisionSpeed     String?      @map("decision_speed")
-  decisionMakers    String?      @map("decision_makers")
-  priorExperience   String?      @map("prior_experience")
-  riskProfile       String?      @map("risk_profile")
-  referralSource    String?      @map("referral_source")
+  targetDate      String? @map("target_date")
+  decisionSpeed   String? @map("decision_speed")
+  decisionMakers  String? @map("decision_makers")
+  priorExperience String? @map("prior_experience")
+  riskProfile     String? @map("risk_profile")
+  referralSource  String? @map("referral_source")
 
   // Consent
-  dataConsent       Boolean      @default(false) @map("data_consent")
+  dataConsent Boolean @default(false) @map("data_consent")
 
   // Draft save-and-continue
-  draftStep         Int?         @map("draft_step")
+  draftStep Int? @map("draft_step")
 
-  // Optional link to originating lead
-  leadId            String?      @unique @map("lead_id")
-  lead              Lead?        @relation(fields: [leadId], references: [id], onDelete: SetNull)
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
-  createdAt         DateTime     @default(now()) @map("created_at")
-  updatedAt         DateTime     @updatedAt @map("updated_at")
-
-  evaluation        ClientEvaluation?
+  engagement Engagement?
 
   @@map("intake_submissions")
-}
-
-model Lead {
-  id                 String           @id @default(cuid())
-
-  // Contact info (required)
-  fullName           String           @map("full_name")
-  phone              String
-  email              String
-
-  // Optional screening info
-  location           String?
-  interestType       LeadInterestType? @map("interest_type")
-
-  // Lifecycle
-  status             LeadStatus       @default(NEW)
-  notes              String?
-
-  // PM assignment
-  assignedPmId       String?          @map("assigned_pm_id") @db.Uuid
-  assignedPm         User?            @relation("LeadPm", fields: [assignedPmId], references: [id], onDelete: SetNull)
-
-  // Portal account link (set when intake invitation is accepted)
-  userId             String?          @unique @map("user_id") @db.Uuid
-  user               User?            @relation("LeadClient", fields: [userId], references: [id], onDelete: SetNull)
-
-  // Calendar scheduling
-  calendarUrl        String?          @map("calendar_url")
-  calendarSentAt     DateTime?        @map("calendar_sent_at")
-
-  // Intake invitation token
-  inviteToken        String?          @unique @map("invite_token")
-  inviteTokenExpiry  DateTime?        @map("invite_token_expiry")
-  inviteSentAt       DateTime?        @map("invite_sent_at")
-
-  // Decline tracking
-  declinedAt         DateTime?        @map("declined_at")
-
-  createdAt          DateTime         @default(now()) @map("created_at")
-  updatedAt          DateTime         @updatedAt @map("updated_at")
-
-  // Intake submission created from this lead
-  intakeSubmission   IntakeSubmission?
-
-  @@map("leads")
-}
-
-// ─── Phase 4–6 Models ─────────────────────────────────────────────────────────
-
-model ClientEvaluation {
-  id                   String   @id @default(cuid())
-  intakeSubmissionId   String   @unique @map("intake_submission_id")
-  pmId                 String   @map("pm_id") @db.Uuid
-
-  legalScore           Int?     @map("legal_score")
-  legalNotes           String?  @map("legal_notes")
-  financialScore       Int?     @map("financial_score")
-  financialNotes       String?  @map("financial_notes")
-  marketScore          Int?     @map("market_score")
-  marketNotes          String?  @map("market_notes")
-  taxNotes             String?  @map("tax_notes")
-  riskScore            Int?     @map("risk_score")
-  riskNotes            String?  @map("risk_notes")
-  crossBorderNotes     String?  @map("cross_border_notes")
-  overallRecommendation String? @map("overall_recommendation")
-  completedAt          DateTime? @map("completed_at")
-  createdAt            DateTime @default(now()) @map("created_at")
-  updatedAt            DateTime @updatedAt @map("updated_at")
-
-  intakeSubmission IntakeSubmission @relation(fields: [intakeSubmissionId], references: [id], onDelete: Cascade)
-  pm               User            @relation("EvaluationPm", fields: [pmId], references: [id])
-
-  @@map("client_evaluations")
 }
 
 model StrategyMeeting {
@@ -430,28 +400,17 @@ model StrategyMeeting {
   @@map("strategy_meetings")
 }
 
-model ServiceTier {
-  id          String   @id @default(cuid())
-  name        String
-  slug        String   @unique
-  description String?
-  price       Float
-  currency    String   @default("NGN")
-  isActive    Boolean  @default(true) @map("is_active")
-  createdById String?  @map("created_by_id") @db.Uuid
-  createdAt   DateTime @default(now()) @map("created_at")
-  updatedAt   DateTime @updatedAt @map("updated_at")
-
-  engagements Engagement[]
-  createdBy   User?      @relation(fields: [createdById], references: [id], onDelete: SetNull)
-
-  @@map("service_tiers")
-}
-
 model ServiceAgreement {
-  id                String    @id @default(cuid())
-  engagementId      String    @unique @map("engagement_id")
-  serviceTier       String?   @map("service_tier")
+  id           String @id @default(cuid())
+  engagementId String @unique @map("engagement_id")
+
+  // Service reference (NEW)
+  serviceId String?  @map("service_id")
+  service   Service? @relation(fields: [serviceId], references: [id], onDelete: SetNull)
+
+  // Deprecated field (keep for old data)
+  serviceTier String? @map("service_tier")
+
   scopeDescription  String    @map("scope_description")
   timeline          String?
   deliverables      String[]
@@ -460,11 +419,11 @@ model ServiceAgreement {
   terms             String
   version           Int       @default(1)
   status            String    @default("PENDING")
-  signedAt            DateTime? @map("signed_at")
-  signerName          String?   @map("signer_name")
-  signatureImageUrl   String?   @map("signature_image_url")
-  signedByUserId      String?   @map("signed_by_user_id") @db.Uuid
-  generatedAt         DateTime  @default(now()) @map("generated_at")
+  signedAt          DateTime? @map("signed_at")
+  signerName        String?   @map("signer_name")
+  signatureImageUrl String?   @map("signature_image_url")
+  signedByUserId    String?   @map("signed_by_user_id") @db.Uuid
+  generatedAt       DateTime  @default(now()) @map("generated_at")
   createdAt         DateTime  @default(now()) @map("created_at")
   updatedAt         DateTime  @updatedAt @map("updated_at")
 
@@ -495,4 +454,137 @@ model Invoice {
   serviceAgreement ServiceAgreement? @relation(fields: [serviceAgreementId], references: [id], onDelete: SetNull)
 
   @@map("invoices")
+}
+
+// ─── Project Management Models ───────────────────────────────────────────────
+
+model Service {
+  id          String      @id @default(cuid())
+  name        String
+  slug        String      @unique
+  type        ServiceType
+  description String?
+  isActive    Boolean     @default(true) @map("is_active")
+  createdAt   DateTime    @default(now()) @map("created_at")
+  updatedAt   DateTime    @updatedAt @map("updated_at")
+
+  workflowTemplates WorkflowTemplate[]
+  engagements       Engagement[]
+  serviceAgreements ServiceAgreement[]
+
+  @@map("services")
+}
+
+model WorkflowTemplate {
+  id          String   @id @default(cuid())
+  serviceId   String   @map("service_id")
+  name        String
+  description String?
+  isActive    Boolean  @default(true) @map("is_active")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  service     Service         @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+  stages      WorkflowStage[]
+  engagements Engagement[]
+
+  @@unique([serviceId, name])
+  @@map("workflow_templates")
+}
+
+model WorkflowStage {
+  id                 String   @id @default(cuid())
+  workflowTemplateId String   @map("workflow_template_id")
+  name               String
+  description        String?
+  order              Int
+  estimatedDays      Int?     @map("estimated_days")
+  createdAt          DateTime @default(now()) @map("created_at")
+  updatedAt          DateTime @updatedAt @map("updated_at")
+
+  workflowTemplate WorkflowTemplate @relation(fields: [workflowTemplateId], references: [id], onDelete: Cascade)
+  projectStages    ProjectStage[]
+
+  @@unique([workflowTemplateId, order])
+  @@map("workflow_stages")
+}
+
+model ProjectStage {
+  id              String             @id @default(cuid())
+  engagementId    String             @map("engagement_id")
+  workflowStageId String             @map("workflow_stage_id")
+  order           Int
+  status          ProjectStageStatus @default(NOT_STARTED)
+  startedAt       DateTime?          @map("started_at")
+  completedAt     DateTime?          @map("completed_at")
+  notes           String?
+  createdAt       DateTime           @default(now()) @map("created_at")
+  updatedAt       DateTime           @updatedAt @map("updated_at")
+
+  engagement    Engagement    @relation(fields: [engagementId], references: [id], onDelete: Cascade)
+  workflowStage WorkflowStage @relation(fields: [workflowStageId], references: [id], onDelete: Restrict)
+
+  @@index([engagementId])
+  @@map("project_stages")
+}
+
+model Task {
+  id           String       @id @default(cuid())
+  engagementId String       @map("engagement_id")
+  assignedTo   String       @map("assigned_to") @db.Uuid
+  createdBy    String       @map("created_by") @db.Uuid
+  title        String
+  description  String?
+  dueDate      DateTime?    @map("due_date")
+  priority     TaskPriority @default(MEDIUM)
+  status       TaskStatus   @default(PENDING)
+  createdAt    DateTime     @default(now()) @map("created_at")
+  updatedAt    DateTime     @updatedAt @map("updated_at")
+
+  engagement  Engagement      @relation(fields: [engagementId], references: [id], onDelete: Cascade)
+  assignee    User            @relation("TaskAssignee", fields: [assignedTo], references: [id], onDelete: Cascade)
+  creator     User            @relation("TaskCreator", fields: [createdBy], references: [id], onDelete: Cascade)
+  submission  TaskSubmission?
+
+  @@index([assignedTo])
+  @@index([engagementId])
+  @@map("tasks")
+}
+
+model TaskSubmission {
+  id              String    @id @default(cuid())
+  taskId          String    @map("task_id")
+  responseText    String?   @map("response_text")
+  attachmentPaths String[]  @default([]) @map("attachment_paths")
+  submittedAt     DateTime  @default(now()) @map("submitted_at")
+  reviewedAt      DateTime? @map("reviewed_at")
+  reviewedBy      String?   @map("reviewed_by") @db.Uuid
+  approvalStatus  String?   @map("approval_status")
+  feedback        String?
+  createdAt       DateTime  @default(now()) @map("created_at")
+  updatedAt       DateTime  @updatedAt @map("updated_at")
+
+  task     Task  @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  reviewer User? @relation("SubmissionReviewer", fields: [reviewedBy], references: [id], onDelete: SetNull)
+
+  @@unique([taskId])
+  @@map("task_submissions")
+}
+
+model ActivityLog {
+  id           String       @id @default(cuid())
+  engagementId String       @map("engagement_id")
+  actorId      String       @map("actor_id") @db.Uuid
+  actorRole    Role
+  actionType   ActivityType @map("action_type")
+  description  String
+  metadata     Json?
+  timestamp    DateTime     @default(now())
+
+  engagement Engagement @relation(fields: [engagementId], references: [id], onDelete: Cascade)
+  actor      User       @relation("ActivityActor", fields: [actorId], references: [id], onDelete: Cascade)
+
+  @@index([engagementId])
+  @@index([timestamp])
+  @@map("activity_logs")
 }

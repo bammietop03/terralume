@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { Lock } from "lucide-react";
 import LoginForm from "@/components/auth/LoginForm";
 
@@ -28,16 +29,18 @@ export default function AdminLoginPage() {
           style={{ background: "var(--color-gold)" }}
         />
 
-        {/* Logo + Internal badge */}
-        <div className="relative z-10 flex items-center justify-between">
-          <Link href="/" className="inline-block">
-            <span className="font-display text-2xl font-bold text-white tracking-tight">
-              Terra<span className="text-(--color-gold)">lume</span>
-            </span>
+        {/* Logo */}
+        <div className="relative z-10">
+          <Link href="/" className="inline-block" aria-label="Terralume home">
+            <Image
+              src="/images/terralume-logo.png"
+              alt="Terralume"
+              width={180}
+              height={50}
+              className="h-10 w-auto"
+              priority
+            />
           </Link>
-          <span className="text-[10px] font-bold tracking-[0.12em] uppercase bg-white/10 text-white/50 px-2.5 py-1 rounded-full">
-            Internal
-          </span>
         </div>
 
         {/* Copy */}

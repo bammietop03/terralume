@@ -31,9 +31,139 @@ function generateReferenceNumber(): string {
   return `TL-${year}-${numeric}`;
 }
 
+// ── Public: Submit intake form from landing page (no auth required) ───────
+// Creates an intake submission without requiring authentication.
+// Admin will review and create a user account upon approval.
+
+export async function submitPublicIntakeForm(
+  formData: IntakeFormData,
+): Promise<{
+  success: boolean;
+  referenceNumber?: string;
+  error?: string;
+}> {
+  // Basic validation
+  if (!formData.selectedServices || formData.selectedServices.length === 0) {
+    return { success: false, error: "Please select at least one service." };
+  }
+
+  if (!formData.fullName?.trim()) {
+    return { success: false, error: "Full name is required." };
+  }
+
+  if (!formData.email?.includes("@")) {
+    return { success: false, error: "Valid email is required." };
+  }
+
+  if (!formData.phone?.trim()) {
+    return { success: false, error: "Phone number is required." };
+  }
+
+  // Generate unique reference number
+  let referenceNumber = generateReferenceNumber();
+  for (let i = 0; i < 5; i++) {
+    const exists = await prisma.intakeSubmission.findUnique({
+      where: { referenceNumber },
+    });
+    if (!exists) break;
+    referenceNumber = generateReferenceNumber();
+  }
+
+  // Create intake submission WITHOUT userId (will be linked later by admin)
+  const submission = await prisma.intakeSubmission.create({
+    data: {
+      referenceNumber,
+      status: "PENDING",
+      userId: null, // No user account yet
+      fullName: formData.fullName.trim(),
+      preferredName: formData.preferredName?.trim() || null,
+      email: formData.email.trim(),
+      phone: formData.phone.trim(),
+      location: formData.location || "",
+      nationality: formData.nationality || null,
+      selectedServices: formData.selectedServices,
+      transactionType: formData.transactionType || null,
+      purpose: formData.purpose || null,
+      energyNeedsDescription: formData.energyNeedsDescription || null,
+      currency: formData.currency || "NGN",
+      budgetMin: formData.budgetMin || null,
+      budgetMax: formData.budgetMax || null,
+      sourceOfFunds: formData.sourceOfFunds || null,
+      mortgageStatus: formData.mortgageStatus || null,
+      targetAreas: formData.targetAreas || [],
+      propertyType: formData.propertyType || null,
+      bedrooms: formData.bedrooms || null,
+      floorAreaSqm: formData.floorAreaSqm || null,
+      mustHaves: formData.mustHaves || [],
+      dealBreakers: formData.dealBreakers || null,
+      targetDate: formData.targetDate || null,
+      decisionSpeed: formData.decisionSpeed || null,
+      decisionMakers: formData.decisionMakers || null,
+      priorExperience: formData.priorExperience || null,
+      riskProfile: formData.riskProfile || null,
+      referralSource: formData.referralSource || null,
+      dataConsent: formData.dataConsent,
+      draftStep: null,
+    },
+  });
+
+  const displayName =
+    formData.preferredName || formData.fullName?.split(" ")[0] || "there";
+
+  // Send intake confirmation email (non-blocking)
+  const serviceNames = formData.selectedServices
+    .map((s) => {
+      if (s === "real-estate") return "Real Estate Advisory";
+      if (s === "renewable-energy") return "Renewable Energy";
+      return s;
+    })
+    .join(" + ");
+
+  try {
+    await sendEmail({
+      to: formData.email,
+      subject: `Enquiry received — your reference is ${referenceNumber}`,
+      html: intakeConfirmationEmailHtml({
+        clientName: displayName,
+        referenceNumber,
+        transactionType: formData.transactionType || serviceNames,
+        isNewUser: true,
+      }),
+    });
+  } catch {
+    // Non-blocking
+  }
+
+  // Notify all admins
+  try {
+    const notifContent = `New public intake submission from ${formData.fullName} for ${serviceNames} (${referenceNumber}).`;
+
+    const admins = await prisma.user.findMany({
+      where: { role: "ADMIN" },
+      select: { id: true },
+    });
+
+    void Promise.all(
+      admins.map((a) =>
+        createNotification({
+          userId: a.id,
+          type: "INTAKE_SUBMITTED",
+          content: notifContent,
+        }),
+      ),
+    );
+  } catch {
+    // Non-blocking
+  }
+
+  revalidatePath("/admin-portal/intake");
+
+  return { success: true, referenceNumber };
+}
+
 // ── Client: Submit intake form (portal only) ──────────────────────────────
 // Clients must be authenticated — accounts are created by admin via
-// "Proceed with intake" on the lead detail page.
+// "Proceed with intake" on the intake detail page.
 
 export async function submitIntakeForm(formData: IntakeFormData): Promise<{
   success: boolean;
@@ -43,8 +173,8 @@ export async function submitIntakeForm(formData: IntakeFormData): Promise<{
   const sessionUser = await requireClient().catch(() => null);
   if (!sessionUser) return { success: false, error: "Not authenticated." };
 
-  if (!formData.transactionType) {
-    return { success: false, error: "Required fields are missing." };
+  if (!formData.selectedServices || formData.selectedServices.length === 0) {
+    return { success: false, error: "Please select at least one service." };
   }
 
   const userId = sessionUser.id;
@@ -59,8 +189,10 @@ export async function submitIntakeForm(formData: IntakeFormData): Promise<{
     phone: formData.phone || sessionUser.phone || "",
     location: formData.location || sessionUser.location || "",
     nationality: formData.nationality || null,
-    transactionType: formData.transactionType,
+    selectedServices: formData.selectedServices || [],
+    transactionType: formData.transactionType || null,
     purpose: formData.purpose || null,
+    energyNeedsDescription: formData.energyNeedsDescription || null,
     currency: formData.currency || "NGN",
     budgetMin: formData.budgetMin || null,
     budgetMax: formData.budgetMax || null,
@@ -115,6 +247,14 @@ export async function submitIntakeForm(formData: IntakeFormData): Promise<{
     "there";
 
   // Send intake confirmation email (non-blocking)
+  const serviceNames = formData.selectedServices
+    .map((s) => {
+      if (s === "real-estate") return "Real Estate Advisory";
+      if (s === "renewable-energy") return "Renewable Energy";
+      return s;
+    })
+    .join(" + ");
+
   try {
     await sendEmail({
       to: sessionUser.email,
@@ -122,7 +262,7 @@ export async function submitIntakeForm(formData: IntakeFormData): Promise<{
       html: intakeConfirmationEmailHtml({
         clientName: displayName,
         referenceNumber,
-        transactionType: formData.transactionType,
+        transactionType: formData.transactionType || serviceNames,
         isNewUser: false,
       }),
     });
@@ -130,51 +270,39 @@ export async function submitIntakeForm(formData: IntakeFormData): Promise<{
     // Non-blocking
   }
 
-  // Update lead status and notify PM (non-blocking)
+  // Notify admins and assigned PM
   try {
-    const lead = await prisma.lead.findFirst({
-      where: {
-        OR: [{ userId }, { email: sessionUser.email }],
-        NOT: { status: "DECLINED" },
-      },
-      select: { id: true, assignedPmId: true, fullName: true },
+    const notifContent = `${displayName} has submitted an intake form for ${serviceNames} (${referenceNumber}).`;
+
+    // Get user's assigned PM
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: { assignedPmId: true },
     });
 
-    if (lead) {
-      await prisma.lead.update({
-        where: { id: lead.id },
-        data: { status: "INTAKE_SUBMITTED" },
+    // Notify assigned PM
+    if (user?.assignedPmId) {
+      void createNotification({
+        userId: user.assignedPmId,
+        type: "INTAKE_SUBMITTED",
+        content: notifContent,
       });
+    }
 
-      const notifContent = `${displayName} has submitted their intake form (${referenceNumber}).`;
-
-      // Notify assigned PM
-      if (lead.assignedPmId) {
-        void createNotification({
-          userId: lead.assignedPmId,
+    // Notify all admins
+    const admins = await prisma.user.findMany({
+      where: { role: "ADMIN" },
+      select: { id: true },
+    });
+    void Promise.all(
+      admins.map((a) =>
+        createNotification({
+          userId: a.id,
           type: "INTAKE_SUBMITTED",
           content: notifContent,
-        });
-      }
-
-      // Notify all admins
-      const admins = await prisma.user.findMany({
-        where: { role: "ADMIN" },
-        select: { id: true },
-      });
-      void Promise.all(
-        admins.map((a) =>
-          createNotification({
-            userId: a.id,
-            type: "INTAKE_SUBMITTED",
-            content: notifContent,
-          }),
-        ),
-      );
-
-      revalidatePath("/admin-portal/leads");
-      revalidatePath(`/admin-portal/leads/${lead.id}`);
-    }
+        }),
+      ),
+    );
   } catch {
     // Non-blocking
   }
@@ -187,7 +315,7 @@ export async function submitIntakeForm(formData: IntakeFormData): Promise<{
     "INTAKE_SUBMITTED",
     "IntakeSubmission",
     referenceNumber,
-    { transactionType: formData.transactionType },
+    { selectedServices: formData.selectedServices },
   );
 
   return { success: true, referenceNumber };
@@ -201,8 +329,8 @@ export async function submitIntakeFormForClient(
 ): Promise<{ success: boolean; referenceNumber?: string; error?: string }> {
   await requireAdmin();
 
-  if (!formData.transactionType) {
-    return { success: false, error: "Required fields are missing." };
+  if (!formData.selectedServices || formData.selectedServices.length === 0) {
+    return { success: false, error: "Please select at least one service." };
   }
 
   const client = await prisma.user.findUnique({ where: { id: clientId } });
@@ -227,8 +355,10 @@ export async function submitIntakeFormForClient(
       phone: client.phone ?? formData.phone,
       location: client.location ?? formData.location,
       nationality: client.nationality ?? formData.nationality ?? null,
-      transactionType: formData.transactionType,
+      selectedServices: formData.selectedServices || [],
+      transactionType: formData.transactionType || null,
       purpose: formData.purpose || null,
+      energyNeedsDescription: formData.energyNeedsDescription || null,
       currency: formData.currency || "NGN",
       budgetMin: formData.budgetMin || null,
       budgetMax: formData.budgetMax || null,
@@ -310,11 +440,12 @@ export async function getIntakeSubmissionById(id: string) {
               photoUrl: true,
             },
           },
-          engagements: {
-            where: { status: "active" },
-            take: 1,
-            select: { id: true },
-          },
+        },
+      },
+      engagement: {
+        select: {
+          id: true,
+          status: true,
         },
       },
     },
@@ -463,8 +594,10 @@ export async function saveIntakeDraft(
     // Optional fields
     preferredName: formData.preferredName?.trim() || null,
     nationality: formData.nationality?.trim() || null,
-    transactionType: formData.transactionType || "",
+    selectedServices: formData.selectedServices ?? [],
+    transactionType: formData.transactionType || null,
     purpose: formData.purpose || null,
+    energyNeedsDescription: formData.energyNeedsDescription || null,
     currency: formData.currency || "NGN",
     budgetMin: formData.budgetMin || null,
     budgetMax: formData.budgetMax || null,
@@ -549,6 +682,7 @@ export async function getMyIntakeDraft(): Promise<{
     id: draft.id,
     draftStep: draft.draftStep ?? 1,
     data: {
+      selectedServices: draft.selectedServices ?? [],
       transactionType: draft.transactionType ?? "",
       purpose: draft.purpose ?? "",
       fullName: draft.fullName ?? "",
@@ -563,6 +697,7 @@ export async function getMyIntakeDraft(): Promise<{
       floorAreaSqm: draft.floorAreaSqm ?? "",
       mustHaves: draft.mustHaves ?? [],
       dealBreakers: draft.dealBreakers ?? "",
+      energyNeedsDescription: draft.energyNeedsDescription ?? "",
       currency: draft.currency ?? "NGN",
       budgetMin: draft.budgetMin ?? "",
       budgetMax: draft.budgetMax ?? "",
@@ -600,4 +735,166 @@ export async function deleteIntakeSubmission(
 
   revalidatePath("/admin-portal/intake");
   return { ok: true };
+}
+
+// ── Admin: create user account from intake submission ─────────────────────
+
+/**
+ * Creates a client account from a public intake submission.
+ * Links the submission to the new user and sends welcome email.
+ */
+export async function createAccountFromIntake(
+  intakeId: string,
+): Promise<{ success: boolean; userId?: string; error?: string }> {
+  const admin = await requireAdmin();
+
+  // Get the intake submission
+  const submission = await prisma.intakeSubmission.findUnique({
+    where: { id: intakeId },
+    select: {
+      id: true,
+      userId: true,
+      email: true,
+      fullName: true,
+      preferredName: true,
+      phone: true,
+      location: true,
+      nationality: true,
+      referenceNumber: true,
+      status: true,
+    },
+  });
+
+  if (!submission) {
+    return { success: false, error: "Intake submission not found." };
+  }
+
+  if (submission.userId) {
+    return {
+      success: false,
+      error: "This intake already has an associated user account.",
+    };
+  }
+
+  // Check if email already exists
+  const existingUser = await prisma.user.findUnique({
+    where: { email: submission.email },
+    select: { id: true },
+  });
+
+  if (existingUser) {
+    // Link existing user to this intake
+    await prisma.intakeSubmission.update({
+      where: { id: intakeId },
+      data: { userId: existingUser.id, status: "REVIEWING" },
+    });
+
+    revalidatePath("/admin-portal/intake");
+    revalidatePath(`/admin-portal/intake/${intakeId}`);
+
+    void logAudit(
+      admin.id,
+      "INTAKE_STATUS_CHANGED",
+      "IntakeSubmission",
+      intakeId,
+      {
+        userId: existingUser.id,
+        linkedToExistingUser: true,
+      },
+    );
+
+    return {
+      success: true,
+      userId: existingUser.id,
+    };
+  }
+
+  // Create new Supabase auth user
+  const { createAdminClient } = await import("@/lib/supabase/admin");
+  const adminClient = createAdminClient();
+
+  const { data: authData, error: authError } =
+    await adminClient.auth.admin.createUser({
+      email: submission.email,
+      email_confirm: true,
+      user_metadata: { full_name: submission.fullName },
+    });
+
+  if (authError || !authData.user) {
+    return {
+      success: false,
+      error: authError?.message ?? "Failed to create auth user",
+    };
+  }
+
+  const uid = authData.user.id;
+
+  // Create Prisma user record
+  const user = await prisma.user.create({
+    data: {
+      id: uid,
+      email: submission.email,
+      fullName: submission.fullName,
+      preferredName: submission.preferredName,
+      phone: submission.phone,
+      location: submission.location,
+      nationality: submission.nationality,
+      role: "CLIENT",
+    },
+  });
+
+  // Link intake submission to new user
+  await prisma.intakeSubmission.update({
+    where: { id: intakeId },
+    data: {
+      userId: user.id,
+      status: "REVIEWING",
+    },
+  });
+
+  // Generate password-setup link
+  const { data: linkData, error: linkError } =
+    await adminClient.auth.admin.generateLink({
+      type: "recovery",
+      email: submission.email,
+    });
+
+  const setupUrl =
+    !linkError && linkData?.properties?.action_link
+      ? linkData.properties.action_link
+      : `${PORTAL_BASE}/reset-password`;
+
+  // Send welcome email
+  try {
+    const { welcomeEmailHtml } = await import("@/lib/email-templates");
+    await sendEmail({
+      to: submission.email,
+      subject: "Welcome to Terralume — set up your account",
+      html: welcomeEmailHtml({
+        clientName: submission.preferredName || submission.fullName,
+        loginUrl: setupUrl,
+      }),
+    });
+  } catch {
+    // Email failure should not roll back user creation
+  }
+
+  // Notify the user about account approval
+  await createNotification({
+    userId: user.id,
+    type: "INTAKE_SUBMITTED",
+    content: `Your intake submission (${submission.referenceNumber}) has been approved. Welcome to Terralume!`,
+  });
+
+  revalidatePath("/admin-portal/intake");
+  revalidatePath(`/admin-portal/intake/${intakeId}`);
+  revalidatePath("/admin-portal/users/clients");
+
+  void logAudit(admin.id, "USER_CREATED", "User", user.id, {
+    intakeId,
+    referenceNumber: submission.referenceNumber,
+    createdFromIntake: true,
+  });
+
+  return { success: true, userId: user.id };
 }

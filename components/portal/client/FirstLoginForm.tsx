@@ -2,6 +2,7 @@
 
 import { useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 import { Eye, EyeOff, Loader2, CheckCircle2, ChevronRight } from "lucide-react";
 import { toast } from "sonner";
 import { createClient } from "@/lib/supabase/client";
@@ -76,9 +77,14 @@ export default function FirstLoginForm({
       <div className="w-full max-w-lg">
         {/* Logo */}
         <div className="text-center mb-8">
-          <span className="font-display text-2xl font-bold tracking-tight text-navy-dark">
-            Terra<span className="text-(--color-gold)">lume</span>
-          </span>
+          <Image
+            src="/images/terralume-logo.png"
+            alt="Terralume"
+            width={180}
+            height={50}
+            className="mx-auto h-10 w-auto"
+            priority
+          />
         </div>
 
         {/* Step indicator */}

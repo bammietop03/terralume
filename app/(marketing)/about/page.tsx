@@ -144,17 +144,13 @@ export default function AboutPage() {
                   Lagos property buyers every year.
                 </p>
                 <p>
-                  Terralume was founded on a single conviction: that buyers
-                  deserve professional representation, accountable to them
-                  alone. We charge a fixed advisory fee — published publicly —
-                  and we take no commission from any seller, landlord, or
-                  developer, under any circumstance.
-                </p>
-                <p>
-                  Since 2022, we have advised over 180 clients across more than
-                  ₦12 billion in protected transactions. Not one client has
+                  Since 2022, Terralume has stood entirely on the side of the
+                  buyer. We have advised over 180 clients across more than ₦12
+                  billion in property transactions — and not one client has
                   suffered a title dispute or fraud loss on a Terralume-advised
-                  purchase.
+                  purchase. Our mandate is simple: protect the buyer. Every
+                  recommendation we make, every developer we vet, and every
+                  title we verify is done with one interest in mind — yours.
                 </p>
               </div>
             </div>
@@ -272,7 +268,7 @@ export default function AboutPage() {
               <span className="h-px w-8 bg-gold" />
             </div>
             <h2 className="mb-6 font-display text-4xl font-bold text-navy">
-              Who works for the buyer in Lagos?
+              Who works for the buyer
             </h2>
             <p className="text-[16px] leading-relaxed text-on-surface-muted">
               Traditional agents are paid by and loyal to the seller. Developers

@@ -25,7 +25,7 @@ const footerLinks = {
     { label: "How It Works", href: "/how-it-works" },
     { label: "About Terralume", href: "/about" },
     { label: "Market Intelligence", href: "/market-intelligence" },
-    { label: "Free Consultation", href: "/consultation" },
+    { label: "Free Consultation", href: "/get-started" },
     { label: "Contact", href: "/contact" },
   ],
 };
@@ -217,8 +217,9 @@ export function Footer() {
         {/* Bottom bar */}
         <div className="flex flex-col gap-3 border-t border-white/8 py-6 sm:flex-row sm:items-center sm:justify-between">
           <p className="text-[12px] text-white/30">
-            © {new Date().getFullYear()} Terralume Ltd. All rights reserved.
-            {/* · CAC No. RC 1847392 · LASRERA/2024/BUY/00471 */}
+            © {new Date().getFullYear()} Terralume Ltd. All rights reserved. ·
+            CAC No. 9661442
+            {/* · LASRERA/2024/BUY/00471 */}
           </p>
           <div className="flex gap-5">
             {[

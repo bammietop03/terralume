@@ -29,11 +29,16 @@ const STATUS_META: Record<string, { label: string; className: string }> = {
   },
 };
 
-const TYPE_LABEL: Record<string, string> = {
-  rent: "Rental",
-  buy: "Purchase",
-  lease: "Commercial Lease",
+const SERVICE_LABELS: Record<string, string> = {
+  "real-estate": "Real Estate",
+  "renewable-energy": "Renewable Energy",
 };
+
+function getServicesLabel(selectedServices: string[]): string {
+  if (!selectedServices || selectedServices.length === 0) return "—";
+  if (selectedServices.length === 2) return "Integrated Solution";
+  return selectedServices.map((s) => SERVICE_LABELS[s] || s).join(", ");
+}
 
 function formatDate(date: Date) {
   return new Date(date).toLocaleDateString("en-GB", {
@@ -154,7 +159,7 @@ export default async function AdminIntakePage() {
                     Email
                   </th>
                   <th className="text-left px-4 py-3 text-xs font-semibold uppercase tracking-wide text-on-surface-muted hidden sm:table-cell">
-                    Type
+                    Services
                   </th>
                   <th className="text-left px-4 py-3 text-xs font-semibold uppercase tracking-wide text-on-surface-muted hidden lg:table-cell">
                     Location
@@ -198,8 +203,8 @@ export default async function AdminIntakePage() {
                         {s.email}
                       </td>
                       <td className="px-4 py-3.5 hidden sm:table-cell">
-                        <span className="text-on-surface">
-                          {TYPE_LABEL[s.transactionType] ?? s.transactionType}
+                        <span className="text-on-surface text-xs">
+                          {getServicesLabel(s.selectedServices)}
                         </span>
                       </td>
                       <td className="px-4 py-3.5 text-on-surface-muted hidden lg:table-cell">

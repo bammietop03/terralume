@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import { updateEngagementStatus } from "@/app/actions/admin";
+import { updateEngagementStatus } from "@/app/actions/engagements";
 import { Button } from "@/components/ui/button";
 import {
   Select,
@@ -33,7 +33,10 @@ export default function UpdateStatusForm({
 
   function handleSave() {
     startTransition(async () => {
-      await updateEngagementStatus(engagementId, status);
+      await updateEngagementStatus(
+        engagementId,
+        status as "ACTIVE" | "COMPLETED" | "PAUSED" | "CANCELLED",
+      );
       setSaved(true);
       setTimeout(() => setSaved(false), 2000);
     });

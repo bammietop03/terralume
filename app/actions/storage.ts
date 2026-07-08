@@ -241,6 +241,17 @@ export async function uploadEngagementDocument(
         }),
       }),
     ]);
+
+    // Log activity to timeline
+    const { TimelineService } = await import("@/services/TimelineService");
+    await TimelineService.logActivity({
+      engagementId,
+      actorId: admin.id,
+      actorRole: admin.role,
+      actionType: "DOCUMENT_UPLOADED",
+      description: `Document uploaded: ${file.name}`,
+      metadata: { documentId: doc.id, category, fileName: file.name },
+    });
   }
 
   const { revalidatePath } = await import("next/cache");
@@ -248,6 +259,100 @@ export async function uploadEngagementDocument(
   revalidatePath("/client-portal/engagement");
 
   void logAudit(admin.id, "DOCUMENT_UPLOADED", "Document", doc.id, {
+    engagementId,
+    category,
+    fileName: file.name,
+  });
+
+  return { ok: true, documentId: doc.id };
+}
+
+export async function clientUploadEngagementDocument(
+  formData: FormData,
+  engagementId: string,
+  category: string,
+  title?: string,
+): Promise<{ ok: true; documentId: string } | { ok: false; error: string }> {
+  const { getSessionUser } = await import("./auth");
+  const client = await getSessionUser();
+  if (!client || client.role !== "CLIENT") {
+    return { ok: false, error: "Not authorised." };
+  }
+
+  const file = formData.get("file");
+  if (!(file instanceof File)) return { ok: false, error: "No file provided." };
+
+  if (!ALLOWED_DOC_MIME.has(file.type)) {
+    return { ok: false, error: "Unsupported file type." };
+  }
+  if (file.size > DOC_MAX_BYTES) {
+    return { ok: false, error: "File must be under 20 MB." };
+  }
+
+  const { prisma } = await import("@/lib/prisma");
+
+  // Verify ownership
+  const engagement = await prisma.engagement.findUnique({
+    where: { id: engagementId },
+    select: { userId: true, pmId: true },
+  });
+
+  if (!engagement || engagement.userId !== client.id) {
+    return { ok: false, error: "Not authorised." };
+  }
+
+  const rawExt = file.name.split(".").pop()?.toLowerCase() ?? "pdf";
+  const ext = ALLOWED_DOC_EXT.has(rawExt) ? rawExt : "pdf";
+  const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, "_");
+  const filePath = `${engagementId}/${crypto.randomUUID()}-${safeName}`;
+
+  const supabase = createAdminClient();
+  const arrayBuffer = await file.arrayBuffer();
+
+  const { error: uploadError } = await supabase.storage
+    .from(DOC_BUCKET)
+    .upload(filePath, arrayBuffer, { contentType: file.type, upsert: false });
+
+  if (uploadError) return { ok: false, error: uploadError.message };
+
+  const doc = await prisma.document.create({
+    data: {
+      engagementId,
+      name: file.name,
+      title: title?.trim() || null,
+      category: category || null,
+      filePath,
+      uploadedBy: client.id,
+      isClientVisible: true,
+    },
+  });
+
+  // Notify the PM or admins
+  const { createNotification } = await import("./notifications");
+  
+  if (engagement.pmId) {
+    await createNotification({
+      userId: engagement.pmId,
+      type: "new_document",
+      content: `A new document "${file.name}" has been uploaded by the client.`,
+    });
+  }
+
+  const { TimelineService } = await import("@/services/TimelineService");
+  await TimelineService.logActivity({
+    engagementId,
+    actorId: client.id,
+    actorRole: client.role,
+    actionType: "DOCUMENT_UPLOADED",
+    description: `Document uploaded: ${file.name}`,
+    metadata: { documentId: doc.id, category, fileName: file.name },
+  });
+
+  const { revalidatePath } = await import("next/cache");
+  revalidatePath(`/admin-portal/engagements/${engagementId}`);
+  revalidatePath("/client-portal/engagement");
+
+  void logAudit(client.id, "DOCUMENT_UPLOADED", "Document", doc.id, {
     engagementId,
     category,
     fileName: file.name,
@@ -302,4 +407,39 @@ export async function getDocumentSignedUrl(
     return { ok: false, error: error?.message ?? "Could not generate URL." };
   }
   return { ok: true, url: data.signedUrl };
+}
+
+/** Get all documents for an engagement */
+export async function getEngagementDocuments(engagementId: string) {
+  const { getSessionUser } = await import("./auth");
+  const { prisma } = await import("@/lib/prisma");
+
+  const user = await getSessionUser();
+  if (!user) throw new Error("Not authenticated.");
+
+  const engagement = await prisma.engagement.findUnique({
+    where: { id: engagementId },
+    select: { userId: true, pmId: true },
+  });
+  if (!engagement) throw new Error("Engagement not found.");
+
+  // Clients can only see their own engagement documents
+  // PM can only see engagements they manage
+  // Admins can see all
+  if (user.role === "CLIENT" && engagement.userId !== user.id) {
+    throw new Error("Not authorised.");
+  }
+  if (user.role === "PM" && engagement.pmId !== user.id) {
+    throw new Error("Not authorised.");
+  }
+
+  const where =
+    user.role === "CLIENT"
+      ? { engagementId, isClientVisible: true }
+      : { engagementId };
+
+  return prisma.document.findMany({
+    where,
+    orderBy: { uploadedAt: "desc" },
+  });
 }

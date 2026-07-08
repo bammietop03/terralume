@@ -2,13 +2,14 @@
 
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import { CheckCircle2 } from "lucide-react";
 import LoginForm from "@/components/auth/LoginForm";
 
 const FEATURES = [
-  "100% buyer-side only — we never represent sellers",
-  "8-stage advisory process, start to finish",
-  "Dedicated project manager for every client",
+  "Guided real estate and energy projects from start to finish",
+  "Dedicated project manager for every engagement",
+  "Track milestones, documents, approvals, and progress in one place",
 ];
 
 export default function LoginPageClient() {
@@ -38,10 +39,15 @@ export default function LoginPageClient() {
 
         {/* Logo */}
         <div className="relative z-10">
-          <Link href="/" className="inline-block">
-            <span className="font-display text-2xl font-bold text-white tracking-tight">
-              Terra<span className="text-(--color-gold)">lume</span>
-            </span>
+          <Link href="/" className="inline-block" aria-label="Terralume home">
+            <Image
+              src="/images/terralume-logo.png"
+              alt="Terralume"
+              width={180}
+              height={50}
+              className="h-10 w-auto"
+              priority
+            />
           </Link>
         </div>
 
@@ -51,13 +57,16 @@ export default function LoginPageClient() {
             Client Portal
           </p>
           <h1 className="font-display text-[2.6rem] font-bold text-white leading-[1.15] mb-5">
-            Your home in Lagos,
+            Every project,
             <br />
-            <em className="not-italic text-(--color-gold)">expertly guided.</em>
+            <em className="not-italic text-(--color-gold)">
+              expertly managed.
+            </em>
           </h1>
           <p className="text-white/55 text-[0.9rem] leading-relaxed mb-8 max-w-xs">
-            Track your search, review property shortlists, and stay connected
-            with your advisory team — all in one place.
+            Monitor your real estate or energy project, review important
+            documents, track milestones, and collaborate with your dedicated
+            project team—all from one secure portal.
           </p>
           <ul className="space-y-3.5">
             {FEATURES.map((f) => (
@@ -78,12 +87,12 @@ export default function LoginPageClient() {
         {/* Footer note */}
         <div className="relative z-10">
           <p className="text-white/35 text-xs">
-            Not yet a client?{" "}
+            Not working with Terralume yet?{" "}
             <Link
-              href="/consultation"
+              href="/get-started"
               className="text-white/60 underline underline-offset-2 hover:text-white transition-colors"
             >
-              Book a consultation →
+              Start Intake Form →
             </Link>
           </p>
         </div>
@@ -113,14 +122,14 @@ export default function LoginPageClient() {
             </a>
           </p>
 
-          <div className="mt-6 pt-6 border-t border-(--color-divider) text-center">
+          {/* <div className="mt-6 pt-6 border-t border-(--color-divider) text-center">
             <Link
               href="/admin-login"
               className="text-xs text-on-surface-muted hover:text-on-surface transition-colors"
             >
               Terralume team? Sign in here →
             </Link>
-          </div>
+          </div> */}
         </div>
       </div>
     </div>

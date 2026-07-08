@@ -2,7 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
-import { createEngagement } from "@/app/actions/admin";
+import { createEngagementFromIntake } from "@/app/actions/engagements";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -51,12 +51,8 @@ export default function ActivateClientForm({
     setError("");
     startTransition(async () => {
       try {
-        await createEngagement({
-          userId,
+        await createEngagementFromIntake({
           intakeSubmissionId: submissionId,
-          serviceTierId: serviceTierId || null,
-          startDate: startDate || null,
-          targetDate: targetDate || null,
         });
         router.push(`/admin-portal/clients/${userId}`);
       } catch (err) {

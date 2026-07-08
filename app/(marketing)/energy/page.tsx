@@ -21,7 +21,7 @@ import PageHero from "@/components/layout/PageHero";
 import { FooterCTA } from "@/components/home/FooterCTA";
 
 export const metadata: Metadata = {
-  title: "Renewable Energy Acquisition Service (EaaS) — Terralume",
+  title: "Renewable Energy Acquisition Service — Terralume",
   description:
     "Reliable power, sized for how you actually live and work. Terralume consults first, then matches the right vetted solution — residential, estate, or commercial scale.",
   openGraph: {
@@ -144,7 +144,7 @@ export default function EnergyPage() {
         actions={
           <>
             <Button asChild size="lg" variant="secondary">
-              <Link href="/consultation">
+              <Link href="/get-started">
                 Start an energy assessment
                 <ArrowRight size={16} className="ml-2" />
               </Link>
@@ -231,7 +231,7 @@ export default function EnergyPage() {
 
           <div className="mt-10 flex justify-center">
             <Button asChild size="lg" variant="secondary">
-              <Link href="/consultation">
+              <Link href="/get-started">
                 Start an energy needs assessment
                 <ArrowRight size={16} className="ml-2" />
               </Link>
@@ -261,7 +261,7 @@ export default function EnergyPage() {
               </p>
               <div className="mt-8">
                 <Button asChild variant="default" size="lg">
-                  <Link href="/consultation">
+                  <Link href="/get-started">
                     Start an energy needs assessment
                     <ArrowRight size={16} className="ml-2" />
                   </Link>
@@ -376,7 +376,7 @@ export default function EnergyPage() {
                 </p>
               </div>
               <Button asChild variant="default" size="lg" className="shrink-0">
-                <Link href="/consultation">
+                <Link href="/get-started">
                   Start an assessment
                   <ArrowRight size={16} className="ml-2" />
                 </Link>

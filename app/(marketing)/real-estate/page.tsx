@@ -159,7 +159,7 @@ export default function RealEstatePage() {
         actions={
           <>
             <Button asChild size="lg" variant="secondary">
-              <Link href="/consultation">
+              <Link href="/get-started">
                 Start a property intake
                 <ArrowRight size={16} className="ml-2" />
               </Link>
@@ -259,7 +259,7 @@ export default function RealEstatePage() {
               </h2>
             </div>
             <Button asChild variant="default" size="lg">
-              <Link href="/consultation">
+              <Link href="/get-started">
                 Start a property intake
                 <ArrowRight size={16} className="ml-2" />
               </Link>
@@ -396,7 +396,7 @@ export default function RealEstatePage() {
                 </p>
               </div>
               <Button asChild variant="default" size="lg" className="shrink-0">
-                <Link href="/consultation">
+                <Link href="/get-started">
                   Start a property intake
                   <ArrowRight size={16} className="ml-2" />
                 </Link>
@@ -454,7 +454,7 @@ export default function RealEstatePage() {
 
           <div className="mt-12 flex justify-center">
             <Button asChild size="lg" variant="secondary">
-              <Link href="/consultation">
+              <Link href="/get-started">
                 Start a property intake
                 <ArrowRight size={16} className="ml-2" />
               </Link>

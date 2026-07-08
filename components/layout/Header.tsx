@@ -85,23 +85,23 @@ export function Header() {
           <div className="flex items-center gap-3 shrink-0">
             <Button
               asChild
-              size="lg"
+              size="sm"
               variant="secondary"
               className="hidden lg:inline-flex gap-2"
             >
-              <Link href="/consultation">
+              <Link href="/get-started">
                 Get Started
                 <ArrowRight size={16} />
               </Link>
             </Button>
-            {/* <Button
+            <Button
               asChild
               size="sm"
               variant="outline"
               className="hidden lg:inline-flex"
             >
               <Link href="/login">Log In</Link>
-            </Button> */}
+            </Button>
             <button
               className="lg:hidden p-2 rounded-sm text-white/70 hover:text-white hover:bg-white/10 transition-colors"
               onClick={() => setMobileOpen(!mobileOpen)}
@@ -140,13 +140,13 @@ export function Header() {
             );
           })}
           <div className="pt-4 flex flex-col gap-2">
-            {/* <Button asChild variant="outline" className="w-full">
+            <Button asChild variant="outline" className="w-full">
               <Link href="/login" onClick={() => setMobileOpen(false)}>
                 Log In
               </Link>
-            </Button> */}
+            </Button>
             <Button asChild variant="secondary" className="w-full">
-              <Link href="/consultation" onClick={() => setMobileOpen(false)}>
+              <Link href="/get-started" onClick={() => setMobileOpen(false)}>
                 Get Started
               </Link>
             </Button>

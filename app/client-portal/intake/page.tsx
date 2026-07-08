@@ -45,16 +45,24 @@ function formatDate(date: Date) {
   });
 }
 
-function stepLabel(step: number | null) {
-  const labels = [
-    "Goal",
-    "About you",
-    "Property",
-    "Budget",
-    "Timeline",
-    "Review",
-  ];
+function stepLabel(step: number | null, selectedServices?: string[]) {
   if (!step || step < 1) return null;
+
+  const labels =
+    selectedServices?.length === 1
+      ? selectedServices[0] === "renewable-energy"
+        ? ["Energy needs", "About you", "Budget", "Timeline", "Review"]
+        : ["Goal", "About you", "Property", "Budget", "Timeline", "Review"]
+      : [
+          "Service",
+          "Goal",
+          "About you",
+          "Property",
+          "Budget",
+          "Timeline",
+          "Review",
+        ];
+
   return labels[step - 1] ?? null;
 }
 
@@ -111,8 +119,8 @@ export default async function ClientIntakePage() {
               </p>
               <p className="text-xs text-on-surface-muted mt-0.5">
                 Saved at step {draft.draftStep ?? 1}
-                {stepLabel(draft.draftStep)
-                  ? ` · ${stepLabel(draft.draftStep)}`
+                {stepLabel(draft.draftStep, draft.selectedServices)
+                  ? ` · ${stepLabel(draft.draftStep, draft.selectedServices)}`
                   : ""}{" "}
                 · last saved {formatDate(draft.updatedAt)}
               </p>
@@ -172,7 +180,9 @@ export default async function ClientIntakePage() {
                       </span>
                     </div>
                     <p className="text-sm font-medium text-on-surface mt-0.5">
-                      {TYPE_LABEL[s.transactionType] ?? s.transactionType}
+                      {s.transactionType
+                        ? (TYPE_LABEL[s.transactionType] ?? s.transactionType)
+                        : "Intake submission"}
                     </p>
                     <p className="text-xs text-on-surface-muted">
                       Submitted {formatDate(s.createdAt)}

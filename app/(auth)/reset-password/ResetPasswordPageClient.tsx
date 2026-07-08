@@ -3,6 +3,7 @@
 import { useEffect, useState, type FormEvent } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import { Loader2, CheckCircle2, Mail } from "lucide-react";
 import { toast } from "sonner";
 import { createClient } from "@/lib/supabase/client";
@@ -76,10 +77,15 @@ export default function ResetPasswordPageClient() {
 
         {/* Logo */}
         <div className="relative z-10">
-          <Link href="/" className="inline-block">
-            <span className="font-display text-2xl font-bold text-white tracking-tight">
-              Terra<span className="text-(--color-gold)">lume</span>
-            </span>
+          <Link href="/" className="inline-block" aria-label="Terralume home">
+            <Image
+              src="/images/terralume-logo.png"
+              alt="Terralume"
+              width={180}
+              height={50}
+              className="h-10 w-auto"
+              priority
+            />
           </Link>
         </div>
 

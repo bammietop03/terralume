@@ -5,7 +5,10 @@ import { revalidatePath } from "next/cache";
 import { requireAdmin, getSessionUser } from "./auth";
 import { createNotification } from "./notifications";
 import { sendEmail } from "@/lib/email";
-import { invoiceIssuedEmailHtml } from "@/lib/email-templates";
+import {
+  invoiceIssuedEmailHtml,
+  paymentReceiptEmailHtml,
+} from "@/lib/email-templates";
 import { maybeCompleteOnboarding } from "./agreements";
 import { logAudit } from "./audit";
 
@@ -105,7 +108,9 @@ export async function sendInvoice(invoiceId: string) {
     content: `Invoice ${invoice.invoiceNumber} for ${invoice.currency} ${invoice.amount.toLocaleString()} has been issued.`,
   });
 
+  revalidatePath(`/admin-portal/engagements/${invoice.engagementId}`);
   revalidatePath(`/admin-portal/clients/${client.id}`);
+  revalidatePath(`/client-portal/engagement/${invoice.engagementId}`);
   revalidatePath("/client-portal/payments");
 
   void logAudit(admin.id, "INVOICE_SENT", "Invoice", invoiceId);
@@ -154,12 +159,49 @@ export async function getInvoiceById(invoiceId: string) {
 export async function markInvoicePaid(paystackReference: string, paidAt: Date) {
   const invoice = await prisma.invoice.findFirst({
     where: { paystackReference },
+    include: { engagement: { include: { user: true } } },
   });
   if (!invoice) return null;
 
   const updated = await prisma.invoice.update({
     where: { id: invoice.id },
     data: { status: "PAID", paidAt },
+  });
+
+  // Create payment record
+  await prisma.payment.create({
+    data: {
+      engagementId: invoice.engagementId,
+      amount: invoice.amount,
+      currency: invoice.currency,
+      provider: "PAYSTACK",
+      status: "SUCCESS",
+      reference: paystackReference,
+      paidAt,
+    },
+  });
+
+  const client = invoice.engagement.user;
+  const clientName = client.preferredName ?? client.fullName ?? "there";
+  const portalUrl = `${process.env.NEXT_PUBLIC_APP_URL}/client-portal/payments`;
+
+  await sendEmail({
+    to: client.email,
+    subject: `Payment Receipt — Invoice ${invoice.invoiceNumber}`,
+    html: paymentReceiptEmailHtml({
+      clientName,
+      invoiceNumber: invoice.invoiceNumber,
+      amount: invoice.amount,
+      currency: invoice.currency,
+      paidAt,
+      portalUrl,
+    }),
+  });
+
+  await createNotification({
+    userId: client.id,
+    type: "invoice_paid",
+    content: `Payment of ${invoice.currency} ${invoice.amount.toLocaleString()} received for Invoice ${invoice.invoiceNumber}.`,
   });
 
   await maybeCompleteOnboarding(invoice.engagementId, "");
@@ -170,6 +212,7 @@ export async function markInvoicePaid(paystackReference: string, paidAt: Date) {
   });
 
   revalidatePath("/client-portal/payments");
+  revalidatePath(`/admin-portal/engagements/${invoice.engagementId}`);
 
   return updated;
 }

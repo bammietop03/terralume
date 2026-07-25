@@ -519,3 +519,43 @@ export function newDocumentEmailHtml({
     </div>
   `;
 }
+
+export function paymentReceiptEmailHtml({
+  clientName,
+  invoiceNumber,
+  amount,
+  currency,
+  paidAt,
+  portalUrl,
+}: {
+  clientName: string;
+  invoiceNumber: string;
+  amount: number;
+  currency: string;
+  paidAt: Date;
+  portalUrl: string;
+}): string {
+  const formattedAmount = `${currency} ${amount.toLocaleString()}`;
+  const formattedDate = new Date(paidAt).toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" });
+
+  return `
+    <div style="${BASE_STYLE}">
+      <div style="${CARD_STYLE}">
+        <p style="margin:0 0 24px 0;">${LOGO}</p>
+        <h1 style="${HEADING_STYLE}">Payment Receipt</h1>
+        <p style="${BODY_STYLE}">Hi ${clientName}, we have received your payment for invoice ${invoiceNumber}.</p>
+        <div style="background:#f9fafb;border:1px solid #d3d1c7;border-radius:8px;padding:16px;margin:16px 0;">
+          <p style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#5f5e5a;margin:0 0 8px 0;">Payment details</p>
+          <p style="${BODY_STYLE}margin:0 0 4px 0;"><strong>Invoice Reference:</strong> ${invoiceNumber}</p>
+          <p style="${BODY_STYLE}margin:0 0 4px 0;"><strong>Amount Paid:</strong> ${formattedAmount}</p>
+          <p style="${BODY_STYLE}margin:0;"><strong>Date:</strong> ${formattedDate}</p>
+        </div>
+        <p style="${BODY_STYLE}">You can view your updated payment history in your portal.</p>
+        <div style="text-align:center;margin:24px 0;">
+          <a href="${portalUrl}" style="${CTA_STYLE}">View Dashboard</a>
+        </div>
+        ${FOOTER}
+      </div>
+    </div>
+  `;
+}

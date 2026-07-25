@@ -21,9 +21,22 @@ import {
 } from "lucide-react";
 import IntakeStatusSelect from "@/components/portal/admin/IntakeStatusSelect";
 import AssignPmButton from "@/components/portal/admin/AssignPmButton";
+import CreateEngagementButton from "@/components/portal/admin/CreateEngagementButton";
+import CreateAccountButton from "@/components/portal/admin/CreateAccountButton";
 import { Card, CardContent } from "@/components/ui/card";
 
 export const metadata = { title: "Intake Detail — Terralume Admin Portal" };
+
+const SERVICE_LABELS: Record<string, string> = {
+  "real-estate": "Real Estate Advisory",
+  "renewable-energy": "Renewable Energy Solutions",
+};
+
+function getServicesLabel(selectedServices: string[]): string {
+  if (!selectedServices || selectedServices.length === 0) return "—";
+  if (selectedServices.length >= 2) return "Integrated Solution";
+  return selectedServices.map((s) => SERVICE_LABELS[s] || s).join(" + ");
+}
 
 const TYPE_LABEL: Record<string, string> = {
   rent: "Rental",
@@ -145,12 +158,12 @@ export default async function AdminIntakeDetailPage({
   if (!submission) notFound();
 
   const pmOptions = staffUsers
-    .filter((u) => u.role === "PM")
+    // .filter((u) => u.role === "PM")
     .map((u) => ({
       id: u.id,
-      fullName: u.fullName,
+      fullName: u.fullName ?? "",
       email: u.email,
-      phone: u.phone,
+      phone: u.phone ?? "",
     }));
 
   // PM is now on the client User, not the submission
@@ -158,6 +171,13 @@ export default async function AdminIntakeDetailPage({
   const pmChangeRequested = submission.user?.pmChangeRequested ?? false;
   const pmChangeReason = submission.user?.pmChangeReason ?? null;
   const isSuperAdmin = user.role === "ADMIN";
+
+  // Check if engagement exists for this intake
+  const hasEngagement = submission.engagement != null;
+  const isRealEstateSelected =
+    submission.selectedServices?.includes("real-estate");
+  const isEnergySelected =
+    submission.selectedServices?.includes("renewable-energy");
 
   const statusMeta = STATUS_META[submission.status] ?? STATUS_META.PENDING;
 
@@ -203,8 +223,7 @@ export default async function AdminIntakeDetailPage({
           <p className="mt-0.5 text-xs text-on-surface-muted">
             {submission.referenceNumber}
             <span className="mx-1.5 text-divider-strong">·</span>
-            {TYPE_LABEL[submission.transactionType] ??
-              submission.transactionType}
+            {getServicesLabel(submission.selectedServices)}
             <span className="mx-1.5 text-divider-strong">·</span>
             {formatDate(submission.createdAt)}
           </p>
@@ -212,33 +231,6 @@ export default async function AdminIntakeDetailPage({
 
         {/* Status badge + selector */}
         <div className="flex flex-col sm:flex-row sm:items-center gap-2.5 shrink-0">
-          {/* PM assignment */}
-          <div className="flex items-center gap-2">
-            {assignedPm ? (
-              <div className="flex items-center gap-1.5 rounded-full border border-divider bg-surface-alt px-2.5 py-1">
-                <div className="flex h-5 w-5 items-center justify-center rounded-full bg-navy text-[10px] font-bold uppercase text-white">
-                  {assignedPm.fullName?.charAt(0) ?? <UserCircle size={12} />}
-                </div>
-                <span className="text-xs text-on-surface font-medium">
-                  {assignedPm.fullName ?? assignedPm.email}
-                </span>
-              </div>
-            ) : (
-              <span className="text-xs text-on-surface-muted italic">
-                No PM assigned
-              </span>
-            )}
-            {/* Only super-admin (ADMIN role) may assign/reassign PMs */}
-            {isSuperAdmin && submission.userId && (
-              <AssignPmButton
-                userId={submission.userId}
-                assignedPm={assignedPm}
-                pmChangeRequested={pmChangeRequested}
-                pmChangeReason={pmChangeReason}
-                pmOptions={pmOptions}
-              />
-            )}
-          </div>
 
           <div className="flex sm:flex-col items-center sm:items-end gap-2 sm:gap-1.5">
             <span
@@ -255,31 +247,55 @@ export default async function AdminIntakeDetailPage({
         </div>
       </div>
 
-      {/* Activate Client banner — ADMIN only, user exists, no engagement yet */}
-      {submission.userId &&
+      {/* Create Account banner — ADMIN only, no user account yet */}
+      {isSuperAdmin && !submission.userId && (
+        <div className="flex items-center justify-between gap-4 rounded-xl border border-emerald-200 bg-emerald-50 px-5 py-4">
+          <div className="flex items-center gap-3">
+            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-emerald-600 text-white">
+              <UserCircle size={16} />
+            </span>
+            <div>
+              <p className="text-sm font-semibold text-emerald-900">
+                No account exists for this intake
+              </p>
+              <p className="text-xs text-emerald-700">
+                Create a client account to proceed with this engagement.
+              </p>
+            </div>
+          </div>
+          <CreateAccountButton
+            intakeId={submission.id}
+            clientName={submission.fullName}
+            clientEmail={submission.email}
+          />
+        </div>
+      )}
+
+      {/* Create Engagement banner — ADMIN only, user exists, no engagement yet */}
+      {isSuperAdmin &&
+        submission.userId &&
         submission.user &&
-        (submission.user as { engagements?: { id: string }[] }).engagements
-          ?.length === 0 && (
-          <div className="flex items-center justify-between gap-4 rounded-xl border border-(--color-navy)/20 bg-(--color-navy-light) px-5 py-4">
+        !hasEngagement && (
+          <div className="flex items-center justify-between gap-4 rounded-xl border border-navy/20 bg-navy-light px-5 py-4">
             <div className="flex items-center gap-3">
-              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-(--color-navy) text-white">
+              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-navy text-white">
                 <Zap size={16} />
               </span>
               <div>
                 <p className="text-sm font-semibold text-on-surface">
-                  Activate this client
+                  Ready to create engagement
                 </p>
                 <p className="text-xs text-on-surface-muted">
-                  Create an engagement to begin work with this client.
+                  Create a project engagement based on selected services.
                 </p>
               </div>
             </div>
-            <Link
-              href={`/admin-portal/intake/${submission.id}/activate`}
-              className="shrink-0 rounded-xl bg-(--color-navy) px-4 py-2 text-sm font-semibold text-white hover:bg-(--color-navy-dark) transition-colors"
-            >
-              Activate →
-            </Link>
+            <CreateEngagementButton
+              intakeSubmissionId={submission.id}
+              assignedPmId={assignedPm?.id}
+              pmOptions={pmOptions}
+              clientName={submission.fullName}
+            />
           </div>
         )}
 
@@ -314,17 +330,37 @@ export default async function AdminIntakeDetailPage({
             )}
           </SectionCard>
 
-          {/* Goal */}
-          <SectionCard title="Goal & purpose" icon={Target}>
+          {/* Selected Services */}
+          <SectionCard title="Selected services" icon={ClipboardList}>
             <Field
-              label="Transaction type"
-              value={
-                TYPE_LABEL[submission.transactionType] ??
-                submission.transactionType
-              }
+              label="Services"
+              value={getServicesLabel(submission.selectedServices)}
+              span2
             />
-            <Field label="Purpose" value={submission.purpose} />
+            {isEnergySelected && (
+              <Field
+                label="Energy needs"
+                value={submission.energyNeedsDescription}
+                span2
+              />
+            )}
           </SectionCard>
+
+          {/* Goal (Real Estate only) */}
+          {isRealEstateSelected && (
+            <SectionCard title="Goal & purpose" icon={Target}>
+              <Field
+                label="Transaction type"
+                value={
+                  submission.transactionType
+                    ? (TYPE_LABEL[submission.transactionType] ??
+                      submission.transactionType)
+                    : null
+                }
+              />
+              <Field label="Purpose" value={submission.purpose} />
+            </SectionCard>
+          )}
 
           {/* Budget */}
           <SectionCard title="Budget & financing" icon={Wallet}>
@@ -341,19 +377,25 @@ export default async function AdminIntakeDetailPage({
 
         {/* RIGHT COLUMN */}
         <div className="space-y-4">
-          {/* Property */}
-          <SectionCard title="Property requirements" icon={Home}>
-            <Field label="Target areas" value={submission.targetAreas} span2 />
-            <Field label="Property type" value={submission.propertyType} />
-            <Field label="Min bedrooms" value={submission.bedrooms} />
-            <Field label="Floor area (sqm)" value={submission.floorAreaSqm} />
-            <Field label="Must-haves" value={submission.mustHaves} span2 />
-            <Field
-              label="Deal-breakers"
-              value={submission.dealBreakers}
-              span2
-            />
-          </SectionCard>
+          {/* Property (Real Estate only) */}
+          {isRealEstateSelected && (
+            <SectionCard title="Property requirements" icon={Home}>
+              <Field
+                label="Target areas"
+                value={submission.targetAreas}
+                span2
+              />
+              <Field label="Property type" value={submission.propertyType} />
+              <Field label="Min bedrooms" value={submission.bedrooms} />
+              <Field label="Floor area (sqm)" value={submission.floorAreaSqm} />
+              <Field label="Must-haves" value={submission.mustHaves} span2 />
+              <Field
+                label="Deal-breakers"
+                value={submission.dealBreakers}
+                span2
+              />
+            </SectionCard>
+          )}
 
           {/* Timeline */}
           <SectionCard title="Timeline & background" icon={Clock}>

@@ -67,7 +67,6 @@ export async function getClientDetail(userId: string) {
             },
           },
           agreement: { select: { status: true } },
-          tierRef: { select: { name: true } },
         },
       },
       enquiries: { orderBy: { createdAt: "desc" }, take: 1 },
@@ -146,171 +145,7 @@ export async function assignPM(engagementId: string, pmId: string) {
   revalidatePath("/admin-portal/clients");
 }
 
-// ─── Engagement creation ──────────────────────────────────────────────────────
 
-const STAGE_LABELS: Record<string, string> = {
-  discovery: "Discovery",
-  brief_confirmation: "Brief Confirmation",
-  area_shortlisting: "Area Shortlisting",
-  property_search: "Property Search",
-  due_diligence: "Due Diligence",
-  offer_negotiation: "Offer & Negotiation",
-  legal_completion: "Legal & Completion",
-  handover: "Handover",
-  active_client: "Active Client",
-};
-
-export async function createEngagement({
-  userId,
-  intakeSubmissionId,
-  serviceTier,
-  serviceTierId,
-  startDate,
-  targetDate,
-}: {
-  userId: string;
-  intakeSubmissionId?: string | null;
-  serviceTier?: string | null;
-  serviceTierId?: string | null;
-  startDate?: string | null;
-  targetDate?: string | null;
-}) {
-  const admin = await requireAdmin();
-
-  // Auto-assign the client's existing PM to the engagement
-  const client = await prisma.user.findUnique({
-    where: { id: userId },
-    select: {
-      email: true,
-      fullName: true,
-      preferredName: true,
-      assignedPmId: true,
-    },
-  });
-
-  // Resolve tier name from DB if tierId provided
-  let resolvedTierName = serviceTier ?? null;
-  if (serviceTierId) {
-    const tier = await prisma.serviceTier.findUnique({
-      where: { id: serviceTierId },
-      select: { name: true },
-    });
-    if (tier) resolvedTierName = tier.name;
-  }
-
-  const engagement = await prisma.engagement.create({
-    data: {
-      userId,
-      pmId: client?.assignedPmId ?? null,
-      serviceTier: resolvedTierName,
-      serviceTierId: serviceTierId ?? null,
-      stage: "discovery",
-      status: "active",
-      startDate: startDate ? new Date(startDate) : new Date(),
-      targetDate: targetDate ? new Date(targetDate) : null,
-    },
-  });
-
-  // Mark intake as ACTIVE if provided
-  if (intakeSubmissionId) {
-    await prisma.intakeSubmission.update({
-      where: { id: intakeSubmissionId },
-      data: { status: "ACTIVE" },
-    });
-  }
-
-  // Mark onboarding complete
-  await prisma.user.update({
-    where: { id: userId },
-    data: { onboardingComplete: true },
-  });
-
-  // Notify client
-  await createNotification({
-    userId,
-    type: "engagement_activated",
-    content: "Your intake has been reviewed and your engagement is now active.",
-  });
-
-  // Email client
-  if (client) {
-    const clientName = client.preferredName ?? client.fullName ?? "there";
-    const portalUrl = `${process.env.NEXT_PUBLIC_APP_URL ?? ""}/client-portal/dashboard`;
-    await sendEmail({
-      to: client.email,
-      subject: "Your Terralume engagement has started",
-      html: engagementActivatedEmailHtml({ clientName, portalUrl }),
-    }).catch(() => {});
-  }
-
-  void logAudit(admin.id, "ENGAGEMENT_CREATED", "Engagement", engagement.id, {
-    userId,
-    serviceTier,
-    intakeSubmissionId,
-  });
-
-  revalidatePath("/admin-portal/engagements");
-  revalidatePath(`/admin-portal/clients/${userId}`);
-  revalidatePath("/admin-portal/intake");
-  if (intakeSubmissionId)
-    revalidatePath(`/admin-portal/intake/${intakeSubmissionId}`);
-
-  return engagement;
-}
-
-export async function updateEngagementStage(
-  engagementId: string,
-  stage: string,
-) {
-  const admin = await requireAdmin();
-
-  const updated = await prisma.engagement.update({
-    where: { id: engagementId },
-    data: { stage },
-    select: { userId: true },
-  });
-
-  await createNotification({
-    userId: updated.userId,
-    type: "stage_updated",
-    content: `Your engagement has advanced to the ${STAGE_LABELS[stage] ?? stage} stage.`,
-  });
-
-  void logAudit(
-    admin.id,
-    "ENGAGEMENT_STAGE_UPDATED",
-    "Engagement",
-    engagementId,
-    { stage },
-  );
-
-  revalidatePath("/admin-portal/engagements");
-  revalidatePath(`/admin-portal/clients/${updated.userId}`);
-}
-export async function updateEngagementStatus(
-  engagementId: string,
-  status: string,
-) {
-  const admin = await requireAdmin();
-
-  const updated = await prisma.engagement.update({
-    where: { id: engagementId },
-    data: { status },
-    select: { userId: true },
-  });
-
-  void logAudit(
-    admin.id,
-    "ENGAGEMENT_STATUS_UPDATED",
-    "Engagement",
-    engagementId,
-    { status },
-  );
-
-  revalidatePath(`/admin-portal/engagements/${engagementId}`);
-  revalidatePath("/admin-portal/engagements");
-  revalidatePath(`/admin-portal/clients/${updated.userId}`);
-}
 export async function getAllEngagements() {
   const admin = await requireAdmin();
   const where =
@@ -332,7 +167,6 @@ export async function getAllEngagements() {
       pm: { select: { id: true, fullName: true } },
       agreement: { select: { status: true } },
       invoices: { select: { id: true, status: true } },
-      tierRef: { select: { name: true, price: true, currency: true } },
     },
   });
 }
@@ -367,7 +201,6 @@ export async function getEngagementDetail(engagementId: string) {
         include: { pm: { select: { id: true, fullName: true } } },
         orderBy: { scheduledAt: "asc" },
       },
-      tierRef: true,
       updates: {
         orderBy: { publishedAt: "desc" },
         include: { pm: { select: { fullName: true } } },
@@ -713,6 +546,82 @@ export async function getAdminEngagementMessages(engagementId: string) {
   const canSend = actor.role === "ADMIN" || engagement.pmId === actor.id;
 
   return { engagement, canSend };
+}
+
+/**
+ * Returns the message thread for an engagement.
+ * Works for CLIENT (own engagement), PM (assigned), and ADMIN.
+ */
+export async function getEngagementMessageThread(engagementId: string) {
+  const { getSessionUser } = await import("./auth");
+  const sessionUser = await getSessionUser();
+  if (!sessionUser) throw new Error("Not authenticated.");
+
+  const engagement = await prisma.engagement.findUnique({
+    where: { id: engagementId },
+    select: {
+      id: true,
+      userId: true,
+      pmId: true,
+      user: {
+        select: {
+          id: true,
+          fullName: true,
+          preferredName: true,
+          photoUrl: true,
+          role: true,
+        },
+      },
+      pm: {
+        select: {
+          id: true,
+          fullName: true,
+          preferredName: true,
+          photoUrl: true,
+          role: true,
+        },
+      },
+      messages: {
+        include: {
+          sender: {
+            select: {
+              id: true,
+              fullName: true,
+              preferredName: true,
+              photoUrl: true,
+              role: true,
+            },
+          },
+        },
+        orderBy: { sentAt: "asc" },
+      },
+    },
+  });
+
+  if (!engagement) throw new Error("Engagement not found.");
+
+  const isClient =
+    sessionUser.role === "CLIENT" && sessionUser.id === engagement.userId;
+  const isPm =
+    sessionUser.role === "PM" && engagement.pmId === sessionUser.id;
+  const isAdmin = sessionUser.role === "ADMIN";
+
+  if (!isClient && !isPm && !isAdmin) {
+    throw new Error("Not authorised.");
+  }
+
+  const canSend =
+    isClient ||
+    isAdmin ||
+    (sessionUser.role === "PM" && engagement.pmId === sessionUser.id);
+
+  return {
+    messages: engagement.messages,
+    engagementId: engagement.id,
+    pmInfo: engagement.pm,
+    clientInfo: engagement.user,
+    canSend,
+  };
 }
 
 /**

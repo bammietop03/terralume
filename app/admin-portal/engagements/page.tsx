@@ -1,7 +1,11 @@
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { requireAdmin } from "@/app/actions/auth";
-import { getAllEngagements } from "@/app/actions/admin";
+import {
+  getEngagements,
+  type EngagementListItem,
+} from "@/app/actions/engagements";
+import { getCurrentProjectStage } from "@/app/actions/engagements";
 import {
   Table,
   TableBody,
@@ -11,29 +15,9 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import UpdateStageForm from "@/components/portal/admin/UpdateStageForm";
-import DeleteEngagementButton from "@/components/portal/admin/DeleteEngagementButton";
 import { Eye, Building2 } from "lucide-react";
 
 export const metadata = { title: "Engagements — Terralume Admin Portal" };
-
-const STAGE_LABELS: Record<string, string> = {
-  discovery: "Discovery",
-  brief_confirmation: "Brief Confirmation",
-  area_shortlisting: "Area Shortlisting",
-  property_search: "Property Search",
-  due_diligence: "Due Diligence",
-  offer_negotiation: "Offer & Negotiation",
-  legal_completion: "Legal & Completion",
-  handover: "Handover",
-  active_client: "Active Client",
-};
-
-const TIER_LABELS: Record<string, string> = {
-  essential: "Essential",
-  premium: "Premium",
-  elite: "Elite",
-};
 
 function formatDate(d: Date | string | null | undefined) {
   if (!d) return "—";
@@ -44,17 +28,29 @@ function formatDate(d: Date | string | null | undefined) {
   });
 }
 
+function getStatusColor(status: string) {
+  switch (status) {
+    case "IN_PROGRESS":
+      return "bg-blue-50 text-blue-700";
+    case "COMPLETED":
+      return "bg-emerald-50 text-emerald-700";
+    case "BLOCKED":
+      return "bg-red-50 text-red-700";
+    case "NOT_STARTED":
+    default:
+      return "bg-zinc-100 text-zinc-600";
+  }
+}
+
 export default async function EngagementsPage() {
   const user = await requireAdmin().catch(() => null);
   if (!user) redirect("/admin-login");
 
-  const engagements = await getAllEngagements();
+  const engagements: EngagementListItem[] = await getEngagements();
 
   const total = engagements.length;
-  const onboarded = engagements.filter((e) => e.user.onboardingComplete).length;
-  const agreementsSigned = engagements.filter(
-    (e) => e.agreement?.status === "SIGNED",
-  ).length;
+  const active = engagements.filter((e) => e.status === "ACTIVE").length;
+  const completed = engagements.filter((e) => e.status === "COMPLETED").length;
 
   return (
     <div className="px-6 py-8 max-w-7xl mx-auto space-y-6">
@@ -76,22 +72,22 @@ export default async function EngagementsPage() {
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         {[
           {
-            label: "Active engagements",
+            label: "Total engagements",
             value: total,
-            color: "text-(--color-navy)",
-            bg: "bg-(--color-navy-light)",
+            color: "text-navy",
+            bg: "bg-navy-light",
           },
           {
-            label: "Fully onboarded",
-            value: onboarded,
-            color: "text-emerald-600",
-            bg: "bg-emerald-50",
-          },
-          {
-            label: "Agreements signed",
-            value: agreementsSigned,
+            label: "Active projects",
+            value: active,
             color: "text-blue-600",
             bg: "bg-blue-50",
+          },
+          {
+            label: "Completed",
+            value: completed,
+            color: "text-emerald-600",
+            bg: "bg-emerald-50",
           },
         ].map((s) => (
           <div
@@ -133,107 +129,81 @@ export default async function EngagementsPage() {
                   Client
                 </TableHead>
                 <TableHead className="font-semibold text-on-surface-muted">
-                  Tier
+                  Service
                 </TableHead>
                 <TableHead className="font-semibold text-on-surface-muted">
                   PM
                 </TableHead>
                 <TableHead className="font-semibold text-on-surface-muted">
-                  Stage
+                  Current Stage
                 </TableHead>
                 <TableHead className="font-semibold text-on-surface-muted">
-                  Agreement
+                  Tasks
                 </TableHead>
                 <TableHead className="font-semibold text-on-surface-muted">
-                  Start date
-                </TableHead>
-                <TableHead className="font-semibold text-on-surface-muted">
-                  Target
+                  Created
                 </TableHead>
                 <TableHead />
               </TableRow>
             </TableHeader>
             <TableBody>
               {engagements.map((eng) => {
-                const invoicePaid = eng.invoices.some(
-                  (inv) => inv.status === "PAID",
-                );
+                // Find current stage (first IN_PROGRESS or NOT_STARTED stage)
+                const currentStage =
+                  eng._count.tasks > 0
+                    ? eng._count.tasks +
+                      " task" +
+                      (eng._count.tasks !== 1 ? "s" : "")
+                    : "No tasks";
 
                 return (
                   <TableRow key={eng.id} className="hover:bg-surface-muted/30">
                     <TableCell>
                       <div>
                         <p className="font-medium text-on-surface text-sm">
-                          {eng.user.fullName ?? eng.user.email}
+                          {eng.user.preferredName || eng.user.fullName}
                         </p>
                         <p className="text-xs text-on-surface-muted">
                           {eng.user.email}
                         </p>
-                        {eng.user.onboardingComplete && (
-                          <span className="mt-0.5 inline-block rounded-full bg-emerald-50 px-2 py-0.5 text-[10px] font-semibold text-emerald-700">
-                            Onboarded
-                          </span>
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <div>
+                        <p className="text-sm font-medium text-on-surface">
+                          {eng.service?.name ?? "—"}
+                        </p>
+                        {eng.workflowTemplate && (
+                          <p className="text-xs text-on-surface-muted">
+                            {eng.workflowTemplate.name}
+                          </p>
                         )}
                       </div>
                     </TableCell>
-                    <TableCell className="text-sm text-on-surface-muted capitalize">
-                      {eng.serviceTier
-                        ? (TIER_LABELS[eng.serviceTier] ?? eng.serviceTier)
-                        : "—"}
-                    </TableCell>
                     <TableCell className="text-sm text-on-surface-muted">
-                      {eng.pm?.fullName ?? (
+                      {(eng.pm?.preferredName || eng.pm?.fullName) ?? (
                         <span className="italic">Unassigned</span>
                       )}
                     </TableCell>
                     <TableCell>
-                      <UpdateStageForm
-                        engagementId={eng.id}
-                        currentStage={eng.stage}
-                      />
-                    </TableCell>
-                    <TableCell>
-                      {eng.agreement ? (
-                        <Badge
-                          variant={
-                            eng.agreement.status === "SIGNED"
-                              ? "default"
-                              : "outline"
-                          }
-                          className="text-xs"
-                        >
-                          {eng.agreement.status === "SIGNED"
-                            ? "Signed"
-                            : "Pending"}
-                        </Badge>
-                      ) : (
-                        <span className="text-xs text-on-surface-muted italic">
-                          None
-                        </span>
-                      )}
+                      <Badge variant="outline" className="text-xs">
+                        {eng.status}
+                      </Badge>
                     </TableCell>
                     <TableCell className="text-sm text-on-surface-muted">
-                      {formatDate(eng.startDate)}
+                      {currentStage}
                     </TableCell>
                     <TableCell className="text-sm text-on-surface-muted">
-                      {formatDate(eng.targetDate)}
+                      {formatDate(eng.createdAt)}
                     </TableCell>
                     <TableCell>
-                      <div className="flex items-center gap-2">
-                        <Link
-                          href={`/admin-portal/engagements/${eng.id}`}
-                          className="inline-flex items-center gap-1 rounded-lg border border-divider px-3 py-1.5 text-xs font-medium text-on-surface hover:bg-surface-muted transition-colors"
-                        >
-                          <Eye size={13} />
-                          View
-                        </Link>
-                        {user.role === "ADMIN" && (
-                          <DeleteEngagementButton
-                            engagementId={eng.id}
-                            clientName={eng.user.fullName ?? eng.user.email}
-                          />
-                        )}
-                      </div>
+                      <Link
+                        href={`/admin-portal/engagements/${eng.id}`}
+                        className="inline-flex items-center gap-1 rounded-lg border border-divider px-3 py-1.5 text-xs font-medium text-on-surface hover:bg-surface-muted transition-colors"
+                      >
+                        <Eye size={13} />
+                        View
+                      </Link>
                     </TableCell>
                   </TableRow>
                 );

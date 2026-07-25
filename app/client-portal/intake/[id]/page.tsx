@@ -152,8 +152,8 @@ export default async function ClientIntakeDetailPage({
           <p className="mt-0.5 text-xs text-on-surface-muted">
             {submission.referenceNumber}
             <span className="mx-1.5 text-divider-strong">·</span>
-            {TYPE_LABEL[submission.transactionType] ??
-              submission.transactionType}
+            {TYPE_LABEL[submission?.transactionType || ""] ??
+              submission?.transactionType}
             <span className="mx-1.5 text-divider-strong">·</span>
             Submitted {formatDate(submission.createdAt)}
           </p>
@@ -261,7 +261,7 @@ export default async function ClientIntakeDetailPage({
             <Field
               label="Transaction type"
               value={
-                TYPE_LABEL[submission.transactionType] ??
+                TYPE_LABEL[submission?.transactionType || ""] ??
                 submission.transactionType
               }
             />

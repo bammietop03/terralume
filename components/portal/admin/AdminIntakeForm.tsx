@@ -3,7 +3,7 @@
 import { useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { Search, ChevronDown, X } from "lucide-react";
-import { IntakeForm } from "@/components/get-started/IntakeForm";
+import PortalIntakeFlow from "@/components/portal/PortalIntakeFlow";
 import { submitIntakeFormForClient } from "@/app/actions/intake";
 import type { FormData as IntakeFormData } from "@/components/get-started/types";
 import { INITIAL_FORM_DATA } from "@/components/get-started/types";
@@ -150,10 +150,12 @@ export default function AdminIntakeForm({ clients }: Props) {
       </div>
 
       {selectedClient ? (
-        <IntakeForm
+        <PortalIntakeFlow
+          key={selectedClient.id}
           initialData={{ ...INITIAL_FORM_DATA, ...aboutData }}
           readOnlyAbout
           submitAction={submitForClient}
+          selectionDescription="Select the service that matches this client's request before completing their intake brief."
         />
       ) : (
         <div className="rounded-2xl border border-dashed border-divider bg-surface p-12 text-center text-sm text-on-surface-muted">

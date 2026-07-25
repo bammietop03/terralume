@@ -121,7 +121,7 @@ const slides = [
       },
       {
         label: "Get Started",
-        href: "/consultation",
+        href: "/get-started",
         icon: Zap,
         variant: "white" as const,
       },

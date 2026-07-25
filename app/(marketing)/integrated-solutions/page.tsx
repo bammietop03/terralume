@@ -132,7 +132,7 @@ export default function IntegratedSolutionsPage() {
         actions={
           <>
             <Button asChild size="lg" variant="secondary">
-              <Link href="/consultation">
+              <Link href="/get-started">
                 Start a property intake
                 <ArrowRight size={16} className="ml-2" />
               </Link>
@@ -143,7 +143,7 @@ export default function IntegratedSolutionsPage() {
               variant="outline"
               className="border-white/30 text-navy-dark hover:bg-white/10 hover:text-white"
             >
-              <Link href="/consultation">
+              <Link href="/get-started">
                 Start an energy assessment{" "}
                 <ArrowRight size={16} className="ml-2" />
               </Link>
@@ -391,7 +391,7 @@ export default function IntegratedSolutionsPage() {
                 </p>
                 <div className="mt-6">
                   <Button asChild variant="default" size="lg">
-                    <Link href="/consultation">
+                    <Link href="/get-started">
                       Start a property intake
                       <ArrowRight size={16} className="ml-2" />
                     </Link>
@@ -428,7 +428,7 @@ export default function IntegratedSolutionsPage() {
                 </p>
                 <div className="mt-6">
                   <Button asChild variant="secondary" size="lg">
-                    <Link href="/consultation">
+                    <Link href="/get-started">
                       Start an energy needs assessment
                       <ArrowRight size={16} className="ml-2" />
                     </Link>

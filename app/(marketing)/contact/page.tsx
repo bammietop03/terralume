@@ -227,7 +227,7 @@ export default function ContactPage() {
               </div>
               <div className="mt-6">
                 <Button asChild variant="default">
-                  <Link href="/consultation">
+                  <Link href="/get-started">
                     Start a property intake
                     <ArrowRight size={15} className="ml-2" />
                   </Link>
@@ -249,7 +249,7 @@ export default function ContactPage() {
               </div>
               <div className="mt-6">
                 <Button asChild variant="secondary">
-                  <Link href="/consultation">
+                  <Link href="/get-started">
                     Start an energy assessment
                     <ArrowRight size={15} className="ml-2" />
                   </Link>

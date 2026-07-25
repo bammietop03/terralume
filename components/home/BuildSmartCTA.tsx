@@ -52,9 +52,9 @@ export function BuildSmartCTA() {
             size="lg"
             className="bg-gold-gradient hover:bg-gold-dark text-white font-semibold gap-2.5 px-8 h-14 text-[16px]"
           >
-            <Link href="/consultation">
+            <Link href="/get-started">
               <CalendarDays size={18} />
-              Book a Consultation
+              Get Started
               <ArrowRight size={16} className="ml-0.5" />
             </Link>
           </Button>

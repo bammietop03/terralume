@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
@@ -7,7 +8,6 @@ import {
   MessageSquare,
   CreditCard,
   User,
-  Users,
   UserCog,
   UserRound,
   ChevronLeft,
@@ -17,13 +17,11 @@ import {
   X,
   Newspaper,
   ClipboardList,
-  Sparkles,
   Settings,
   FileSignature,
   History,
   Building2,
   LayoutList,
-  Layers,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
@@ -68,7 +66,6 @@ const adminNav: NavItem[] = [
     href: "/admin-portal/dashboard",
     icon: LayoutDashboard,
   },
-  { label: "Leads", href: "/admin-portal/leads", icon: Sparkles },
   { label: "Intake Forms", href: "/admin-portal/intake", icon: ClipboardList },
   { label: "Engagements", href: "/admin-portal/engagements", icon: LayoutList },
   { label: "Messages", href: "/admin-portal/messages", icon: MessageSquare },
@@ -78,11 +75,6 @@ const adminNav: NavItem[] = [
     label: "Market Intelligence",
     href: "/admin-portal/market-intelligence",
     icon: Newspaper,
-  },
-  {
-    label: "Service Tiers",
-    href: "/admin-portal/service-tiers",
-    icon: Layers,
   },
   {
     label: "Audit Log",
@@ -99,9 +91,6 @@ const pmNav: NavItem[] = [
     href: "/admin-portal/dashboard",
     icon: LayoutDashboard,
   },
-  { label: "My Clients", href: "/admin-portal/clients", icon: Users },
-  { label: "My Leads", href: "/admin-portal/leads", icon: Sparkles },
-  { label: "Intake Forms", href: "/admin-portal/intake", icon: ClipboardList },
   { label: "Engagements", href: "/admin-portal/engagements", icon: LayoutList },
   { label: "Messages", href: "/admin-portal/messages", icon: MessageSquare },
   { label: "Profile", href: "/admin-portal/profile", icon: User },
@@ -240,19 +229,26 @@ function SidebarContent({
       <div
         className={cn(
           "flex h-16 shrink-0 items-center border-b border-white/[0.07]",
-          collapsed ? "justify-center px-3" : "gap-3 px-4",
+          collapsed ? "justify-center px-3" : "px-4",
         )}
       >
-        {!collapsed && (
-          <Link href="/" className="flex items-baseline gap-px min-w-0 flex-1">
-            <span className="font-display text-[17px] font-bold tracking-tight text-white leading-none">
-              Terra
-            </span>
-            <span className="font-display text-[17px] font-bold tracking-tight text-(--color-gold) leading-none">
-              lume
-            </span>
-          </Link>
-        )}
+        <Link
+          href="/"
+          className={cn(
+            "min-w-0",
+            collapsed ? "inline-flex justify-center" : "flex-1 inline-flex",
+          )}
+          aria-label="Terralume home"
+        >
+          <Image
+            src="/images/terralume-logo.png"
+            alt="Terralume"
+            width={180}
+            height={50}
+            className={cn("w-auto", collapsed ? "h-7" : "h-8")}
+            priority
+          />
+        </Link>
 
         {/* Mobile close */}
         {onClose && (

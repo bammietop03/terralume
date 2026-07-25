@@ -46,7 +46,6 @@ export default async function ReceiptPrintPage({
               location: true,
             },
           },
-          tierRef: { select: { name: true } },
         },
       },
     },
@@ -113,16 +112,16 @@ export default async function ReceiptPrintPage({
                 {invoice.invoiceNumber}
               </p>
             </div>
-            {invoice.engagement.tierRef && (
+            {/* {invoice.engagement.service && (
               <div>
                 <p className="text-xs text-gray-400 uppercase tracking-wide font-semibold mb-0.5">
-                  Service Tier
+                  Service
                 </p>
                 <p className="text-sm font-medium text-gray-900">
-                  {invoice.engagement.tierRef.name}
+                  {invoice.engagement.service.name}
                 </p>
               </div>
-            )}
+            )} */}
             <div>
               <p className="text-xs text-gray-400 uppercase tracking-wide font-semibold mb-0.5">
                 Issued

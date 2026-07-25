@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import { requireClient } from "@/app/actions/auth";
 import { getMyIntakeDraft } from "@/app/actions/intake";
-import { IntakeForm } from "@/components/get-started/IntakeForm";
+import PortalIntakeFlow from "@/components/portal/PortalIntakeFlow";
 import { ArrowLeft } from "lucide-react";
 
 export const metadata = {
@@ -27,7 +27,7 @@ export default async function ClientIntakeNewPage() {
   };
 
   return (
-    <div className="mx-auto max-w-3xl space-y-6 px-6 py-8">
+    <div className="mx-auto max-w-4xl space-y-6 px-6 py-8">
       <div>
         <Link
           href="/client-portal/intake"
@@ -43,7 +43,7 @@ export default async function ClientIntakeNewPage() {
           Submit a new brief
         </h1>
         <p className="mt-1 text-sm text-on-surface-muted">
-          Complete the form below to start a new property search engagement.
+          Choose the service you need, then complete the matching intake form.
           {draft && (
             <span className="ml-1 font-medium text-navy">
               Your progress has been restored from your last session.
@@ -52,7 +52,7 @@ export default async function ClientIntakeNewPage() {
         </p>
       </div>
 
-      <IntakeForm
+      <PortalIntakeFlow
         enableDraft
         readOnlyAbout
         initialData={{ ...userAbout, ...(draft?.data ?? {}) }}

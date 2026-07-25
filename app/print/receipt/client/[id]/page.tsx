@@ -48,7 +48,7 @@ export default async function ClientReceiptPrintPage({
               location: true,
             },
           },
-          tierRef: { select: { name: true } },
+          // tierRef: { select: { name: true } },
         },
       },
     },
@@ -119,7 +119,7 @@ export default async function ClientReceiptPrintPage({
                 {invoice.invoiceNumber}
               </p>
             </div>
-            {invoice.engagement.tierRef && (
+            {/* {invoice.engagement.tierRef && (
               <div>
                 <p className="text-xs text-gray-400 uppercase tracking-wide font-semibold mb-0.5">
                   Service Tier
@@ -128,7 +128,7 @@ export default async function ClientReceiptPrintPage({
                   {invoice.engagement.tierRef.name}
                 </p>
               </div>
-            )}
+            )} */}
             <div>
               <p className="text-xs text-gray-400 uppercase tracking-wide font-semibold mb-0.5">
                 Issued

@@ -16,9 +16,9 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Terralume — Buyer-Side Real Estate Advisory, Lagos",
+  title: "Terralume — Real Estate & Energy Project Management",
   description:
-    "The only real estate advisory firm in Lagos that works exclusively for buyers — never sellers.",
+    "Terralume delivers expert real estate advisory and energy project management services, guiding clients from planning and due diligence to execution and successful project delivery.",
   icons: {
     icon: "/favicon.svg",
     shortcut: "/favicon.svg",
@@ -32,7 +32,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${playfair.variable} ${inter.variable}`}>
-      <body className="min-h-screen flex flex-col antialiased">
+      <body
+        suppressHydrationWarning
+        className="min-h-screen flex flex-col antialiased"
+      >
         {children}
         <Toaster richColors position="top-right" />
       </body>

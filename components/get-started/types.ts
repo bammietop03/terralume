@@ -1,9 +1,12 @@
 export interface FormData {
-  // Step 1 — Goal
-  transactionType: string; // rent | buy | lease
+  // Step 1 — Service Selection
+  selectedServices: string[]; // ["real-estate"] | ["renewable-energy"] | ["real-estate", "renewable-energy"]
+
+  // Step 2 — Goal (Real Estate only)
+  transactionType?: string; // rent | buy | lease (conditional)
   purpose: string;
 
-  // Step 2 — About you
+  // Step 3 — About you
   fullName: string;
   preferredName: string;
   email: string;
@@ -11,7 +14,7 @@ export interface FormData {
   nationality: string;
   location: string;
 
-  // Step 3 — Property
+  // Step 4 — Property (Real Estate only)
   targetAreas: string[];
   propertyType: string;
   bedrooms: string; // non-lease only
@@ -19,14 +22,17 @@ export interface FormData {
   mustHaves: string[];
   dealBreakers: string;
 
-  // Step 4 — Budget
+  // Energy-specific fields
+  energyNeedsDescription: string; // Renewable Energy service description
+
+  // Step 5 — Budget (conditional)
   currency: string; // NGN | USD | GBP
   budgetMin: string;
   budgetMax: string;
   sourceOfFunds: string;
   mortgageStatus: string; // buy only
 
-  // Step 5 — Timeline & background
+  // Step 6 — Timeline & background
   targetDate: string;
   decisionSpeed: string;
   decisionMakers: string; // sole | spouse | family | partner
@@ -34,11 +40,12 @@ export interface FormData {
   riskProfile: string; // buy only
   referralSource: string;
 
-  // Step 6 — Review / consent
+  // Step 7 — Review / consent
   dataConsent: boolean;
 }
 
 export const INITIAL_FORM_DATA: FormData = {
+  selectedServices: [],
   transactionType: "",
   purpose: "",
 
@@ -56,6 +63,8 @@ export const INITIAL_FORM_DATA: FormData = {
   mustHaves: [],
   dealBreakers: "",
 
+  energyNeedsDescription: "",
+
   currency: "NGN",
   budgetMin: "",
   budgetMax: "",
@@ -72,9 +81,10 @@ export const INITIAL_FORM_DATA: FormData = {
   dataConsent: false,
 };
 
-export const TOTAL_STEPS = 6;
+export const TOTAL_STEPS = 7;
 
 export const STEP_LABELS = [
+  "Service",
   "Goal",
   "About you",
   "Property",
@@ -84,10 +94,11 @@ export const STEP_LABELS = [
 ] as const;
 
 export const STEP_DESCRIPTIONS: Record<number, string> = {
-  1: "This determines the questions we ask. You can always change it.",
-  2: "This stays strictly confidential — it helps your advisor understand your situation from the first call.",
-  3: "Tell us exactly what you need. The more specific you are, the better we can shortlist.",
-  4: "Your budget is confidential. We use it to find the best options within your range.",
-  5: "This helps us prioritise your search and match you with the right advisor.",
-  6: "Check your details before submitting. Your advisor will call within 48 hours.",
+  1: "Choose the service(s) you need. You can select one or both.",
+  2: "This determines the questions we ask. You can always change it.",
+  3: "This stays strictly confidential — it helps your advisor understand your situation from the first call.",
+  4: "Tell us exactly what you need. The more specific you are, the better we can shortlist.",
+  5: "Your budget is confidential. We use it to find the best options within your range.",
+  6: "This helps us prioritise your search and match you with the right advisor.",
+  7: "Check your details before submitting. Your advisor will call within 48 hours.",
 };

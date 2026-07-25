@@ -353,7 +353,7 @@ export default function HowItWorksPage() {
               size="lg"
               className="bg-navy hover:bg-navy-dark text-white gap-2 px-8 h-13"
             >
-              <Link href="/consultation">
+              <Link href="/get-started">
                 Book a Consultation
                 <ArrowRight size={15} />
               </Link>

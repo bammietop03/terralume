@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import PageHero from "@/components/layout/PageHero";
 import { FooterCTA } from "@/components/home/FooterCTA";
-import { ConsultationForm } from "@/components/consultation/ConsultationForm";
+// import { ConsultationForm } from "@/components/consultation/ConsultationForm";
 import { CalendarCheck, MessageSquare, ShieldCheck } from "lucide-react";
 
 export const metadata: Metadata = {
@@ -79,7 +79,7 @@ export default function ConsultationPage() {
                   better we can prepare for your call.
                 </p>
               </div>
-              <ConsultationForm />
+              {/* <ConsultationForm /> */}
             </div>
 
             {/* ── Sidebar (2/5) */}

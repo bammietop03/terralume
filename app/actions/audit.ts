@@ -52,7 +52,16 @@ export type AuditAction =
   | "SERVICE_TIER_DEACTIVATED"
   | "MEETING_DELETED"
   // Onboarding
-  | "ONBOARDING_COMPLETE";
+  | "ONBOARDING_COMPLETE"
+  | "MANUAL_UPDATE"
+  | "INTERNAL_NOTE_CREATED"
+  | "PAYMENT_RECORDED"
+  | "TASK_CREATED"
+  | "TASK_UPDATED"
+  | "TASK_DELETED"
+  | "TASK_SUBMITTED"
+  | "TASK_APPROVED"
+  | "TASK_REJECTED";
 
 /**
  * Fire-and-forget audit log writer. Never throws — failures are silently swallowed

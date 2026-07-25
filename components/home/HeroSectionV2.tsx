@@ -43,7 +43,7 @@ const slides = [
         variant: "white" as const,
       },
     ],
-    image: "/images/lagos2.png",
+    image: "/images/lagos3.webp",
   },
   {
     id: "real-estate",
@@ -70,7 +70,7 @@ const slides = [
         variant: "white" as const,
       },
     ],
-    image: "/images/lagos3.webp", // Replace with real estate specific image
+    image: "/images/lagos5.jpg", // Replace with real estate specific image
   },
   {
     id: "energy",
@@ -97,7 +97,7 @@ const slides = [
         variant: "white" as const,
       },
     ],
-    image: "/images/energy.png", // Replace with energy specific image
+    image: "/images/energy3.jpg", // Replace with energy specific image
   },
   {
     id: "satisfaction",
@@ -216,8 +216,8 @@ export function HeroSectionV2() {
       ))}
 
       {/* Overlays */}
-      <div className="absolute inset-0 bg-linear-to-b from-navy-dark/70 via-navy-dark/60 to-navy-dark/90" />
-      <div className="absolute inset-0 bg-linear-to-r from-navy-dark/50 to-transparent" />
+      {/* <div className="absolute inset-0 bg-linear-to-b from-navy-dark/70 via-navy-dark/60 to-navy-dark/90" />
+      <div className="absolute inset-0 bg-linear-to-r from-navy-dark/50 to-transparent" /> */}
       <div
         aria-hidden
         className="absolute inset-0 opacity-[0.03]"
@@ -232,41 +232,41 @@ export function HeroSectionV2() {
       {/* Navigation Arrows */}
       <button
         onClick={prevSlide}
-        className="hidden lg:flex absolute left-4 top-1/2 -translate-y-1/2 z-20 p-3 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/20 transition-all items-center justify-center"
+        className="hidden lg:flex absolute left-4 top-1/2 -translate-y-1/2 z-20 p-3 rounded-full bg-navy-dark/40  hover:bg-navy-dark/70  backdrop-blur-sm border border-white/20 transition-all items-center justify-center"
         aria-label="Previous slide"
       >
         <ChevronLeft className="w-6 h-6 text-white" />
       </button>
       <button
         onClick={nextSlide}
-        className="hidden lg:flex absolute right-4 top-1/2 -translate-y-1/2 z-20 p-3 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/20 transition-all items-center justify-center"
+        className="hidden lg:flex absolute right-4 top-1/2 -translate-y-1/2 z-20 p-3 rounded-full bg-navy-dark/40  hover:bg-navy-dark/70 backdrop-blur-sm border border-white/20 transition-all items-center justify-center"
         aria-label="Next slide"
       >
         <ChevronRight className="w-6 h-6 text-white" />
       </button>
 
       {/* Content */}
-      <div className="relative z-10 mx-auto w-full max-w-7xl px-6 pb-24 pt-40 lg:px-12 lg:pb-32">
+      <div className="relative z-10 mx-auto w-full max-w-7xl px-6 pb-24 pt-32 lg:px-12 lg:pb-16">
         {/* Animated content */}
         <div
           key={currentSlide}
-          className="animate-in fade-in slide-in-from-bottom-4 duration-700"
+          className="max-w-212.5 animate-in fade-in slide-in-from-bottom-4 duration-700 backdrop-blur-sm px-8 py-10 rounded-2xl bg-navy-dark/70"
         >
           {/* Eyebrow tag */}
-          <div className="mb-8 inline-flex items-center gap-2.5 rounded-full border border-white/15 bg-white/8 px-5 py-2 backdrop-blur-sm">
+          <div className="mb-8 inline-flex items-center gap-2.5 rounded-full border border-white bg-white/8 px-5 py-2 backdrop-blur-sm">
             <span className="h-1.5 w-1.5 rounded-full bg-gold animate-pulse" />
-            <span className="text-[11px] font-semibold uppercase tracking-[0.18em] text-white/75">
+            <span className="text-[11px] font-semibold uppercase tracking-[0.18em] text-white">
               {currentSlideData.eyebrow}
             </span>
           </div>
 
           {/* Headline */}
-          <h1 className="max-w-4xl font-display text-5xl font-bold leading-[1.06] text-white lg:text-[66px] xl:text-[76px]">
+          <h1 className="max-w-4xl font-display text-5xl font leading-[1.06] text-white lg:text-[66px] xl:text-[76px]">
             {currentSlideData.title}
           </h1>
 
           {/* Subheadline */}
-          <p className="mt-7 max-w-2xl text-[18px] leading-relaxed text-white/60">
+          <p className="mt-7 max-w-2xl text-[18px] leading-relaxed text-white">
             {currentSlideData.description}
           </p>
 
@@ -308,7 +308,7 @@ export function HeroSectionV2() {
         </div>
 
         {/* Slide indicators */}
-        <div className="mt-16 flex items-center gap-3">
+        <div className="mt-8 flex items-center gap-3">
           {slides.map((_, index) => (
             <button
               key={index}
@@ -324,18 +324,18 @@ export function HeroSectionV2() {
         </div>
 
         {/* Divider metrics bar */}
-        <div className="mt-20 flex flex-wrap items-center gap-x-10 gap-y-5 border-t border-white/10 pt-9">
+        <div className="mt-10 flex flex-wrap items-center gap-x-10 gap-y-5 p-9 bg-navy-dark/70 backdrop-blur-sm rounded-2xl">
           <HeroMetric value="120+" label="Transactions" />
-          <div className="hidden sm:block h-6 w-px bg-white/15" />
+          <div className="hidden sm:block h-6 w-px bg-white" />
           <HeroMetric value="67" label="Active Clients" />
-          <div className="hidden sm:block h-6 w-px bg-white/15" />
+          <div className="hidden sm:block h-6 w-px bg-white" />
           <HeroMetric value="12%" label="Avg. ROI Range" />
-          <div className="hidden sm:block h-6 w-px bg-white/15" />
+          <div className="hidden sm:block h-6 w-px bg-white" />
           <HeroMetric value="4.5/5" label="Client Satisfaction" />
-          <div className="hidden lg:block h-6 w-px bg-white/15" />
+          <div className="hidden lg:block h-6 w-px bg-white" />
           <div className="flex items-center gap-2.5">
-            <span className="h-1.5 w-1.5 rounded-full bg-white/40" />
-            <span className="text-[12px] text-white/50 uppercase tracking-widest">
+            <span className="h-1.5 w-1.5 rounded-full bg-white" />
+            <span className="text-[12px] text-white uppercase tracking-widest">
               CAC &amp; LASRERA Registered
             </span>
           </div>

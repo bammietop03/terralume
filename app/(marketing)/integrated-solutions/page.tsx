@@ -129,6 +129,7 @@ export default function IntegratedSolutionsPage() {
           { label: "Integrated Solutions" },
         ]}
         minHeight="56vh"
+        imageSrc="/images/lagos5.jpg"
         actions={
           <>
             <Button asChild size="lg" variant="secondary">

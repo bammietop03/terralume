@@ -140,11 +140,11 @@ export default function EnergyPage() {
         description="You don't need to be buying a property to work with Terralume on energy. This division stands on its own — we consult first, understand your actual needs, then pull the right solution from our vetted technology data."
         breadcrumbs={[{ label: "Home", href: "/" }, { label: "Energy" }]}
         minHeight="56vh"
-        imageSrc="/images/energy.jpg"
+        imageSrc="/images/energy3.jpg"
         actions={
           <>
             <Button asChild size="lg" variant="secondary">
-              <Link href="/get-started">
+              <Link href="/get-started?service=renewable-energy">
                 Start an energy assessment
                 <ArrowRight size={16} className="ml-2" />
               </Link>
@@ -231,7 +231,7 @@ export default function EnergyPage() {
 
           <div className="mt-10 flex justify-center">
             <Button asChild size="lg" variant="secondary">
-              <Link href="/get-started">
+              <Link href="/get-started?service=renewable-energy">
                 Start an energy needs assessment
                 <ArrowRight size={16} className="ml-2" />
               </Link>
@@ -261,7 +261,7 @@ export default function EnergyPage() {
               </p>
               <div className="mt-8">
                 <Button asChild variant="default" size="lg">
-                  <Link href="/get-started">
+                  <Link href="/get-started?service=renewable-energy">
                     Start an energy needs assessment
                     <ArrowRight size={16} className="ml-2" />
                   </Link>
@@ -376,7 +376,7 @@ export default function EnergyPage() {
                 </p>
               </div>
               <Button asChild variant="default" size="lg" className="shrink-0">
-                <Link href="/get-started">
+                <Link href="/get-started?service=renewable-energy">
                   Start an assessment
                   <ArrowRight size={16} className="ml-2" />
                 </Link>

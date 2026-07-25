@@ -156,10 +156,11 @@ export default function RealEstatePage() {
         description="Most platforms hand you options and let you carry the risk. Terralume takes your goals, runs every candidate property through a four-pillar evaluation, and only brings you what clears the bar — then manages the acquisition for you."
         breadcrumbs={[{ label: "Home", href: "/" }, { label: "Real Estate" }]}
         minHeight="56vh"
+        imageSrc="/images/lagos3.webp"
         actions={
           <>
             <Button asChild size="lg" variant="secondary">
-              <Link href="/get-started">
+              <Link href="/get-started?service=real-estate">
                 Start a property intake
                 <ArrowRight size={16} className="ml-2" />
               </Link>
@@ -259,7 +260,7 @@ export default function RealEstatePage() {
               </h2>
             </div>
             <Button asChild variant="default" size="lg">
-              <Link href="/get-started">
+              <Link href="/get-started?service=real-estate">
                 Start a property intake
                 <ArrowRight size={16} className="ml-2" />
               </Link>
@@ -396,7 +397,7 @@ export default function RealEstatePage() {
                 </p>
               </div>
               <Button asChild variant="default" size="lg" className="shrink-0">
-                <Link href="/get-started">
+                <Link href="/get-started?service=real-estate">
                   Start a property intake
                   <ArrowRight size={16} className="ml-2" />
                 </Link>
@@ -454,7 +455,7 @@ export default function RealEstatePage() {
 
           <div className="mt-12 flex justify-center">
             <Button asChild size="lg" variant="secondary">
-              <Link href="/get-started">
+              <Link href="/get-started?service=real-estate">
                 Start a property intake
                 <ArrowRight size={16} className="ml-2" />
               </Link>

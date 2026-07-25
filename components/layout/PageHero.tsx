@@ -40,7 +40,7 @@ export default function PageHero({
 }: PageHeroProps) {
   return (
     <section
-      className="relative flex items-end overflow-hidden bg-navy-dark pb-16 pt-36"
+      className="relative flex items-end overflow-hidden bg-navy-dark pb-8 pt-28"
       style={{ minHeight }}
     >
       <Image
@@ -50,50 +50,54 @@ export default function PageHero({
         className="object-cover object-center"
         priority
       />
-      <div className="absolute inset-0 bg-linear-to-b from-navy-dark/70 via-navy-dark/60 to-navy-dark/90" />
-      <div className="absolute inset-0 bg-linear-to-r from-navy-dark/50 to-transparent" />
+      {/* <div className="absolute inset-0 bg-linear-to-b from-navy-dark/70 via-navy-dark/60 to-navy-dark/90" />
+      <div className="absolute inset-0 bg-linear-to-r from-navy-dark/50 to-transparent" /> */}
 
-      <div className="container relative z-10 mx-auto max-w-5xl px-6">
-        {/* Breadcrumb */}
-        <nav className="mb-6 flex items-center gap-2 text-[13px] text-white/50">
-          {breadcrumbs.map((crumb, i) => (
-            <span key={i} className="flex items-center gap-2">
-              {i > 0 && <span>/</span>}
-              {crumb.href ? (
-                <Link
-                  href={crumb.href}
-                  className="transition-colors hover:text-white/80"
-                >
-                  {crumb.label}
-                </Link>
-              ) : (
-                <span className="text-white/80">{crumb.label}</span>
-              )}
-            </span>
-          ))}
-        </nav>
+      <div className="container relative z-10 mx-auto max-w-7xl px-6">
+        <div className="max-w-187.5 backdrop-blur-sm px-8 py-10 rounded-2xl bg-navy-dark/70">
+          {/* Breadcrumb */}
+          <nav className="mb-6 flex items-center gap-2 text-[13px] text-white/50">
+            {breadcrumbs.map((crumb, i) => (
+              <span key={i} className="flex items-center gap-2">
+                {i > 0 && <span>/</span>}
+                {crumb.href ? (
+                  <Link
+                    href={crumb.href}
+                    className="transition-colors hover:text-white/80"
+                  >
+                    {crumb.label}
+                  </Link>
+                ) : (
+                  <span className="text-white/80">{crumb.label}</span>
+                )}
+              </span>
+            ))}
+          </nav>
 
-        {/* Eyebrow */}
-        <div className="mb-4 flex items-center gap-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-white">
-          <span className="h-px w-8 bg-white" />
-          {eyebrow}
+          {/* Eyebrow */}
+          <div className="mb-4 flex items-center gap-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-white">
+            <span className="h-px w-8 bg-white" />
+            {eyebrow}
+          </div>
+
+          {/* Title */}
+          <h1 className="mb-4 font-display text-4xl font-bold text-white lg:text-5xl">
+            {title}
+          </h1>
+
+          {/* Description */}
+          <p className="max-w-xl text-[17px] leading-relaxed text-white">
+            {description}
+          </p>
+
+          {/* Chips */}
+          {chips && <div className="mt-8 flex flex-wrap gap-3">{chips}</div>}
+
+          {/* Actions */}
+          {actions && (
+            <div className="mt-8 flex flex-wrap gap-3">{actions}</div>
+          )}
         </div>
-
-        {/* Title */}
-        <h1 className="mb-4 font-display text-4xl font-bold text-white lg:text-5xl">
-          {title}
-        </h1>
-
-        {/* Description */}
-        <p className="max-w-xl text-[17px] leading-relaxed text-white/70">
-          {description}
-        </p>
-
-        {/* Chips */}
-        {chips && <div className="mt-8 flex flex-wrap gap-3">{chips}</div>}
-
-        {/* Actions */}
-        {actions && <div className="mt-8 flex flex-wrap gap-3">{actions}</div>}
       </div>
     </section>
   );

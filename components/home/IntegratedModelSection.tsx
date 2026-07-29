@@ -96,15 +96,26 @@ export function IntegratedModelSection() {
                 ))}
               </ul>
 
-              <Button
-                asChild
-                className="bg-gold-gradient hover:bg-gold-dark text-white border border-white/20 gap-2 px-7 h-13 text-[15px]"
-              >
-                <Link href="/real-estate">
-                  View Full Capability
-                  <ArrowRight size={15} />
-                </Link>
-              </Button>
+              <div className="relative flex flex-col sm:flex-row md:flex-row gap-4">
+                <Button
+                  asChild
+                  className="bg-gold-gradient hover:bg-gold-dark text-white border border-white/20 gap-2 px-5 h-13 text-[14px]"
+                >
+                  <Link href="/get-started?service=real-estate">
+                    Start Intake Process
+                    <ArrowRight size={15} />
+                  </Link>
+                </Button>
+                <Button
+                  asChild
+                  className="bg-white text-navy hover:bg-white border border-white/20 gap-2 px-5 h-13 text-[14px]"
+                >
+                  <Link href="/real-estate">
+                    View Full Capability
+                    <ArrowRight size={15} />
+                  </Link>
+                </Button>
+              </div>
             </div>
           </div>
 
@@ -173,15 +184,26 @@ export function IntegratedModelSection() {
                 ))}
               </ul>
 
-              <Button
-                asChild
-                className="bg-gold-gradient hover:bg-gold-dark text-white border border-white/20 gap-2 px-7 h-13 text-[15px]"
-              >
-                <Link href="/energy">
-                  View Full Capability
-                  <ArrowRight size={15} />
-                </Link>
-              </Button>
+              <div className="relative flex flex-col sm:flex-row md:flex-row gap-4">
+                <Button
+                  asChild
+                  className="bg-gold-gradient hover:bg-gold-dark text-white border border-white/20 gap-2 px-5 h-13 text-[14px]"
+                >
+                  <Link href="/get-started?service=renewable-energy">
+                    Start Intake Process
+                    <ArrowRight size={15} />
+                  </Link>
+                </Button>
+                <Button
+                  asChild
+                  className="bg-white text-navy hover:bg-white border border-white/20 gap-2 px-5 h-13 text-[14px]"
+                >
+                  <Link href="/energy">
+                    View Full Capability
+                    <ArrowRight size={15} />
+                  </Link>
+                </Button>
+              </div>
             </div>
           </div>
         </div>
